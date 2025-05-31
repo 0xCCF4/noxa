@@ -1,11 +1,10 @@
-{
-  self,
-  lib,
-  pkgs,
-  runCommand,
-  mdbook,
-  nixosOptionsDoc,
-  ...
+{ self
+, lib
+, pkgs
+, runCommand
+, mdbook
+, nixosOptionsDoc
+, ...
 }@inputs:
 
 let
@@ -13,27 +12,25 @@ let
     module:
     nixosOptionsDoc {
       inherit
-        (
-          (lib.evalModules {
-            modules = [
-              module
-              (
-                { lib, ... }:
-                {
-                  # Provide `pkgs` arg to all modules
-                  config._module = {
-                    args = inputs;
-                    check = false;
-                  };
-                  # Hide NixOS `_module.args` from nixosOptionsDoc to remain specific to noxa
-                  options._module.args = lib.mkOption {
-                    internal = true;
-                  };
-                }
-              )
-            ];
-          })
-        )
+        ((lib.evalModules {
+          modules = [
+            module
+            (
+              { lib, ... }:
+              {
+                # Provide `pkgs` arg to all modules
+                config._module = {
+                  args = inputs;
+                  check = false;
+                };
+                # Hide NixOS `_module.args` from nixosOptionsDoc to remain specific to noxa
+                options._module.args = lib.mkOption {
+                  internal = true;
+                };
+              }
+            )
+          ];
+        }))
         options
         ;
 
@@ -41,24 +38,26 @@ let
         opt:
         opt
         // {
-          declarations = map (
-            decl:
-            let
-              root = toString ../.;
-              declStr = toString decl;
-              declPath = lib.removePrefix root decl;
-            in
-            if
-              lib.hasPrefix root declStr
-            # Rewrite links from ../. in the /nix/store to the source on Github
-            then
-              {
-                name = "noxa${declPath}";
-                url = "https://github.com/0xCCF4/noxa/tree/main${declPath}";
-              }
-            else
-              decl
-          ) opt.declarations;
+          declarations = map
+            (
+              decl:
+              let
+                root = toString ../.;
+                declStr = toString decl;
+                declPath = lib.removePrefix root decl;
+              in
+              if
+                lib.hasPrefix root declStr
+              # Rewrite links from ../. in the /nix/store to the source on Github
+              then
+                {
+                  name = "noxa${declPath}";
+                  url = "https://github.com/0xCCF4/noxa/tree/main${declPath}";
+                }
+              else
+                decl
+            )
+            opt.declarations;
         };
     };
 
@@ -66,9 +65,9 @@ let
 
 in
 runCommand "noxa.nix-doc"
-  {
-    nativeBuildInputs = [ mdbook ];
-  }
+{
+  nativeBuildInputs = [ mdbook ];
+}
   ''
     cp -r ${../docs} docs
     chmod u+w docs/src

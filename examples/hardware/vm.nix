@@ -1,10 +1,9 @@
-{
-    disko,
-pkgs,
-lib,
-config,
-modulesPath,
-...
+{ disko
+, pkgs
+, lib
+, config
+, modulesPath
+, ...
 }:
 {
   imports = [

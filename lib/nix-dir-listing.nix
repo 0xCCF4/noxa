@@ -1,7 +1,6 @@
-{
-  nixpkgs,
-  lib ? nixpkgs.lib,
-  ...
+{ nixpkgs
+, lib ? nixpkgs.lib
+, ...
 }:
 with lib; with builtins;
 rec {
@@ -35,7 +34,7 @@ rec {
     in
     (nixFilesRoot ++ nixFolders);
 
-/**
+  /**
       Generates a set of all `<name>.nix` files and `<name>/default.nix` files in the specified directory.
 
       # Inputs
@@ -70,18 +69,22 @@ rec {
       nixFilesRoot = filter (f: f != "default.nix") (filterNixFiles files);
 
       # Build attribute set from .nix files (excluding default.nix)
-      fileAttrs = listToAttrs (map (name: {
-        inherit name;
-        value = path + "/${name}";
-      }) nixFilesRoot);
+      fileAttrs = listToAttrs (map
+        (name: {
+          inherit name;
+          value = path + "/${name}";
+        })
+        nixFilesRoot);
 
       # Build attribute set from directories with default.nix, but only if not shadowed by a .nix file
-      dirAttrs = listToAttrs (map (dir: {
-        name = dir;
-        value = path + "/${dir}/default.nix";
-      }) (filter (dir: builtins.pathExists (path + "/${dir}/default.nix")) directories));
+      dirAttrs = listToAttrs (map
+        (dir: {
+          name = dir;
+          value = path + "/${dir}/default.nix";
+        })
+        (filter (dir: builtins.pathExists (path + "/${dir}/default.nix")) directories));
     in
-      dirAttrs // fileAttrs;
+    dirAttrs // fileAttrs;
 
 
   /**
@@ -100,7 +103,7 @@ rec {
       [ Any ] -> [ Any ]
       ```
       */
-  expandNixPathList = paths: 
+  expandNixPathList = paths:
     if typeOf paths == "path" then
       nixDirectoryToList paths
     else if typeOf paths == "list" then

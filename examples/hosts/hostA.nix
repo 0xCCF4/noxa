@@ -1,10 +1,10 @@
 { ... }:
 {
-    imports = [
-        ../hardware/vm.nix
-    ];
+  imports = [
+    ../hardware/vm.nix
+  ];
 
-    networking.hostName = "hostA";
+  networking.hostName = "hostA";
 
-    system.stateVersion = "25.11";
+  system.stateVersion = "25.11";
 }

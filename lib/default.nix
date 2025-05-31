@@ -1,8 +1,7 @@
-{
-  nixpkgs,
-  lib ? nixpkgs.lib,
-  mkMerge ? lib.mkMerge,
-  ...
+{ nixpkgs
+, lib ? nixpkgs.lib
+, mkMerge ? lib.mkMerge
+, ...
 }@inputs:
 with builtins; with lib;
 let
@@ -10,6 +9,6 @@ let
 
   nix-files = nixDirectoryToList ./.;
 
-  noxa-lib = fold (a: b: a//b) {} (map (file: import file inputs) nix-files);
+  noxa-lib = fold (a: b: a // b) { } (map (file: import file inputs) nix-files);
 in
 noxa-lib

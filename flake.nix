@@ -34,50 +34,49 @@
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      flake-utils,
-      disko,
-      ...
+    { self
+    , nixpkgs
+    , flake-utils
+    , disko
+    , ...
     }@inputs:
-    with nixpkgs.lib; with builtins;
-    {
-      # Nixos modules
-      nixosModules.noxa.default = import ./modules inputs;
-
-      # Libraries
-      lib.noxa-lib = import ./lib inputs;
-
-      # Source code formatter
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-tree;
-
-      # Example nixos configuration
-      nixosConfigurations = self.lib.noxa-lib.nixos-instantiate {
-        hostLocations = ./examples/hosts;
-        additionalArgs = {
-          modules = [ disko.nixosModules.disko ];
-        };
-      };
-    }
-    // flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
-
-        scopedInputs = inputs // {
-          inherit pkgs system;
-        };
-      in
+      with nixpkgs.lib; with builtins;
       {
+        # Nixos modules
+        nixosModules.noxa.default = import ./modules inputs;
 
-        # Packages
-        packages.doc = pkgs.callPackage ./pkgs/doc.nix scopedInputs;
+        # Libraries
+        lib.noxa-lib = import ./lib inputs;
 
-        # Dev shells
-        devShells = import ./shells scopedInputs;
+        # Source code formatter
+        formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
+
+        # Example nixos configuration
+        nixosConfigurations = self.lib.noxa-lib.nixos-instantiate {
+          hostLocations = ./examples/hosts;
+          additionalArgs = {
+            modules = [ disko.nixosModules.disko ];
+          };
+        };
       }
-    );
+      // flake-utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+          };
+
+          scopedInputs = inputs // {
+            inherit pkgs system;
+          };
+        in
+        {
+
+          # Packages
+          packages.doc = pkgs.callPackage ./pkgs/doc.nix scopedInputs;
+
+          # Dev shells
+          devShells = import ./shells scopedInputs;
+        }
+      );
 }
