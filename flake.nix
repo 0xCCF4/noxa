@@ -1,5 +1,5 @@
 {
-  description = "Noxa management tool for multi host nixos management";
+  description = "Noxa management tool for multi host nixos setups";
 
   inputs = {
     # Nixpkgs
@@ -10,20 +10,62 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Flake utils
+    flake-utils.url = "github:numtide/flake-utils";
+
+    # Disk setup tool, used by the example configurations
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      flake-utils,
+      disko,
       ...
     }@inputs:
     {
+      # Nixos modules
       nixosModules.default = self.nixosModules.noxa;
-      nixosModules.noxa = import ./nix/modules inputs;
+      nixosModules.noxa = import ./modules inputs;
 
-      lib.noxa = import ./nix/lib.nix inputs;
+      # Libraries
+      lib.noxa-lib = import ./lib inputs;
 
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
-    };
+      # Source code formatter
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-tree;
+
+      # Example nixos configuration
+      nixosConfigurations = self.lib.noxa-lib.nixos-instantiate {
+        hostLocations = ./examples/hosts;
+        additionalArgs = {
+          modules = [ disko.nixosModules.disko ];
+        };
+      };
+    }
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+
+        scopedInputs = inputs // {
+          inherit pkgs system;
+        };
+      in
+      {
+
+        # Packages
+        packages.doc = pkgs.callPackage ./pkgs/doc.nix scopedInputs;
+
+        # Dev shells
+        devShells = import ./shells scopedInputs;
+      }
+    );
 }
