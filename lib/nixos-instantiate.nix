@@ -4,6 +4,11 @@
   lib ? nixpkgs.lib,
   noxa-lib ? self.lib.noxa-lib,
   system ? "x86_64-linux", # use this for stage 1 configuration
+
+  # Noxa addons
+  home-manager,
+  agenix,
+  agenix-rekey,
   ...
 }:
 with lib; with lib.filesystem; with lib.attrsets; with builtins;
@@ -15,27 +20,54 @@ let
     }:
     let
       nixosModulesWithDuplicates = map (
-        path:
+        module:
         let
-          mainConfigurationPlatform = system: lib.nixosSystem (
+          # Wrapped invocation of lib.nixosSystem
+          mainConfigurationPlatform = {
+            system,
+            additionalModules ? [],
+           }: lib.nixosSystem (
             additionalArgs //
               {
                 system = additionalArgs.system or system;
-                modules = [ path ] ++ (additionalArgs.modules or []);
+                modules = [ module self.nixosModules.noxa.default ] ++ additionalModules;
+                specialArgs = (additionalArgs.specialArgs or {}) // {
+                  noxa-lib = (additionalArgs.specialArgs or {}).noxa-lib or noxa-lib;
+                };
               }
           );
 
-          # Evaluate the target system by using the system set in caller arguments
-          stageOneConfig = mainConfigurationPlatform system;
+          # Evaluate the target system for the `config.nixpkgs.system` option by predicting that the target platform is x86_64-linux.
+          stageOneConfig = mainConfigurationPlatform {
+            inherit system;
+            additionalModules = additionalArgs.modules or [];
+          };
           stageOneTargetPlatform = stageOneConfig.config.nixpkgs.system;
-          stageTwoConfig = mainConfigurationPlatform stageOneTargetPlatform;
-          stageTwoTargetPlatform = stageTwoConfig.config.nixpkgs.system;
+          stageOneAddonConfig = (stageOneConfig.config.noxa.addons or {}) ++ [
+            home-manager.nixosModules.default
+            agenix.nixosModules.default
+            agenix-rekey.nixosModules.default
+          ];
 
-        # If target platform is different then re-evaluate the configuration
+          # Use the actual target platform setting to build the final configuration.
+          stageTwoConfig = mainConfigurationPlatform {
+            system = stageOneTargetPlatform;
+            additionalModules = (additionalArgs.modules or [])
+              ++ list.optional stageOneAddonConfig.homeManagerSupport home-manager.nixosModules.default
+              ++ list.optional stageOneAddonConfig.agenixSupport agenix.nixosModules.default
+              ++ list.optional stageOneAddonConfig.agenixRekeySupport agenix-rekey.nixosModules.default
+            ;
+          };
+          stageTwoTargetPlatform = stageTwoConfig.config.nixpkgs.system;
+          stageTwoAddonConfig = stageTwoConfig.config.noxa.addons or {};
+
+        # If target platform is different then re-evaluate the configuration, then something weird is going on.
           mainConfiguration = if stageOneTargetPlatform == system then
             stageOneConfig
           else if stageTwoTargetPlatform != stageOneTargetPlatform then
             throw "There is some shenanigans happening with conditional setting of nixpkgs.system. Stop this! Target platform mismatch: ${stageTwoTargetPlatform} <- ${stageOneTargetPlatform} (system = ${system})."
+          else if stageTwoAddonConfig.externalModuleSupport != stageOneAddonConfig.externalModuleSupport then
+            throw "There is some shenanigans happening with conditional setting of noxa.addons.externalModuleSupport. Stop this!"
           else
             stageTwoConfig;
         in
@@ -112,7 +144,7 @@ in
           }
         else if pathIsDirectory x then
           nixos-instantiate {
-            hostLocations = noxa-lib.list-nix-directory x;
+            hostLocations = noxa-lib.nixDirectoryToList x;
           }
         else
           throw "nixos-instantiate expects a path to a host file or a directory containing host files"
@@ -122,7 +154,7 @@ in
             hostLocations = if typeOf (x.hostLocations or []) == "list" then
                 x.hostLocations or []
             else if typeOf (x.hostLocations or []) == "path" then
-                noxa-lib.list-nix-directory x.hostLocations
+                noxa-lib.nixDirectoryToList x.hostLocations
             else
                 throw "nixos-instantiate expects a list of paths to host configurations or a path to a directory containing host files";
         in

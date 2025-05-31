@@ -1,9 +1,8 @@
-inputs:
-{
-  noxa-lib ? inputs.self.lib.noxa-lib,
+noxa-inputs: {
+  noxa-lib? noxa-inputs.self.lib.noxa-lib,
   ...
 }:
 {
-  imports = noxa-lib.list-nix-directory ./.;
+  imports = noxa-lib.nixDirectoryToList ./.;
 
 }

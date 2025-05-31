@@ -19,6 +19,18 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Secret management; enabled for a host if `noxa.agenixSupport` is set to true
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Secret management with rekeying capabilities; enabled for a host if `noxa.agenixRekeySupport` is set to true
+    agenix-rekey = {
+      url = "github:oddlama/agenix-rekey";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -29,10 +41,10 @@
       disko,
       ...
     }@inputs:
+    with nixpkgs.lib; with builtins;
     {
       # Nixos modules
-      nixosModules.default = self.nixosModules.noxa;
-      nixosModules.noxa = import ./modules inputs;
+      nixosModules.noxa.default = import ./modules inputs;
 
       # Libraries
       lib.noxa-lib = import ./lib inputs;

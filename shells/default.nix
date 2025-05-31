@@ -6,7 +6,7 @@
 }@inputs:
 with lib; with builtins; with lib.attrsets;
 let
-    shellPaths = noxa-lib.list-nix-directory ./.;
+    shellPaths = noxa-lib.nixDirectoryToList ./.;
 in
     mapAttrs (key: value: value.contents) (mkMerge (map (path: let
         name = baseNameOf path;

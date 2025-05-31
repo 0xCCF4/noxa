@@ -6,9 +6,9 @@
 }@inputs:
 with builtins; with lib;
 let
-  list-nix-directory = (import ./nix-dir-listing.nix { inherit nixpkgs; inherit lib; }).list-nix-directory;
+  nixDirectoryToList = (import ./nix-dir-listing.nix { inherit nixpkgs; inherit lib; }).nixDirectoryToList;
 
-  nix-files = list-nix-directory ./.;
+  nix-files = nixDirectoryToList ./.;
 
   noxa-lib = fold (a: b: a//b) {} (map (file: import file inputs) nix-files);
 in
