@@ -5,6 +5,12 @@
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # IP data types and utility functions
+    nix-net-lib = {
+      url = "github:0xCCF4/nix-net-lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Home Manager
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -59,6 +65,9 @@
         let
           pkgs = import nixpkgs {
             inherit system;
+            overlays = [
+              nix-net-lib.overlays.default
+            ];
           };
 
           scopedInputs = inputs // {

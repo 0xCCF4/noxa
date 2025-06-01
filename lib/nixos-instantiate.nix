@@ -1,7 +1,7 @@
 { self
 , nixpkgs
 , lib ? nixpkgs.lib
-, noxa-lib ? self.lib
+, noxa ? self
 , system ? "x86_64-linux"
 , # use this for stage 1 configuration
 
@@ -17,7 +17,6 @@ let
     { hostLocations ? throw "list of paths to host configurations is required"
     , additionalArgs ? { }
     , nixosConfigurations ? throw "nixosConfigurations is required, please supply a list of all nixos hosts managed through Noxa. Either supply [ NixosConfiguration ] or { NixosConfiguration } using self.nixosConfigurations"
-    , addons ? []
     ,
     }:
     let
@@ -25,19 +24,33 @@ let
         (
           module:
           let
+            # Inject the modules for Noxa addons to specialArgs if not already present
+            inputWithDefaults = specialArgs:
+              (specialArgs // {
+                nixpkgs = specialArgs.inputs or nixpkgs;
+                home-manager = specialArgs.inputs.home-manager or home-manager;
+                agenix = specialArgs.inputs.agenix or agenix;
+                agenix-rekey = specialArgs.inputs.agenix-rekey or agenix-rekey;
+              });
+
             # Wrapped invocation of lib.nixosSystem
             mainConfigurationPlatform =
               { system
               , additionalModules ? [ ]
+              , stageOneConfig ? { config = { }; }
               ,
               }: lib.nixosSystem (
                 additionalArgs //
                 {
                   system = additionalArgs.system or system;
                   modules = [ module self.nixosModules.noxa.default ] ++ additionalModules;
-                  specialArgs = (additionalArgs.specialArgs or { }) // {
-                    noxa-lib = (additionalArgs.specialArgs or { }).noxa-lib or noxa-lib;
-                    inherit nixosConfigurations;
+                  specialArgs = (inputWithDefaults (additionalArgs.specialArgs or { })) // {
+                    noxa = ((additionalArgs.specialArgs or { }).noxa or (self // { nixosConfigurations = { }; })) // {
+                      # remove nixosConfigurations, since it contains just the example configuration -> prevent circular dependency
+                      # augment noxa special args with stageOneConfig and all nixosConfigurations
+                      inherit stageOneConfig;
+                      inherit nixosConfigurations;
+                    };
                   };
                 }
               );
@@ -48,35 +61,38 @@ let
               additionalModules = additionalArgs.modules or [ ];
             };
             stageOneTargetPlatform = stageOneConfig.config.nixpkgs.system;
-            stageOneAddonConfig = (stageOneConfig.config.noxa.addons or { }) ++ [
-              home-manager.nixosModules.default
-              agenix.nixosModules.default
-              agenix-rekey.nixosModules.default
-            ] ++ (map (addon: addon.content) addons);
 
             # Use the actual target platform setting to build the final configuration.
             stageTwoConfig = mainConfigurationPlatform {
               system = stageOneTargetPlatform;
-              additionalModules = (additionalArgs.modules or [ ])
-                ++ list.optional stageOneAddonConfig.homeManagerSupport home-manager.nixosModules.default
-                ++ list.optional stageOneAddonConfig.agenixSupport agenix.nixosModules.default
-                ++ list.optional stageOneAddonConfig.agenixRekeySupport agenix-rekey.nixosModules.default
-                ++ (map (addon: list.optional addon.condition addon.content) addons)
-              ;
+              additionalModules = additionalArgs.modules or [ ];
+              inherit stageOneConfig;
             };
             stageTwoTargetPlatform = stageTwoConfig.config.nixpkgs.system;
-            stageTwoAddonConfig = stageTwoConfig.config.noxa.addons or { };
+
+            # Apply configuration overlays
+            noxaOverlays = stageOneConfig.config.noxa.overlays or [ ];
+            overlayedStageTwoConfig =
+              foldl
+                (
+                  acc: overlay:
+                    overlay {
+                      final = overlayedStageTwoConfig;
+                      prev = acc;
+                      stageOne = stageOneConfig;
+                    }
+                )
+                stageTwoConfig
+                noxaOverlays;
 
             # If target platform is different then re-evaluate the configuration, then something weird is going on.
             mainConfiguration =
               if stageOneTargetPlatform == system then
                 stageOneConfig
               else if stageTwoTargetPlatform != stageOneTargetPlatform then
-                throw "There is some shenanigans happening with conditional setting of nixpkgs.system. Stop this! Target platform mismatch: ${stageTwoTargetPlatform} <- ${stageOneTargetPlatform} (system = ${system})."
-              else if stageTwoAddonConfig.externalModuleSupport != stageOneAddonConfig.externalModuleSupport then
-                throw "There is some shenanigans happening with conditional setting of noxa.addons.externalModuleSupport. Stop this!"
+                throw "There is some shenanigans happening with conditional setting of `nixpkgs.system`. Stop this! Target platform mismatch: ${stageTwoTargetPlatform} <- ${stageOneTargetPlatform} (system = ${system})."
               else
-                stageTwoConfig;
+                overlayedStageTwoConfig;
           in
           {
             "${mainConfiguration.config.networking.hostName}" = {
@@ -151,7 +167,7 @@ in
           if typeOf (x.hostLocations or [ ]) == "list" then
             x.hostLocations or [ ]
           else if typeOf (x.hostLocations or [ ]) == "path" then
-            noxa-lib.nixDirectoryToList x.hostLocations
+            noxa.lib.nixDirectoryToList x.hostLocations
           else
             throw "nixos-instantiate expects a list of paths to host configurations or a path to a directory containing host files";
       in

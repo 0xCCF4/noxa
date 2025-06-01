@@ -228,6 +228,26 @@
         "type": "github"
       }
     },
+    "nix-net-lib": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1749386907,
+        "narHash": "sha256-VM43871luccNjbjFAVngFsBOzjDpAFsMjVDtzVJ3cfI=",
+        "owner": "0xCCF4",
+        "repo": "nix-net-lib",
+        "rev": "58f27bc4231a5a517f1858075cbfe94ab4d414d1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "0xCCF4",
+        "repo": "nix-net-lib",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1748460289,
@@ -274,6 +294,7 @@
         "disko": "disko",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager_2",
+        "nix-net-lib": "nix-net-lib",
         "nixpkgs": "nixpkgs"
       }
     },
