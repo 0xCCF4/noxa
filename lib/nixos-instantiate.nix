@@ -1,7 +1,7 @@
 { self
 , nixpkgs
 , lib ? nixpkgs.lib
-, noxa-lib ? self.lib.noxa-lib
+, noxa-lib ? self.lib
 , system ? "x86_64-linux"
 , # use this for stage 1 configuration
 

@@ -14,12 +14,6 @@
     # Flake utils
     flake-utils.url = "github:numtide/flake-utils";
 
-    # Disk setup tool, used by the example configurations
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Secret management; enabled for a host if `noxa.agenixSupport` is set to true
     agenix = {
       url = "github:ryantm/agenix";
@@ -29,6 +23,12 @@
     # Secret management with rekeying capabilities; enabled for a host if `noxa.agenixRekeySupport` is set to true
     agenix-rekey = {
       url = "github:oddlama/agenix-rekey";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Disk setup tool, used by the example configuration in `examples/`
+    disko = {
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -46,18 +46,13 @@
         nixosModules.noxa.default = import ./modules inputs;
 
         # Libraries
-        lib.noxa-lib = import ./lib inputs;
+        lib = import ./lib inputs;
 
         # Source code formatter
         formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
 
         # Example nixos configuration
-        nixosConfigurations = self.lib.noxa-lib.nixos-instantiate {
-          hostLocations = ./examples/hosts;
-          additionalArgs = {
-            modules = [ disko.nixosModules.disko ];
-          };
-        };
+        nixosConfigurations = ((import ./examples/flake.nix).outputs (inputs // { noxa = self; })).nixosConfigurations;
       }
       // flake-utils.lib.eachDefaultSystem (
         system:

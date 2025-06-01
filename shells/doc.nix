@@ -1,4 +1,3 @@
-inputs:
 { pkgs, ... }:
 pkgs.mkShell {
   name = "noxa-doc";

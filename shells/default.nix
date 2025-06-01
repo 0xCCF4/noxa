@@ -1,18 +1,12 @@
-{ noxa-lib ? inputs.self.lib.noxa-lib
+{ noxa ? inputs.self
 , nixpkgs
 , lib ? nixpkgs.lib
 , ...
 }@inputs:
-with lib; with builtins; with lib.attrsets;
+with lib; with builtins;
 let
-  shellPaths = noxa-lib.nixDirectoryToList ./.;
+  shellPaths = noxa.lib.nixDirectoryToAttr ./.;
 in
-mapAttrs (key: value: value.contents) (mkMerge (map
-  (path:
-  let
-    name = baseNameOf path;
-  in
-  {
-    "${name}" = import path inputs;
-  })
-  shellPaths))
+(attrsets.mapAttrs'
+  (name: path: attrsets.nameValuePair (noxa.lib.baseNameWithoutExtension name) (import path inputs))
+  shellPaths)

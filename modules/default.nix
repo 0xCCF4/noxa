@@ -1,4 +1,4 @@
-noxa-inputs: { noxa-lib ? noxa-inputs.self.lib.noxa-lib
+noxa-inputs: { noxa-lib ? noxa-inputs.self.lib
              , ...
              }:
 {
