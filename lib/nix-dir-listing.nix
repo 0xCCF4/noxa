@@ -26,7 +26,7 @@ rec {
       files = attrNames (filterAttrs (name: type: type == "regular") entries);
       directories = attrNames (filterAttrs (name: type: type == "directory") entries);
 
-      filterNixFiles = files: filter (name: match ".*?\.nix$" name != null) files;
+      filterNixFiles = files: filter (name: match "[^\.].*?\.nix$" name != null) files;
       nixFilesRoot = map (name: path + "/${name}") (filter (f: f != "default.nix") (filterNixFiles files));
 
       potentialNixFolders = map (dir: path + "/${dir}/default.nix") directories;
