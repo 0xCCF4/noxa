@@ -31,6 +31,7 @@
         # Nixos configuration
         nixosConfigurations = noxa.lib.nixos-instantiate {
           hostLocations = ./hosts;
+          nixosConfigurations = self.nixosConfigurations;
           additionalArgs = {
             modules = [ disko.nixosModules.disko ];
           };

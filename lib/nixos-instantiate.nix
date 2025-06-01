@@ -16,6 +16,8 @@ let
   nixos-instantiate =
     { hostLocations ? throw "list of paths to host configurations is required"
     , additionalArgs ? { }
+    , nixosConfigurations ? throw "nixosConfigurations is required, please supply a list of all nixos hosts managed through Noxa. Either supply [ NixosConfiguration ] or { NixosConfiguration } using self.nixosConfigurations"
+    , addons ? []
     ,
     }:
     let
@@ -35,6 +37,7 @@ let
                   modules = [ module self.nixosModules.noxa.default ] ++ additionalModules;
                   specialArgs = (additionalArgs.specialArgs or { }) // {
                     noxa-lib = (additionalArgs.specialArgs or { }).noxa-lib or noxa-lib;
+                    inherit nixosConfigurations;
                   };
                 }
               );
@@ -49,7 +52,7 @@ let
               home-manager.nixosModules.default
               agenix.nixosModules.default
               agenix-rekey.nixosModules.default
-            ];
+            ] ++ (map (addon: addon.content) addons);
 
             # Use the actual target platform setting to build the final configuration.
             stageTwoConfig = mainConfigurationPlatform {
@@ -58,6 +61,7 @@ let
                 ++ list.optional stageOneAddonConfig.homeManagerSupport home-manager.nixosModules.default
                 ++ list.optional stageOneAddonConfig.agenixSupport agenix.nixosModules.default
                 ++ list.optional stageOneAddonConfig.agenixRekeySupport agenix-rekey.nixosModules.default
+                ++ (map (addon: list.optional addon.condition addon.content) addons)
               ;
             };
             stageTwoTargetPlatform = stageTwoConfig.config.nixpkgs.system;
@@ -113,13 +117,12 @@ in
       Instantiates a list of NixOS configurations from the provided set of arguments.
 
       # Inputs
-      - `x` : A path to a host file.
-      - `x` : A path to a directory containing multiple host files.
-      - `x` : A set of settings of the following form:
+      A set of settings of the following form:
         ```nix
         {
           hostLocations = [ <path> ] / <path>; # Location(s) to the host configurations files
           additionalArgs = { <key> = <value>; ... }; # Appended to the lib.nixosSystem call
+          nixosConfigurations = { <name> = <nixosConfiguration>; ... }; or [ <nixosConfiguration> ];
         }
         ```
 
@@ -142,22 +145,7 @@ in
   */
   nixos-instantiate = (
     x:
-    if typeOf x == "path" then
-      (
-        if pathIsRegularFile x then
-          nixos-instantiate
-            {
-              hostLocations = [ x ];
-            }
-        else if pathIsDirectory x then
-          nixos-instantiate
-            {
-              hostLocations = noxa-lib.nixDirectoryToList x;
-            }
-        else
-          throw "nixos-instantiate expects a path to a host file or a directory containing host files"
-      )
-    else if typeOf x == "set" then
+    if typeOf x == "set" then
       let
         hostLocations =
           if typeOf (x.hostLocations or [ ]) == "list" then
