@@ -10,7 +10,7 @@ let
 in
 {
   options.noxa.wireguard = {
-    data = mkOption {
+    routes = mkOption {
       type = lazyAttrsOf
         (submodule
           (submod: {
@@ -36,7 +36,7 @@ in
                   A list of gateways for this interface. Automatically populated.
                 '';
               };
-              connections = mkOption {
+              peers = mkOption {
                 type = listOf (submodule (submod: {
                   options = {
                     target = mkOption {
@@ -58,7 +58,25 @@ in
 
                 readOnly = true;
                 description = ''
-                  A list of connections for this interface. Automatically populated.
+                  A list of peers for this interface. Automatically populated.
+                '';
+              };
+              neighbors = mkOption {
+                type = lazyAttrsOf (submodule (submod: {
+                  options = {
+                    keepAlive = mkOption {
+                      type = nullOr int;
+                      readOnly = true;
+                      description = ''
+                        The keep-alive interval for this connection, in seconds.
+                        If set to `null`, no keep-alive is configured.
+                      '';
+                    };
+                  };
+                  }));
+                readOnly = true;
+                description = ''
+                  A set of connections for this interface, automatically computed from the nixos configurations.
                 '';
               };
             };
@@ -76,7 +94,7 @@ in
       exceptThis = attrsets.filterAttrs (host: nixos: host != config.networking.hostName) allmods;
     in
     {
-      noxa.wireguard.data = mkMerge (map
+      noxa.wireguard.routes = mkMerge (map
         (name:
           let
             submod = cfg.interfaces.${name};
@@ -95,10 +113,12 @@ in
                 head gatewaysListOrdered
               else
                 null;
+
+            minOrNull = (a: b: if a == null then b else if b == null then a else min a b);
           in
           {
             "${name}" = {
-              connections = mkMerge [
+              peers = mkMerge [
                 (attrsets.mapAttrsToList
                   (host: config: {
                     target = host;
@@ -113,6 +133,13 @@ in
                   })
                   (attrsets.filterAttrs (host: mod: host != config.networking.hostName) clients))
               ];
+              neighbors = mkMerge (map
+                (via: {
+                  "${via}" = {
+                    keepAlive = minOrNull allmod.${via}.advertise.keepAlive submod.keepAlive;
+                  };
+                })
+                (lists.unique ((map (peer: if peer.via == config.networking.hostName then peer.target else peer.via) config.noxa.wireguard.routes.${name}.peers))));
               participants.servers = attrNames servers;
               participants.clients = attrNames clients;
               participants.gateways = attrNames gateways;

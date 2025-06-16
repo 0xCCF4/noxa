@@ -52,8 +52,8 @@ in
           (name:
             let
               submod = cfg.interfaces.${name};
-              datamod = cfg.data.${name};
-              uniqueVias = lists.unique (map (mod: if mod.via == config.networking.hostName then mod.target else mod.via) datamod.connections);
+              datamod = cfg.routes.${name};
+              uniqueVias = attrNames datamod.neighbors;
             in
             (map
               (target: {
@@ -77,8 +77,8 @@ in
         (name:
           let
             submod = cfg.interfaces.${name};
-            datamod = cfg.data.${name};
-            uniqueTargets = lists.unique (map (mod: mod.target) datamod.connections);
+            datamod = cfg.routes.${name};
+            uniqueTargets = attrNames datamod.neighbors;
           in
           {
             "${name}" =
@@ -90,7 +90,7 @@ in
                 publicKeyFile = noxa.lib.filesystem.withExtension keyFile.rekeyFile "pub";
               in
               {
-                publicKey = with noxa.lib.ansi; if filesystem.pathIsRegularFile publicKeyFile then readFile publicKeyFile else throw "${fgYellow}WireGuard public key file ${fgCyan}${publicKeyFile}${fgYellow} does not exist. Did you run ${fgCyan}git add${fgYellow}?${default}";
+                publicKey = with noxa.lib.ansi; if filesystem.pathIsRegularFile publicKeyFile then readFile publicKeyFile else throw "${fgYellow}WireGuard public key file ${fgCyan}${toString publicKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}";
                 privateKeyFile = keyFile.path;
                 presharedKeyFiles = mkMerge (map
                   (target: {

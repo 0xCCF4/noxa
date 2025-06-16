@@ -1,8 +1,10 @@
 { ... }:
 {
   imports = [
+    # top to bottom dependency order
     ./options.nix
-    ./connections.nix
+    ./routes.nix
     ./secrets.nix
+    ./interfaces.nix
   ];
 }
