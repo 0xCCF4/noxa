@@ -9,6 +9,7 @@
   home-manager
 , agenix
 , agenix-rekey
+, nix-net-lib
 , ...
 }:
 with lib; with lib.filesystem; with lib.attrsets; with builtins;
@@ -50,6 +51,7 @@ let
                       # augment noxa special args with stageOneConfig and all nixosConfigurations
                       inherit stageOneConfig;
                       inherit nixosConfigurations;
+                      net = nix-net-lib.lib;
                     };
                   };
                 }

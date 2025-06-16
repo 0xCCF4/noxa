@@ -1,6 +1,5 @@
 { nixpkgs
 , lib ? nixpkgs.lib
-, mkMerge ? lib.mkMerge
 , ...
 }@inputs:
 with builtins; with lib;
