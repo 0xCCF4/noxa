@@ -10,33 +10,32 @@ with lib; with builtins; with types;
 let
   cfg = config.noxa.secrets;
 
-  cleanPath = str: strings.replaceStrings [ "/" ":" ] [ "-" "" ] str;
-
   generatorType = {
     dependencies = mkOption {
       type =
-        with types;
-        oneOf [
-          (listOf unspecified)
-          (attrsOf unspecified)
-        ];
+        nullOr (
+          oneOf [
+            (listOf unspecified)
+            (attrsOf unspecified)
+          ]);
       example = literalExpression ''[ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ]'';
-      default = [ ];
+      default = null;
       description = ''
         Other secrets on which this secret depends. See `agenix-rekey` documentation.
       '';
     };
 
     script = mkOption {
-      type = either str (functionTo str);
+      type = nullOr (either str (functionTo str));
+      default = null;
       description = ''
         Generator script, see `agenix-rekey` documentation.
       '';
     };
 
     tags = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
+      type = nullOr (listOf str);
+      default = null;
       example = [ "wireguard" ];
       description = ''
         Optional list of tags that may be used to refer to secrets that use this generator.
@@ -52,90 +51,32 @@ let
     in
     {
       options = (add.options or { }) // {
-        hostSecret = mkOption {
-          type = nullOr (submodule (submod: {
-            options = {
-              module = mkOption {
-                type = str;
-                description = ''
-                  The owning module of that secret.
-
-                  Typically this is the name of module declaring the secret, e.g. "noxa.wireguard.interfaces.<name>".
-                '';
-                example = "services.openssh";
-              };
-              name = mkOption {
-                type = str;
-                description = ''
-                  The name of the secret.
-                      
-                  This is the name of the secret, e.g. "wg-interface-key".
-                '';
-                example = "wg-interface-key";
-              };
-            };
-          }));
-          default = null;
+        module = mkOption {
+          type = str;
           description = ''
-            A secret that is owned by a single host. To construct the path to the secret the following template ist
-            used: `$\{noxa.secrets.hostSecretsPath}/$\{module}/$\{name}.age`.
+            The owning module of that secret.
+
+            Typically this is the name of module declaring the secret, e.g. "noxa.wireguard.interfaces.<name>".
           '';
-          example = ''
-            {
-              module = "noxa.wireguard.interfaces.some-interface";
-              name = "wg-interface-key";
-            }
-          '';
+          example = "services.openssh";
         };
-
-        sharedSecret = mkOption {
-          type = nullOr (submodule (submod: {
-            options = {
-              module = mkOption {
-                type = str;
-                description = ''
-                  The owning module of that secret.
-
-                  Typically this is the name of module declaring the secret, e.g. "noxa.wireguard.interfaces.<name>".
-                '';
-                example = "services.openssh";
-              };
-              name = mkOption {
-                type = str;
-                description = ''
-                  The name of the secret.
-                      
-                  This is the name of the secret, e.g. "wg-interface-key".
-                '';
-                example = "wg-interface-key";
-              };
-              hosts = mkOption {
-                type = listOf str;
-                description = ''
-                  The hosts that have access to this secret.
-                '';
-                example = [ "host1" "host2" ];
-              };
-            };
-          }));
-          default = null;
+        ident = mkOption {
+          type = str;
           description = ''
-            A secret that is shared between several hosts. To construct the path to the secret
-            the following template is used: `$\{noxa.secrets.sharedSecretsPath}/$\{hosts}/$\{module}/$\{name}.age`.
-
-            Note that, all hosts that should have access to this secret must declare the secret in their
-            nixos configuration. Since the secret path is derived from all hosts that have access to the secret,
-            when changing that list, the secret path will change, hence the secret must be moved.
+            The name of the secret.
+                
+            This is the name of the secret, e.g. "wg-interface-key".
           '';
-          example = ''
-            {
-              module = "noxa.wireguard.interfaces.some-interface";
-              name = "wg-preshared-connection-key";
-              hosts = [ "host1" "host2" ];
-            }
-          '';
+          example = "wg-interface-key";
         };
-
+        hosts = mkOption {
+          type = noxa.lib.types.uniqueListOf str;
+          description = ''
+            The hosts that have access to this secret.
+          '';
+          example = [ "host1" "host2" ];
+          default = [ config.networking.hostName ];
+        };
         identifier = mkOption {
           type = str;
           readOnly = true;
@@ -147,52 +88,28 @@ let
       };
       config =
         let
-          module =
-            if submod.config.hostSecret != null then
-              cleanPath submod.config.hostSecret.module
-            else if submod.config.sharedSecret != null then
-              cleanPath submod.config.sharedSecret.module
-            else
-              null;
+          hosts = noxa.lib.secrets.sortHosts (map noxa.lib.secrets.cleanIdentifier submod.config.hosts);
+          ident = noxa.lib.secrets.cleanIdentifier submod.config.ident;
+          module = noxa.lib.secrets.cleanIdentifier submod.config.module;
 
-          hosts =
-            if submod.config.sharedSecret != null then
-              (concatStringsSep "," (lists.sort (a: b: a < b) submod.config.sharedSecret.hosts))
-            else
-              "";
+          hostPath = concatStringsSep "+" hosts;
 
-          name =
-            if submod.config.hostSecret != null then
-              cleanPath submod.config.hostSecret.name
-            else if submod.config.sharedSecret != null then
-              cleanPath submod.config.sharedSecret.name
-            else
-              null;
-
-          hostSecretRekeyFile = cfg.hostSecretsPath + "/${module}/${name}.age";
-          sharedSecretRekeyFile = cfg.sharedSecretsPath + "/${module}/${hosts}/${name}.age";
+          hostSecretRekeyFile = cfg.hostSecretsPath + "/${module}/${ident}.age";
+          sharedSecretRekeyFile = cfg.sharedSecretsPath + "/${module}/${hostPath}/${ident}.age";
 
           rekeyFile =
-            if submod.config.hostSecret != null then
+            if length hosts <= 1 then
               hostSecretRekeyFile
-            else if submod.config.sharedSecret != null then
-              sharedSecretRekeyFile
             else
-              null;
-
-          prefix =
-            if submod.config.hostSecret != null then
-              "host"
-            else if submod.config.sharedSecret != null then
-              "shared"
-            else
-              null;
-
-          identifier = "${prefix}:${module}:${hosts}:${name}";
+              sharedSecretRekeyFile;
         in
         (add.config or { }) // {
           rekeyFile = mkIf (rekeyFile != null) rekeyFile;
-          identifier = mkIf (identifier != null) identifier;
+          identifier = noxa.lib.secrets.computeIdentifier {
+            inherit module;
+            inherit hosts;
+            inherit ident;
+          };
         };
     });
 in
@@ -349,18 +266,29 @@ in
   ];
 
   config = {
-    assertions = mkMerge (map
+    assertions = with noxa.lib.ansi; [
+      {
+        assertion = config.age.rekey.storageMode == "local" -> filesystem.pathIsDirectory config.age.rekey.localStorageDir;
+        message = "${bold}${fgRed}The local storage directory for rekeying secrets does not exist. Did you run ${noBold}${fgCyan}'agenix rekey'${default}${bold}${fgRed} to create it?${default}";
+      }
+    ]
+    ++
+    (map
       (secret:
-        [
-          {
-            assertion = secret.hostSecret == null || secret.sharedSecret == null;
-            message = "At least one of `hostSecret` or `sharedSecret` must be set.";
-          }
-        ]
-      )
-      (attrValues config.age.secrets));
+        {
+          assertion = length secret.hosts <= 1 -> elem config.networking.hostName secret.hosts;
+          message = "${fgYellow}Defined secret ${fgCyan}'${secret.identifier}'${fgYellow} is not defined on the host that owns it: ${fgCyan}'${config.networking.hostName}'${fgYellow}, instead it is defined on: ${fgCyan}'${head secret.hosts}Ä${default}";
+        })
+      cfg.def)
+    ;
 
-    noxa.secrets.hostSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/host"));
+    warnings = with noxa.lib.ansi; (map
+      (secret: mkIf (!(elem config.networking.hostName secret.hosts))
+        "${fgYellow}Defined secret ${fgCyan}'${secret.identifier}'${fgYellow} is not shared to the host on which it is defined: ${fgCyan}'${config.networking.hostName}'${fgYellow}, instead it is shared to: ${fgCyan}${toJSON secret.hosts}${default}"
+      )
+      cfg.def);
+
+    noxa.secrets.hostSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/host/${config.networking.hostName}"));
     noxa.secrets.sharedSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/shared"));
     noxa.secrets.options.rekeyDirectory = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/rekeyed/${config.networking.hostName}"));
 
@@ -368,8 +296,7 @@ in
       (secret:
         {
           "${secret.identifier}" = {
-            hostSecret = secret.hostSecret;
-            sharedSecret = secret.sharedSecret;
+            inherit (secret) module ident hosts;
             generator = mkIf (secret.generator != null) {
               script = mkIf (secret.generator.script != null) secret.generator.script;
               dependencies = mkIf (secret.generator.dependencies != null) secret.generator.dependencies;
