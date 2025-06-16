@@ -36,5 +36,11 @@
             modules = [ disko.nixosModules.disko ];
           };
         };
+
+        # Agenix rekey module configuration
+        agenix-rekey = inputs.agenix-rekey.configure {
+          userFlake = self;
+          nixosConfigurations = self.nixosConfigurations;
+        };
       };
 }

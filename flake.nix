@@ -59,6 +59,12 @@
 
         # Example nixos configuration
         nixosConfigurations = ((import ./examples/flake.nix).outputs (inputs // { noxa = self; })).nixosConfigurations;
+
+        # Configuration of agenix rekey for usage in the examples
+        agenix-rekey = inputs.agenix-rekey.configure {
+          userFlake = self;
+          nixosConfigurations = self.nixosConfigurations;
+        };
       }
       // flake-utils.lib.eachDefaultSystem (
         system:
