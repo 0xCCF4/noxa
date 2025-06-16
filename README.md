@@ -4,6 +4,7 @@
 
 > **Status:** Experimental early development phase, under active development.  
 > Interfaces and features may change at any time.
+> Breaking changes and incomplete features are to be expected.
 
 ## Goals
 
@@ -16,10 +17,6 @@
 - **Cross-host modules:** Write modules that can coordinate settings and state between hosts.
 - **Secret management:** Automated secret management for (cross-host) distributed systems (e.g., WireGuard keys, SSH host keys).
 
-## Project Status
-
-Noxa is in an early, experimental phase. 
-Breaking changes and incomplete features are to be expected.
 
 ## Getting Started
 
