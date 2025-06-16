@@ -8,5 +8,5 @@ let
   shellPaths = noxa.lib.nixDirectoryToAttr ./.;
 in
 (attrsets.mapAttrs'
-  (name: path: attrsets.nameValuePair (noxa.lib.baseNameWithoutExtension name) (import path inputs))
+  (name: path: attrsets.nameValuePair (noxa.lib.filesystem.baseNameWithoutExtension name) (import path inputs))
   shellPaths)
