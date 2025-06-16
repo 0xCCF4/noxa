@@ -2,7 +2,7 @@
 
 **Noxa** is a management tool for multi-host NixOS configurations.
 
-> **Status:** Experimental, under active development.  
+> **Status:** Experimental early development phase, under active development.  
 > Interfaces and features may change at any time.
 
 ## Goals
@@ -27,7 +27,6 @@ See the [examples](examples/) directory for sample multi-host configurations and
 
 ## Other related projects
 - [nixus](https://github.com/infinisil/nixus/)
-nixos multi
 
 ## Contributing
 
