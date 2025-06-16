@@ -99,7 +99,11 @@ let
           {
             "${mainConfiguration.config.networking.hostName}" = {
               configuration = mainConfiguration;
-              location = path;
+              location =
+                if isPath module || isString module then
+                  module
+                else
+                  "<inline module>";
             };
           }
         )
@@ -118,13 +122,13 @@ let
         else
           head (attrValues duplicates);
 
-      nixosConfigurations =
+      nixosConfigurations = with noxa.lib.ansi;
         if length (attrValues duplicates) > 0 then
-          throw "Duplicate host names found: ${
-            concatStringsSep ", " (map (x: x.location) firstDuplicate)
-          }. These configuration files use the same host name: ${
-            firstDuplicate [ 0 ].configuration.config.networking.hostName
-          }. Please resolve the duplicates."
+          throw "${fgRed}Duplicate host name found: ${fgYellow}${
+            concatStringsSep ", " (map (x: toString (head (attrValues x)).location) firstDuplicate)
+          }${fgRed}. These configuration files use the same host name: ${fgCyan}${
+            head (attrNames (head firstDuplicate))
+          }${fgRed}. Please resolve the duplicates.${default}"
         else
           (foldl (a: b: a // b) { } (map (host: mapAttrs (hostname: data: data.configuration) host) nixosModulesWithDuplicates));
     in
