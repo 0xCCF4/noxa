@@ -73,7 +73,7 @@ in
                       '';
                     };
                   };
-                  }));
+                }));
                 readOnly = true;
                 description = ''
                   A set of connections for this interface, automatically computed from the nixos configurations.
