@@ -40,8 +40,8 @@ in
   config =
     let
       resolvePath = path:
-        if impermanencePathOverride != null
-        then impermanencePathOverride
+        if cfg.impermanencePathOverride != null
+        then cfg.impermanencePathOverride
         else path;
     in
     {

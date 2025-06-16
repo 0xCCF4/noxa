@@ -13,37 +13,37 @@ let
   cleanPath = str: strings.replaceStrings [ "/" ":" ] [ "-" "" ] str;
 
   generatorType = {
-                dependencies = mkOption {
-                  type =
-                    with types;
-                    oneOf [
-                      (listOf unspecified)
-                      (attrsOf unspecified)
-                    ];
-                  example = literalExpression ''[ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ]'';
-                  default = [ ];
-                  description = ''
-                    Other secrets on which this secret depends. See `agenix-rekey` documentation.
-                  '';
-                };
+    dependencies = mkOption {
+      type =
+        with types;
+        oneOf [
+          (listOf unspecified)
+          (attrsOf unspecified)
+        ];
+      example = literalExpression ''[ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ]'';
+      default = [ ];
+      description = ''
+        Other secrets on which this secret depends. See `agenix-rekey` documentation.
+      '';
+    };
 
-                script = mkOption {
-                  type = either str (functionTo str);
-                  description = ''
-                    Generator script, see `agenix-rekey` documentation.
-                  '';
-                };
+    script = mkOption {
+      type = either str (functionTo str);
+      description = ''
+        Generator script, see `agenix-rekey` documentation.
+      '';
+    };
 
-                tags = mkOption {
-                  type = types.listOf types.str;
-                  default = [ ];
-                  example = [ "wireguard" ];
-                  description = ''
-                    Optional list of tags that may be used to refer to secrets that use this generator.
+    tags = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "wireguard" ];
+      description = ''
+        Optional list of tags that may be used to refer to secrets that use this generator.
           
-                    See `agenix-rekey` documentation for more information.
-                  '';
-                };
+        See `agenix-rekey` documentation for more information.
+      '';
+    };
   };
 
   mock = additional: submodule (submod:
@@ -302,7 +302,7 @@ in
           It is recommended to use `$\{config.networking.hostName}` to create a unique directory for each host.
         '';
       };
-      hostPublicKey = mkOption {
+      hostPubkey = mkOption {
         type = nullOr str;
         default = null;
         description = ''
@@ -353,12 +353,12 @@ in
       (secret:
         [
           {
-            assertion = secret.config.hostSecret == null || secret.config.sharedSecret == null;
+            assertion = secret.hostSecret == null || secret.sharedSecret == null;
             message = "At least one of `hostSecret` or `sharedSecret` must be set.";
           }
         ]
       )
-      (attrValues cfg.age.secrets));
+      (attrValues config.age.secrets));
 
     noxa.secrets.hostSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/host"));
     noxa.secrets.sharedSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/shared"));
@@ -399,7 +399,7 @@ in
     age.rekey = mkIf (cfg.options.enable) {
       storageMode = mkDefault "local";
       localStorageDir = mkDefault cfg.options.rekeyDirectory;
-      hostPubkey = mkDefault cfg.options.hostPublicKey;
+      hostPubkey = mkIf (cfg.options.hostPubkey != null) (mkDefault cfg.options.hostPubkey);
       masterIdentities = mkDefault cfg.options.masterIdentities;
     };
 
