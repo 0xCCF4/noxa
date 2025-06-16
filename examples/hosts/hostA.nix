@@ -20,10 +20,8 @@
   };
 
   noxa.secrets.def = [{
-    hostSecret = {
-      module = "test";
-      name = "dummy-key";
-    };
+    module = "test";
+    ident = "dummy-key";
     generator.script = "dummy";
     generator.tags = [ "example" ];
   }];
