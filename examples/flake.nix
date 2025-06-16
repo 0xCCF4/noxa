@@ -33,6 +33,7 @@
           hostLocations = ./hosts;
           nixosConfigurations = self.nixosConfigurations;
           additionalArgs = {
+            # used for disk provisioning
             modules = [ disko.nixosModules.disko ];
           };
         };
