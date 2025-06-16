@@ -19,6 +19,10 @@ let
         in
         if merged == null then null else { elemType = merged; };
     };
+
+  optionDescriptionPhrase =
+      unparenthesize: t:
+      if unparenthesize (t.descriptionClass or null) then t.description else "(${t.description})";
 in
 rec {
   types.uniqueListOf =
