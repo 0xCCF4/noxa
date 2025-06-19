@@ -49,7 +49,7 @@
       with nixpkgs.lib; with builtins;
       {
         # Nixos modules
-        nixosModules.noxa.default = import ./modules inputs;
+        nixosModules = import ./modules inputs;
 
         # Libraries
         lib = import ./lib inputs;
@@ -71,9 +71,6 @@
         let
           pkgs = import nixpkgs {
             inherit system;
-            overlays = [
-              nix-net-lib.overlays.default
-            ];
           };
 
           scopedInputs = inputs // {

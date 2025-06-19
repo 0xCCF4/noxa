@@ -1,10 +1,30 @@
-noxa-inputs: { ... }@inputs:
-{
-  imports = noxa-inputs.self.lib.nixDirectoryToList ./.;
+noxa-inputs: rec {
+  /**
+     Default nixos module, including all features
+  */
+  default = { ... }: {
+    imports = noxa-inputs.self.lib.nixDirectoryToList ./.;
+  };
 
-  config = {
-    nixpkgs.overlays = [
-      (inputs.nix-net-lib or noxa-inputs.nix-net-lib).overlays.default
-    ];
+  /**
+    Multi-host secrets management module
+    */
+  secrets = { ... }: {
+    imports = [ ./secrets.nix ./sshHostKeys.nix ];
+  };
+
+  /**
+    Multi-host wireguard network configuration module
+    */
+  wireguard = { ... }: {
+    imports = [ secrets ./wireguard ];
+  };
+
+  /**
+    Experimental overlay module used by nixos-instantiate
+    */
+  overlay = { ... }: {
+    imports = [ ./overlay.nix ];
   };
 }
+

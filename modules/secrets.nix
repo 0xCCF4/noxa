@@ -1,3 +1,16 @@
+/**
+   Multi-host secrets management module
+   This module is designated to facilitate easy multi-host
+   key management.
+   It is based on the `agenix` and `agenix-rekey` modules,
+   augments them with additional options.
+
+   The two main new concept is the differentiation between:
+  1. Host specific secrets, which are secrets that are only
+      available on a single host, e.g. the private key of a wireguard interface.
+  2. Shared secrets, which are secrets that are shared between multiple hosts,
+      e.g. the pre-shared symmetric key for a wireguard interface peer.
+*/
 { pkgs
 , config
 , lib

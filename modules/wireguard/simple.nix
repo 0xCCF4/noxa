@@ -1,3 +1,11 @@
+/**
+   Since very commonly you would like to assign different device addresses
+   to different peers, while keeping the same network address,
+   this module provides a simple way to do so.
+   It allows you to specify a `deviceNumber` for each interface,
+   which will be used to generate the device address
+   based on the network address.
+ */
 { pkgs
 , inputs
 , config

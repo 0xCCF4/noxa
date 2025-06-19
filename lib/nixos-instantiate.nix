@@ -44,7 +44,7 @@ let
                 additionalArgs //
                 {
                   system = additionalArgs.system or system;
-                  modules = [ module self.nixosModules.noxa.default ] ++ additionalModules;
+                  modules = [ module self.nixosModules.default ] ++ additionalModules;
                   specialArgs = (inputWithDefaults (additionalArgs.specialArgs or { })) // {
                     noxa = ((additionalArgs.specialArgs or { }).noxa or (self // { nixosConfigurations = { }; })) // {
                       # remove nixosConfigurations, since it contains just the example configuration -> prevent circular dependency

@@ -1,3 +1,12 @@
+/**
+   Module to ensure the generation of SSH host keys,
+   even if the openssh service is not enabled.
+
+   Since by default, our secrets module uses the SSH host keys
+   for secret decryption at runtime, this module ensures that
+  the keys are generated and available at runtime even
+  for hosts without the openssh service enabled.
+  */
 { pkgs
 , lib
 , config
