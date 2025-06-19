@@ -74,12 +74,12 @@ let
 
             # Apply configuration overlays
             noxaOverlays = stageOneConfig.config.noxa.overlays or [ ];
-            overlayedStageTwoConfig =
+            overlaidStageTwoConfig =
               foldl
                 (
                   acc: overlay:
                     overlay {
-                      final = overlayedStageTwoConfig;
+                      final = overlaidStageTwoConfig;
                       prev = acc;
                       stageOne = stageOneConfig;
                     }
@@ -94,7 +94,7 @@ let
               else if stageTwoTargetPlatform != stageOneTargetPlatform then
                 throw "There is some shenanigans happening with conditional setting of `nixpkgs.system`. Stop this! Target platform mismatch: ${stageTwoTargetPlatform} <- ${stageOneTargetPlatform} (system = ${system})."
               else
-                overlayedStageTwoConfig;
+                overlaidStageTwoConfig;
           in
           {
             "${mainConfiguration.config.networking.hostName}" = {
