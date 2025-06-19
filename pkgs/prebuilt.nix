@@ -24,7 +24,7 @@ with lib; with builtins;
 
   for host in ${concatStringsSep " " (attrNames self.nixosConfigurations)}; do
     ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#$host build "$@"
-    rm ./result/ || true
+    rm -Rf ./result/ || true
   done
 
   popd
