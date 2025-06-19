@@ -9,7 +9,7 @@ with builtins; with lib; let
       peers = attrsets.mapAttrs
         (neighbor: cfg:
           let
-            otherHost = trace noxa.nixosConfigurations.${neighbor}.config.noxa.wireguard.interfaces noxa.nixosConfigurations.${neighbor}.config.noxa.wireguard.interfaces.${name};
+            otherHost = noxa.nixosConfigurations.${neighbor}.config.noxa.wireguard.interfaces.${name};
             otherSecrets = noxa.nixosConfigurations.${neighbor}.config.noxa.wireguard.secrets.${name};
           in
           {
