@@ -1,21 +1,26 @@
-# name: doc
-# 
-# on:
-#   push:
-#     branches:
-#       - main
-# 
-# jobs:
-#   doc:
-#     name: build and deploy doc
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - uses: cachix/install-nix-action@v31
-#       - name: Build
-#         run: nix build .#doc
-#       - name: Deploy
-#         uses: peaceiris/actions-gh-pages@v4
-#         with:
-#           github_token: ${{ secrets.GITHUB_TOKEN }}
-#           publish_dir: ./result
+name: doc
+
+on:
+  push:
+    branches:
+      - main
+    pull_request:
+
+jobs:
+  doc:
+    name: build and deploy doc
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      - name: Build
+        run: nix build .#doc
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./result
+          commit_message: "ci: ${{ github.event.head_commit.message }}"

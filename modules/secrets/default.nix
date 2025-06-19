@@ -88,11 +88,12 @@ let
             The hosts that have access to this secret.
           '';
           example = [ "host1" "host2" ];
-          default = [ config.networking.hostName ];
+          default = [ config.networking.hostName or "<hostname>" ];
         };
         identifier = mkOption {
           type = str;
           readOnly = true;
+          example = "host:noxa.wireguard.interfaces.some-interface::wg-interface-key";
           description = ''
             A unique identifier for the secret, derived from the module and name.
             This may be used to name the secret.
@@ -271,11 +272,16 @@ in
 
   options.age.secrets = mkOption {
     type = attrsOf (mock (additional: { }));
+    description = ''
+      Extension of the `age` (agenix) secrets module to provide
+      secrets for multi-host NixOs configurations.
+    '';
   };
 
   imports = [
     agenix.nixosModules.default
     agenix-rekey.nixosModules.default
+    ./sshHostKeys.nix
   ];
 
   config = {

@@ -5,3 +5,7 @@ updates:
     schedule:
       interval: monthly
     open-pull-requests-limit: 10
+    labels:
+    - "CI/CD"
+    commit-message:
+      prefix: ci

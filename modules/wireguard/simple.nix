@@ -39,6 +39,10 @@ in
         _deviceAddress = mkOption {
           type = nullOr ip;
           readOnly = true;
+          description = ''
+            The device address assigned to the peer, based on the network address and device number.
+            This is automatically generated.
+          '';
         };
       };
 

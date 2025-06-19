@@ -6,13 +6,13 @@
 , nixosOptionsDoc
 , ...
 }@inputs:
-
+with lib; with builtins; 
 let
   makeOptionsDoc =
     module:
     nixosOptionsDoc {
       inherit
-        ((lib.evalModules {
+        ((evalModules {
           modules = [
             module
             (
@@ -20,16 +20,25 @@ let
               {
                 # Provide `pkgs` arg to all modules
                 config._module = {
-                  args = inputs;
+                  args.pkgs = pkgs;
                   check = false;
                 };
                 # Hide NixOS `_module.args` from nixosOptionsDoc to remain specific to noxa
-                options._module.args = lib.mkOption {
+                options._module.args = mkOption {
                   internal = true;
                 };
               }
             )
           ];
+          specialArgs = inputs // {
+            noxa = {
+              net = inputs.nix-net-lib.lib;
+              lib = self.lib;
+              nixosConfigurations = { };
+            };
+            agenix-rekey = {nixosModules.default = {};};
+            agenix = {nixosModules.default = {};};
+          };
         }))
         options
         ;
@@ -44,10 +53,10 @@ let
               let
                 root = toString ../.;
                 declStr = toString decl;
-                declPath = lib.removePrefix root decl;
+                declPath = removePrefix root decl;
               in
               if
-                lib.hasPrefix root declStr
+                hasPrefix root declStr
               # Rewrite links from ../. in the /nix/store to the source on Github
               then
                 {
@@ -61,7 +70,13 @@ let
         };
     };
 
-  optionsDocs = makeOptionsDoc (import ../modules inputs);
+  groups = {
+    secrets = ../modules/secrets;
+    wireguard = ../modules/wireguard ;
+    overlay = ../modules/overlay.nix;
+  };
+
+  documentation = attrsets.mapAttrs (name: module: makeOptionsDoc module) groups;
 
 in
 runCommand "noxa.nix-doc"
@@ -69,8 +84,14 @@ runCommand "noxa.nix-doc"
   nativeBuildInputs = [ mdbook ];
 }
   ''
+    set -euo pipefail
     cp -r ${../docs} docs
-    chmod u+w docs/src
-    cp ${optionsDocs.optionsCommonMark} docs/src/options.md
+    chmod -R u+w docs/src
+    
+    cp ${documentation.secrets.optionsCommonMark} docs/src/secrets.md
+    cp ${documentation.wireguard.optionsCommonMark} docs/src/wireguard.md
+    cp ${documentation.overlay.optionsCommonMark} docs/src/overlay.md
+    
     ${mdbook}/bin/mdbook build -d $out docs
+    cp -r docs/ $out/docs
   ''

@@ -14,13 +14,13 @@
 }: with lib; with builtins; with types;
 let
   cfg = config.noxa.sshHostKeys;
-  cfgOpenssh = config.services.openssh;
+  cfgOpenssh = config.services.openssh or {};
 in
 {
   options.noxa.sshHostKeys = {
     generate = mkOption {
       type = bool;
-      default = !cfgOpenssh.enable;
+      default = !cfgOpenssh.enable or true;
       description = ''
         Generates SSH host keys on boot even if the openssh service is not enabled.
       '';

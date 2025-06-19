@@ -10,7 +10,7 @@ noxa-inputs: rec {
     Multi-host secrets management module
     */
   secrets = { ... }: {
-    imports = [ ./secrets.nix ./sshHostKeys.nix ];
+    imports = [ ./secrets ];
   };
 
   /**
