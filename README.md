@@ -16,6 +16,7 @@
 - **Multi-host configuration:** Define and manage several NixOS machines in a unified structure.
 - **Cross-host modules:** Write modules that can coordinate settings and state between hosts.
 - **Secret management:** Automated secret management for (cross-host) distributed systems (e.g., WireGuard keys, SSH host keys).
+- **Modularity:** Just use the features you need.
 
 
 ## Getting Started
@@ -27,7 +28,7 @@ See the [examples](examples/) directory for sample multi-host configurations and
 
 ## Contributing
 
-Contributions are welcome! Open an issue or submit a pull request to get involved.
+Contributions are welcome! Open an issue with a feature request, bug report or submit a pull request to get involved.
 
 ## License
 
