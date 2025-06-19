@@ -1,29 +1,29 @@
-# name: "prebuilt"
-# 
-# on:
-#   workflow_dispatch:
-#   schedule:
-#     - cron: '0 0 * * *'
-#   pull_request:
-#     branches:
-#       - main
-#   push:
-#     branches:
-#       - main
-#   merge_group:
-#     branches:
-#       - main
-# 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     strategy:
-#       matrix:
-#         nixpkgs:
-#           - release-24.11
-#           - release-25.05
-#           - nixos-unstable
-#     steps:
-#       - uses: actions/checkout@v4
-#       - uses: cachix/install-nix-action@v31
-#       - run: nix build -L .#prebuilt --override-input nixpkgs github:nixos/nixpkgs/${{ matrix.nixpkgs }}
+name: "prebuilt"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  merge_group:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nixpkgs:
+          - release-24.11
+          - release-25.05
+          - nixos-unstable
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      - run: nix run .#prebuilt -- -L --override-input nixpkgs github:nixos/nixpkgs/${{ matrix.nixpkgs }}

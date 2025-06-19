@@ -81,6 +81,7 @@
 
           # Packages
           packages.doc = pkgs.callPackage ./pkgs/doc.nix scopedInputs;
+          packages.prebuilt = pkgs.callPackage ./pkgs/prebuilt.nix scopedInputs;
 
           # Dev shells
           devShells = import ./shells scopedInputs;
