@@ -1,4 +1,4 @@
 noxa-inputs: {
-    nixos = (imports ./nixos) noxa-inputs;
-    noxa = (imports ./noxa) noxa-inputs;
+    nixos = (import ./nixos) noxa-inputs;
+    noxa = (import ./noxa) noxa-inputs;
 }
