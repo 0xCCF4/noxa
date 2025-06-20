@@ -1,0 +1,532 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Wireguard - Noxa</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Noxa</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/0xCCF4/noxa" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="noxawireguardenable"><a class="header" href="#noxawireguardenable">noxa.wireguard.enable</a></h2>
+<p>Enables the WireGuard module, which a cross-host VPN setup utility for wireguard.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfaces"><a class="header" href="#noxawireguardinterfaces">noxa.wireguard.interfaces</a></h2>
+<p>A set of WireGuard interfaces to configure. Each interface is defined by its name and
+contains its private key, public key, and listen port.</p>
+<p><em>Type:</em>
+lazy attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesname_deviceaddress"><a class="header" href="#noxawireguardinterfacesname_deviceaddress">noxa.wireguard.interfaces.&lt;name&gt;._deviceAddress</a></h2>
+<p>The device address assigned to the peer, based on the network address and device number.
+This is automatically generated.</p>
+<p><em>Type:</em>
+null or IPv4 address or IPv6 address <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnameadvertisekeepalive"><a class="header" href="#noxawireguardinterfacesnameadvertisekeepalive">noxa.wireguard.interfaces.&lt;name&gt;.advertise.keepAlive</a></h2>
+<p>The keep alive interval remote peers should use when communicating with this interface.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnameadvertiseserver"><a class="header" href="#noxawireguardinterfacesnameadvertiseserver">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server</a></h2>
+<p>Options for wireguard servers. If a wireguard interface is regarded as a server (e.g. since it has a public IP address), it may advertise its service via the <code>server.advertise</code> option.</p>
+<p>If set, all peers that would like to connect to that peer will use the advertised listen port and address as means of directly connecting to the server.</p>
+<p>Further, if <code>server.defaultGateway</code> is set, all peers that do not advertise listen port and address will be reached via the server marked as default gateway. Therefore, only one interface may be marked as default gateway at any time.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnameadvertiseserverdefaultgateway"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverdefaultgateway">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.defaultGateway</a></h2>
+<p>If set, this server will be the default gateway for clients.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnameadvertiseserverfirewallallow"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverfirewallallow">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.firewallAllow</a></h2>
+<p>If set, the nixos firewall will allow incoming connections to the advertised listen port.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnameadvertiseserverlistenaddress"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverlistenaddress">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.listenAddress</a></h2>
+<p>The address this server will listen on for incoming connections.</p>
+<p><em>Type:</em>
+IPv4 address or IPv6 address</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnameadvertiseserverlistenport"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverlistenport">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.listenPort</a></h2>
+<p>The port this server will listen on for incoming connections.</p>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnameautostart"><a class="header" href="#noxawireguardinterfacesnameautostart">noxa.wireguard.interfaces.&lt;name&gt;.autostart</a></h2>
+<p>Specifies whether to autostart the WireGuard interface.</p>
+<p>Only relevant if the <code>backend</code> is set to <code>wg-quick</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamebackend"><a class="header" href="#noxawireguardinterfacesnamebackend">noxa.wireguard.interfaces.&lt;name&gt;.backend</a></h2>
+<p>The backend to use for WireGuard config generation.</p>
+<ul>
+<li><code>wireguard</code>: Uses the <code>networking.wireguard.interfaces</code> module to generate the configuration.</li>
+<li><code>wg-quick</code>: Uses the <code>networking.wg-quick.interfaces</code> module to generate the configuration.</li>
+</ul>
+<p><em>Type:</em>
+one of “wireguard”, “wg-quick”</p>
+<p><em>Default:</em>
+<code>"wireguard"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamedeviceaddresses"><a class="header" href="#noxawireguardinterfacesnamedeviceaddresses">noxa.wireguard.interfaces.&lt;name&gt;.deviceAddresses</a></h2>
+<p>List of ip addresses to assign to this interface. The server will forward traffic
+to these addresses.</p>
+<p><em>Type:</em>
+list of (IPv4 address or IPv6 address)</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamedevicenumber"><a class="header" href="#noxawireguardinterfacesnamedevicenumber">noxa.wireguard.interfaces.&lt;name&gt;.deviceNumber</a></h2>
+<p>If set, a new address will be assigned to the peer with the following schema:</p>
+<p>The network prefix defined in <code>noxa.wireguard.interfaces.&lt;name&gt;.networkAddress</code> will be used as the base
+for the device address, and the value of <code>noxa.wireguard.interfaces.&lt;name&gt;.deviceNumber</code> will be used
+in the device part. For example, if the network prefix is <code>1.2.0.0/16</code> and the device number is <code>11</code>,
+the address added to the peer will be <code>1.2.0.11/32</code>.</p>
+<p>The device number might be a single number passed into the last component of the address.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Example:</em>
+<code>"3"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamegatewayoverride"><a class="header" href="#noxawireguardinterfacesnamegatewayoverride">noxa.wireguard.interfaces.&lt;name&gt;.gatewayOverride</a></h2>
+<p>If set, this interface will use the specified hostname as the gateway for connecting to the wireguard network.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamekeepalive"><a class="header" href="#noxawireguardinterfacesnamekeepalive">noxa.wireguard.interfaces.&lt;name&gt;.keepAlive</a></h2>
+<p>The default keep alive interval this interface will use when communicating with remote peers.</p>
+<p>If the remote end uses <code>advertise.keepAlive</code>, the minimum value of both will be used.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamekindisclient"><a class="header" href="#noxawireguardinterfacesnamekindisclient">noxa.wireguard.interfaces.&lt;name&gt;.kind.isClient</a></h2>
+<p>This interface has the role of a client, meaning it does not advertise other peers to connect to it. Instead, it connects to other peers, initiating the connection.</p>
+<p><em>Type:</em>
+boolean <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamekindisgateway"><a class="header" href="#noxawireguardinterfacesnamekindisgateway">noxa.wireguard.interfaces.&lt;name&gt;.kind.isGateway</a></h2>
+<p>This interface is a server and is marked as the default gateway for clients.
+This means that clients will use this interface to reach other peers that do not advertise their listen port and address.</p>
+<p><em>Type:</em>
+boolean <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamekindisserver"><a class="header" href="#noxawireguardinterfacesnamekindisserver">noxa.wireguard.interfaces.&lt;name&gt;.kind.isServer</a></h2>
+<p>This interface has the role of a server, meaning it advertises its listen port and address to peers.</p>
+<p><em>Type:</em>
+boolean <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardinterfacesnamenetworkaddress"><a class="header" href="#noxawireguardinterfacesnamenetworkaddress">noxa.wireguard.interfaces.&lt;name&gt;.networkAddress</a></h2>
+<p>The network IP addresses. On clients, traffic of this network will be routed through the WireGuard interface.</p>
+<p><em>Type:</em>
+IPv4 address, normalized network address, or (IPv6 address, normalized network address)</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutes"><a class="header" href="#noxawireguardroutes">noxa.wireguard.routes</a></h2>
+<p>A set of intermediary connection information, automatically computed from the nixos configurations.</p>
+<p><em>Type:</em>
+lazy attribute set of (submodule) <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutesnameneighbors"><a class="header" href="#noxawireguardroutesnameneighbors">noxa.wireguard.routes.&lt;name&gt;.neighbors</a></h2>
+<p>A set of connections for this interface, automatically computed from the nixos configurations.</p>
+<p><em>Type:</em>
+lazy attribute set of (submodule) <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutesnameneighborsnamekeepalive"><a class="header" href="#noxawireguardroutesnameneighborsnamekeepalive">noxa.wireguard.routes.&lt;name&gt;.neighbors.&lt;name&gt;.keepAlive</a></h2>
+<p>The keep-alive interval for this connection, in seconds.
+If set to <code>null</code>, no keep-alive is configured.</p>
+<p><em>Type:</em>
+null or signed integer <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutesnameparticipantsclients"><a class="header" href="#noxawireguardroutesnameparticipantsclients">noxa.wireguard.routes.&lt;name&gt;.participants.clients</a></h2>
+<p>A list of clients for this interface. Automatically populated.</p>
+<p><em>Type:</em>
+list of string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutesnameparticipantsgateways"><a class="header" href="#noxawireguardroutesnameparticipantsgateways">noxa.wireguard.routes.&lt;name&gt;.participants.gateways</a></h2>
+<p>A list of gateways for this interface. Automatically populated.</p>
+<p><em>Type:</em>
+list of string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutesnameparticipantsservers"><a class="header" href="#noxawireguardroutesnameparticipantsservers">noxa.wireguard.routes.&lt;name&gt;.participants.servers</a></h2>
+<p>A list of servers for this interface. Automatically populated.</p>
+<p><em>Type:</em>
+list of string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutesnamepeers"><a class="header" href="#noxawireguardroutesnamepeers">noxa.wireguard.routes.&lt;name&gt;.peers</a></h2>
+<p>A list of peers for this interface. Automatically populated.</p>
+<p><em>Type:</em>
+list of (submodule) <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutesnamepeerstarget"><a class="header" href="#noxawireguardroutesnamepeerstarget">noxa.wireguard.routes.&lt;name&gt;.peers.*.target</a></h2>
+<p>The target hostname of the connection.</p>
+<p><em>Type:</em>
+string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardroutesnamepeersvia"><a class="header" href="#noxawireguardroutesnamepeersvia">noxa.wireguard.routes.&lt;name&gt;.peers.*.via</a></h2>
+<p>The hostname of the peer this connection is routed through.</p>
+<p><em>Type:</em>
+null or string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+</ul>
+<h2 id="noxawireguardsecrets"><a class="header" href="#noxawireguardsecrets">noxa.wireguard.secrets</a></h2>
+<p>A set of wireguard secrets. When using the <code>.interfaces</code> options,
+this set is automatically populated. Each peer will own its own
+set of secrets</p>
+<p><em>Type:</em>
+lazy attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+</ul>
+<h2 id="noxawireguardsecretsnamepresharedkeyfiles"><a class="header" href="#noxawireguardsecretsnamepresharedkeyfiles">noxa.wireguard.secrets.&lt;name&gt;.presharedKeyFiles</a></h2>
+<p>The pre-shared key file for each peer (by hostname) of the wireguard interface</p>
+<p><em>Type:</em>
+lazy attribute set of string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+</ul>
+<h2 id="noxawireguardsecretsnameprivatekeyfile"><a class="header" href="#noxawireguardsecretsnameprivatekeyfile">noxa.wireguard.secrets.&lt;name&gt;.privateKeyFile</a></h2>
+<p>The private key file of the wireguard interface</p>
+<p><em>Type:</em>
+string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+</ul>
+<h2 id="noxawireguardsecretsnamepublickey"><a class="header" href="#noxawireguardsecretsnamepublickey">noxa.wireguard.secrets.&lt;name&gt;.publicKey</a></h2>
+<p>The public key the wireguard interface</p>
+<p><em>Type:</em>
+string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="secrets.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="overlay.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="secrets.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="overlay.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

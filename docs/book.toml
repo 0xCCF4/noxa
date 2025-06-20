@@ -1,0 +1,9 @@
+[book]
+authors = ["0xCCF4"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Noxa"
+
+[output.html]
+git-repository-url = "https://github.com/0xCCF4/noxa"
