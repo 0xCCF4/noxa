@@ -1,6 +1,6 @@
 # Table of contents
 
-- [Introduction](./introduction.md)
+- [Intro](./introduction.md)
 - [Options](./options.md)
     - [Secrets](./secrets.md)
     - [Wireguard](./wireguard.md)
