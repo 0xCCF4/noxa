@@ -1,4 +1,4 @@
-name: doc
+name: GitHub Pages
 
 on:
   push:
@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v31
