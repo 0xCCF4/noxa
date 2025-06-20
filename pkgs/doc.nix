@@ -71,9 +71,9 @@ let
     };
 
   groups = {
-    secrets = ../modules/secrets;
-    wireguard = ../modules/wireguard ;
-    overlay = ../modules/overlay.nix;
+    secrets = ../modules/nixos/secrets;
+    wireguard = ../modules/nixos/wireguard ;
+    overlay = ../modules/nixos/overlay.nix;
   };
 
   documentation = attrsets.mapAttrs (name: module: makeOptionsDoc module) groups;

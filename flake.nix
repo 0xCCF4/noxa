@@ -47,9 +47,15 @@
     , ...
     }@inputs:
       with nixpkgs.lib; with builtins;
+      let
+        modules = import ./modules inputs;
+      in
       {
         # Nixos modules
-        nixosModules = import ./modules inputs;
+        nixosModules = modules.nixos;
+
+        # Noxa modules
+        noxaModules = modules.noxa;
 
         # Libraries
         lib = import ./lib inputs;
