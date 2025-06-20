@@ -13,7 +13,7 @@ boolean
 ` false `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -35,8 +35,8 @@ lazy attribute set of (submodule)
 ` { } `
 
 *Declared by:*
- - [noxa/modules/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix)
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -53,7 +53,7 @@ This is automatically generated\.
 null or IPv4 address or IPv6 address *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix)
+ - [noxa/modules/nixos/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix)
 
 
 
@@ -74,7 +74,7 @@ null or signed integer
 ` null `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -99,7 +99,7 @@ null or (submodule)
 ` null `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -120,7 +120,7 @@ boolean
 ` false `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -141,7 +141,7 @@ boolean
 ` true `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -157,7 +157,7 @@ The address this server will listen on for incoming connections\.
 IPv4 address or IPv6 address
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -173,7 +173,7 @@ The port this server will listen on for incoming connections\.
 signed integer
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -196,7 +196,7 @@ boolean
 ` true `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -220,7 +220,7 @@ one of “wireguard”, “wg-quick”
 ` "wireguard" `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -237,7 +237,7 @@ to these addresses\.
 list of (IPv4 address or IPv6 address)
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -270,7 +270,7 @@ null or signed integer
 ` "3" `
 
 *Declared by:*
- - [noxa/modules/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix)
+ - [noxa/modules/nixos/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix)
 
 
 
@@ -291,7 +291,7 @@ null or string
 ` null `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -314,7 +314,7 @@ null or signed integer
 ` null `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -335,7 +335,7 @@ boolean *(read only)*
 ` true `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -357,7 +357,7 @@ boolean *(read only)*
 ` false `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -378,7 +378,7 @@ boolean *(read only)*
 ` false `
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -394,7 +394,7 @@ The network IP addresses\. On clients, traffic of this network will be routed th
 IPv4 address, normalized network address, or (IPv6 address, normalized network address)
 
 *Declared by:*
- - [noxa/modules/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix)
+ - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
 
 
 
@@ -410,7 +410,7 @@ A set of intermediary connection information, automatically computed from the ni
 lazy attribute set of (submodule) *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -426,7 +426,7 @@ A set of connections for this interface, automatically computed from the nixos c
 lazy attribute set of (submodule) *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -443,7 +443,7 @@ If set to ` null `, no keep-alive is configured\.
 null or signed integer *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -459,7 +459,7 @@ A list of clients for this interface\. Automatically populated\.
 list of string *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -475,7 +475,7 @@ A list of gateways for this interface\. Automatically populated\.
 list of string *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -491,7 +491,7 @@ A list of servers for this interface\. Automatically populated\.
 list of string *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -507,7 +507,7 @@ A list of peers for this interface\. Automatically populated\.
 list of (submodule) *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -523,7 +523,7 @@ The target hostname of the connection\.
 string *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -539,7 +539,7 @@ The hostname of the peer this connection is routed through\.
 null or string *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix)
+ - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
 
 
@@ -562,7 +562,7 @@ lazy attribute set of (submodule)
 ` { } `
 
 *Declared by:*
- - [noxa/modules/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix)
+ - [noxa/modules/nixos/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix)
 
 
 
@@ -578,7 +578,7 @@ The pre-shared key file for each peer (by hostname) of the wireguard interface
 lazy attribute set of string *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix)
+ - [noxa/modules/nixos/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix)
 
 
 
@@ -594,7 +594,7 @@ The private key file of the wireguard interface
 string *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix)
+ - [noxa/modules/nixos/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix)
 
 
 
@@ -610,6 +610,6 @@ The public key the wireguard interface
 string *(read only)*
 
 *Declared by:*
- - [noxa/modules/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix)
+ - [noxa/modules/nixos/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix)
 
 

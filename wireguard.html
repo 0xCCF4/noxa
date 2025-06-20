@@ -177,7 +177,7 @@ boolean</p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfaces"><a class="header" href="#noxawireguardinterfaces">noxa.wireguard.interfaces</a></h2>
 <p>A set of WireGuard interfaces to configure. Each interface is defined by its name and
@@ -188,8 +188,8 @@ lazy attribute set of (submodule)</p>
 <code>{ }</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesname_deviceaddress"><a class="header" href="#noxawireguardinterfacesname_deviceaddress">noxa.wireguard.interfaces.&lt;name&gt;._deviceAddress</a></h2>
 <p>The device address assigned to the peer, based on the network address and device number.
@@ -198,7 +198,7 @@ This is automatically generated.</p>
 null or IPv4 address or IPv6 address <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertisekeepalive"><a class="header" href="#noxawireguardinterfacesnameadvertisekeepalive">noxa.wireguard.interfaces.&lt;name&gt;.advertise.keepAlive</a></h2>
 <p>The keep alive interval remote peers should use when communicating with this interface.</p>
@@ -208,7 +208,7 @@ null or signed integer</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserver"><a class="header" href="#noxawireguardinterfacesnameadvertiseserver">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server</a></h2>
 <p>Options for wireguard servers. If a wireguard interface is regarded as a server (e.g. since it has a public IP address), it may advertise its service via the <code>server.advertise</code> option.</p>
@@ -220,7 +220,7 @@ null or (submodule)</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserverdefaultgateway"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverdefaultgateway">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.defaultGateway</a></h2>
 <p>If set, this server will be the default gateway for clients.</p>
@@ -230,7 +230,7 @@ boolean</p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserverfirewallallow"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverfirewallallow">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.firewallAllow</a></h2>
 <p>If set, the nixos firewall will allow incoming connections to the advertised listen port.</p>
@@ -240,7 +240,7 @@ boolean</p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserverlistenaddress"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverlistenaddress">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.listenAddress</a></h2>
 <p>The address this server will listen on for incoming connections.</p>
@@ -248,7 +248,7 @@ boolean</p>
 IPv4 address or IPv6 address</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserverlistenport"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverlistenport">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.listenPort</a></h2>
 <p>The port this server will listen on for incoming connections.</p>
@@ -256,7 +256,7 @@ IPv4 address or IPv6 address</p>
 signed integer</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameautostart"><a class="header" href="#noxawireguardinterfacesnameautostart">noxa.wireguard.interfaces.&lt;name&gt;.autostart</a></h2>
 <p>Specifies whether to autostart the WireGuard interface.</p>
@@ -267,7 +267,7 @@ boolean</p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamebackend"><a class="header" href="#noxawireguardinterfacesnamebackend">noxa.wireguard.interfaces.&lt;name&gt;.backend</a></h2>
 <p>The backend to use for WireGuard config generation.</p>
@@ -281,7 +281,7 @@ one of “wireguard”, “wg-quick”</p>
 <code>"wireguard"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamedeviceaddresses"><a class="header" href="#noxawireguardinterfacesnamedeviceaddresses">noxa.wireguard.interfaces.&lt;name&gt;.deviceAddresses</a></h2>
 <p>List of ip addresses to assign to this interface. The server will forward traffic
@@ -290,7 +290,7 @@ to these addresses.</p>
 list of (IPv4 address or IPv6 address)</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamedevicenumber"><a class="header" href="#noxawireguardinterfacesnamedevicenumber">noxa.wireguard.interfaces.&lt;name&gt;.deviceNumber</a></h2>
 <p>If set, a new address will be assigned to the peer with the following schema:</p>
@@ -307,7 +307,7 @@ null or signed integer</p>
 <code>"3"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamegatewayoverride"><a class="header" href="#noxawireguardinterfacesnamegatewayoverride">noxa.wireguard.interfaces.&lt;name&gt;.gatewayOverride</a></h2>
 <p>If set, this interface will use the specified hostname as the gateway for connecting to the wireguard network.</p>
@@ -317,7 +317,7 @@ null or string</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamekeepalive"><a class="header" href="#noxawireguardinterfacesnamekeepalive">noxa.wireguard.interfaces.&lt;name&gt;.keepAlive</a></h2>
 <p>The default keep alive interval this interface will use when communicating with remote peers.</p>
@@ -328,7 +328,7 @@ null or signed integer</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamekindisclient"><a class="header" href="#noxawireguardinterfacesnamekindisclient">noxa.wireguard.interfaces.&lt;name&gt;.kind.isClient</a></h2>
 <p>This interface has the role of a client, meaning it does not advertise other peers to connect to it. Instead, it connects to other peers, initiating the connection.</p>
@@ -338,7 +338,7 @@ boolean <em>(read only)</em></p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamekindisgateway"><a class="header" href="#noxawireguardinterfacesnamekindisgateway">noxa.wireguard.interfaces.&lt;name&gt;.kind.isGateway</a></h2>
 <p>This interface is a server and is marked as the default gateway for clients.
@@ -349,7 +349,7 @@ boolean <em>(read only)</em></p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamekindisserver"><a class="header" href="#noxawireguardinterfacesnamekindisserver">noxa.wireguard.interfaces.&lt;name&gt;.kind.isServer</a></h2>
 <p>This interface has the role of a server, meaning it advertises its listen port and address to peers.</p>
@@ -359,7 +359,7 @@ boolean <em>(read only)</em></p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamenetworkaddress"><a class="header" href="#noxawireguardinterfacesnamenetworkaddress">noxa.wireguard.interfaces.&lt;name&gt;.networkAddress</a></h2>
 <p>The network IP addresses. On clients, traffic of this network will be routed through the WireGuard interface.</p>
@@ -367,7 +367,7 @@ boolean <em>(read only)</em></p>
 IPv4 address, normalized network address, or (IPv6 address, normalized network address)</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutes"><a class="header" href="#noxawireguardroutes">noxa.wireguard.routes</a></h2>
 <p>A set of intermediary connection information, automatically computed from the nixos configurations.</p>
@@ -375,7 +375,7 @@ IPv4 address, normalized network address, or (IPv6 address, normalized network a
 lazy attribute set of (submodule) <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameneighbors"><a class="header" href="#noxawireguardroutesnameneighbors">noxa.wireguard.routes.&lt;name&gt;.neighbors</a></h2>
 <p>A set of connections for this interface, automatically computed from the nixos configurations.</p>
@@ -383,7 +383,7 @@ lazy attribute set of (submodule) <em>(read only)</em></p>
 lazy attribute set of (submodule) <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameneighborsnamekeepalive"><a class="header" href="#noxawireguardroutesnameneighborsnamekeepalive">noxa.wireguard.routes.&lt;name&gt;.neighbors.&lt;name&gt;.keepAlive</a></h2>
 <p>The keep-alive interval for this connection, in seconds.
@@ -392,7 +392,7 @@ If set to <code>null</code>, no keep-alive is configured.</p>
 null or signed integer <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameparticipantsclients"><a class="header" href="#noxawireguardroutesnameparticipantsclients">noxa.wireguard.routes.&lt;name&gt;.participants.clients</a></h2>
 <p>A list of clients for this interface. Automatically populated.</p>
@@ -400,7 +400,7 @@ null or signed integer <em>(read only)</em></p>
 list of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameparticipantsgateways"><a class="header" href="#noxawireguardroutesnameparticipantsgateways">noxa.wireguard.routes.&lt;name&gt;.participants.gateways</a></h2>
 <p>A list of gateways for this interface. Automatically populated.</p>
@@ -408,7 +408,7 @@ list of string <em>(read only)</em></p>
 list of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameparticipantsservers"><a class="header" href="#noxawireguardroutesnameparticipantsservers">noxa.wireguard.routes.&lt;name&gt;.participants.servers</a></h2>
 <p>A list of servers for this interface. Automatically populated.</p>
@@ -416,7 +416,7 @@ list of string <em>(read only)</em></p>
 list of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnamepeers"><a class="header" href="#noxawireguardroutesnamepeers">noxa.wireguard.routes.&lt;name&gt;.peers</a></h2>
 <p>A list of peers for this interface. Automatically populated.</p>
@@ -424,7 +424,7 @@ list of string <em>(read only)</em></p>
 list of (submodule) <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnamepeerstarget"><a class="header" href="#noxawireguardroutesnamepeerstarget">noxa.wireguard.routes.&lt;name&gt;.peers.*.target</a></h2>
 <p>The target hostname of the connection.</p>
@@ -432,7 +432,7 @@ list of (submodule) <em>(read only)</em></p>
 string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnamepeersvia"><a class="header" href="#noxawireguardroutesnamepeersvia">noxa.wireguard.routes.&lt;name&gt;.peers.*.via</a></h2>
 <p>The hostname of the peer this connection is routed through.</p>
@@ -440,7 +440,7 @@ string <em>(read only)</em></p>
 null or string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardsecrets"><a class="header" href="#noxawireguardsecrets">noxa.wireguard.secrets</a></h2>
 <p>A set of wireguard secrets. When using the <code>.interfaces</code> options,
@@ -452,7 +452,7 @@ lazy attribute set of (submodule)</p>
 <code>{ }</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
 <h2 id="noxawireguardsecretsnamepresharedkeyfiles"><a class="header" href="#noxawireguardsecretsnamepresharedkeyfiles">noxa.wireguard.secrets.&lt;name&gt;.presharedKeyFiles</a></h2>
 <p>The pre-shared key file for each peer (by hostname) of the wireguard interface</p>
@@ -460,7 +460,7 @@ lazy attribute set of (submodule)</p>
 lazy attribute set of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
 <h2 id="noxawireguardsecretsnameprivatekeyfile"><a class="header" href="#noxawireguardsecretsnameprivatekeyfile">noxa.wireguard.secrets.&lt;name&gt;.privateKeyFile</a></h2>
 <p>The private key file of the wireguard interface</p>
@@ -468,7 +468,7 @@ lazy attribute set of string <em>(read only)</em></p>
 string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
 <h2 id="noxawireguardsecretsnamepublickey"><a class="header" href="#noxawireguardsecretsnamepublickey">noxa.wireguard.secrets.&lt;name&gt;.publicKey</a></h2>
 <p>The public key the wireguard interface</p>
@@ -476,7 +476,7 @@ string <em>(read only)</em></p>
 string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
 
                     </main>

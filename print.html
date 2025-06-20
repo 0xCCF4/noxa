@@ -170,7 +170,37 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="options"><a class="header" href="#options">Options</a></h1>
+                        <h1 id="intro"><a class="header" href="#intro">Intro</a></h1>
+<p><strong>Noxa</strong> is a tool to ease the configuration of multi-host NixOS configurations.
+Starting with the motivation, design goals, and design decisions, this handbook guides
+you through setting up a multi-host NixOS configuration.</p>
+<h2 id="motivation"><a class="header" href="#motivation">Motivation</a></h2>
+<p>NixOS is a Linux distribution configuration solution composed of modules and packages <a href="https://nixos.org/manual/nixos/stable/#preface">NixOS Manual</a>. While <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> provides many modules for configuring NixOS machines, it lacks fundamental support for configuration beyond the scope of a single host.</p>
+<p>In practice, some hosts share configuration settings. Imagine that you configure four different NixOS machines and would like to set up a Wireguard network between them. In the end, you will configure <code>networking.wireguard.interfaces.&lt;name&gt;</code> on each host, but there are several open questions:</p>
+<ol>
+<li>How do you manage secrets? For some secrets, how do you share public interface keys with each host or handle connection keys shared between two hosts?</li>
+<li>Some hosts will have public IP addresses and a direct connection should be established, while others take on a client role and do not own a public IP address. The trait of having a public IP address will ultimately belong to the configuration of each host, while each other host needs to configure their connection settings accordingly.</li>
+</ol>
+<p>To summarize, there are configuration settings shared among different hosts and do not belong to any specific one, and there are configuration values owned by hosts but accessed by others to configure their NixOS configuration.</p>
+<p>Currently, <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> does not support these multi-host configuration scenarios and multi-host dependency.</p>
+<h2 id="goal"><a class="header" href="#goal">Goal</a></h2>
+<p>The goal of <strong>Noxa</strong> is to fill this gap and provide a framework to support the configuration of hosts that depend on each other.</p>
+<h2 id="contributing"><a class="header" href="#contributing">Contributing</a></h2>
+<p>Contributions are welcome. Suggest new features and bugs via issue. Pull requests are welcome.</p>
+<h2 id="related-projects"><a class="header" href="#related-projects">Related projects</a></h2>
+<p>Other frameworks already aim to implement multi-host NixOS configuration; the list is provided below.
+Why another framework? 1. Because of the following design goal: Plug-and-play, new hosts added, should have minimal configuration already configured according to the existing hosts. 2. Learning of Nix language and ecosystem.</p>
+<p>List of other multi-host configuration framework (feel free to add others):</p>
+<ul>
+<li><a href="https://github.com/infinisil/nixus/">nixus</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="options"><a class="header" href="#options">Options</a></h1>
+<p>This section is the option specification of <strong>Noxa</strong>. The specification is split into the following parts:</p>
+<ul>
+<li><a href="./secrets.html">Multi-host secret management</a> Curtesy of the NixOS module <code>noxa.nixosModules.secrets</code></li>
+<li><a href="./wireguard.html">Multi-host wireguard setup</a> Curtesy of the NixOS module <code>noxa.nixosModules.wireguard</code></li>
+<li><a href="./overlay.html">Noxa overlays</a> Curtesy of the NixOS module <code>noxa.nixosModules.overlay</code></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="agesecrets"><a class="header" href="#agesecrets">age.secrets</a></h2>
 <p>Extension of the <code>age</code> (agenix) secrets module to provide
 secrets for multi-host NixOs configurations.</p>
@@ -178,7 +208,7 @@ secrets for multi-host NixOs configurations.</p>
 attribute set of (submodule)</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="agesecretsnamehosts"><a class="header" href="#agesecretsnamehosts">age.secrets.&lt;name&gt;.hosts</a></h2>
 <p>The hosts that have access to this secret.</p>
@@ -197,7 +227,7 @@ unique list of string</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="agesecretsnameident"><a class="header" href="#agesecretsnameident">age.secrets.&lt;name&gt;.ident</a></h2>
 <p>The name of the secret.</p>
@@ -208,7 +238,7 @@ string</p>
 <code>"wg-interface-key"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="agesecretsnameidentifier"><a class="header" href="#agesecretsnameidentifier">age.secrets.&lt;name&gt;.identifier</a></h2>
 <p>A unique identifier for the secret, derived from the module and name.
@@ -219,7 +249,7 @@ string <em>(read only)</em></p>
 <code>"host:noxa.wireguard.interfaces.some-interface::wg-interface-key"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="agesecretsnamemodule"><a class="header" href="#agesecretsnamemodule">age.secrets.&lt;name&gt;.module</a></h2>
 <p>The owning module of that secret.</p>
@@ -230,7 +260,7 @@ string</p>
 <code>"services.openssh"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsenable"><a class="header" href="#noxasecretsenable">noxa.secrets.enable</a></h2>
 <p>Enables the secrets module, multi-host secret management.</p>
@@ -240,7 +270,7 @@ boolean</p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdef"><a class="header" href="#noxasecretsdef">noxa.secrets.def</a></h2>
 <p>A list of secrets that are managed by the noxa secrets module.</p>
@@ -255,7 +285,7 @@ list of (submodule)</p>
 <code>[ ]</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdefgeneratordependencies"><a class="header" href="#noxasecretsdefgeneratordependencies">noxa.secrets.def.*.generator.dependencies</a></h2>
 <p>Other secrets on which this secret depends. See <code>agenix-rekey</code> documentation.</p>
@@ -267,7 +297,7 @@ null or (list of unspecified value) or attribute set of unspecified value</p>
 <code>[ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ]</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdefgeneratorscript"><a class="header" href="#noxasecretsdefgeneratorscript">noxa.secrets.def.*.generator.script</a></h2>
 <p>Generator script, see <code>agenix-rekey</code> documentation.</p>
@@ -277,7 +307,7 @@ null or string or function that evaluates to a(n) string</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdefgeneratortags"><a class="header" href="#noxasecretsdefgeneratortags">noxa.secrets.def.*.generator.tags</a></h2>
 <p>Optional list of tags that may be used to refer to secrets that use this generator.</p>
@@ -293,7 +323,7 @@ null or (list of string)</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdefhosts"><a class="header" href="#noxasecretsdefhosts">noxa.secrets.def.*.hosts</a></h2>
 <p>The hosts that have access to this secret.</p>
@@ -312,7 +342,7 @@ unique list of string</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdefident"><a class="header" href="#noxasecretsdefident">noxa.secrets.def.*.ident</a></h2>
 <p>The name of the secret.</p>
@@ -323,7 +353,7 @@ string</p>
 <code>"wg-interface-key"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdefidentifier"><a class="header" href="#noxasecretsdefidentifier">noxa.secrets.def.*.identifier</a></h2>
 <p>A unique identifier for the secret, derived from the module and name.
@@ -334,7 +364,7 @@ string <em>(read only)</em></p>
 <code>"host:noxa.wireguard.interfaces.some-interface::wg-interface-key"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdefmodule"><a class="header" href="#noxasecretsdefmodule">noxa.secrets.def.*.module</a></h2>
 <p>The owning module of that secret.</p>
@@ -345,7 +375,7 @@ string</p>
 <code>"services.openssh"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsdefrekeyfile"><a class="header" href="#noxasecretsdefrekeyfile">noxa.secrets.def.*.rekeyFile</a></h2>
 <p>The path to the rekey file for this secret. This is used by the <code>agenix-rekey</code> module to rekey the secret.</p>
@@ -353,7 +383,7 @@ string</p>
 absolute path <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretshostsecretspath"><a class="header" href="#noxasecretshostsecretspath">noxa.secrets.hostSecretsPath</a></h2>
 <p>The path where host secrets are stored. This is the path where noxa will look for (encrypted) host specific secrets.</p>
@@ -367,7 +397,7 @@ shared with other hosts.</p>
 absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsoptionsenable"><a class="header" href="#noxasecretsoptionsenable">noxa.secrets.options.enable</a></h2>
 <p>Enables the ‘simple’ options, by providing settings proxy, a user can set the options, inside the <code>noxa.secrets.options</code> module
@@ -379,7 +409,7 @@ boolean</p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsoptionshostpubkey"><a class="header" href="#noxasecretsoptionshostpubkey">noxa.secrets.options.hostPubkey</a></h2>
 <p>The public key of the host that is used to encrypt the secrets for this host.</p>
@@ -389,7 +419,7 @@ null or string</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsoptionsmasteridentities"><a class="header" href="#noxasecretsoptionsmasteridentities">noxa.secrets.options.masterIdentities</a></h2>
 <p>A list of identities that are used to decrypt encrypted secrets for rekeying.</p>
@@ -397,7 +427,7 @@ null or string</p>
 list of (submodule)</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsoptionsmasteridentitiesidentity"><a class="header" href="#noxasecretsoptionsmasteridentitiesidentity">noxa.secrets.options.masterIdentities.*.identity</a></h2>
 <p>The identity that is used to encrypt and store secrets as .age files.
@@ -407,7 +437,7 @@ This must be an absolute path, given as string to not publish keys to the nix st
 null or string</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsoptionsmasteridentitiespubkey"><a class="header" href="#noxasecretsoptionsmasteridentitiespubkey">noxa.secrets.options.masterIdentities.*.pubkey</a></h2>
 <p>The identity that is used to encrypt and store secrets as .age files.
@@ -417,7 +447,7 @@ This is the age public key of the identity, used to encrypt the secrets.</p>
 null or string</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretsoptionsrekeydirectory"><a class="header" href="#noxasecretsoptionsrekeydirectory">noxa.secrets.options.rekeyDirectory</a></h2>
 <p>The directory where the rekey files are stored. This is used by the <code>agenix-rekey</code> module to rekey the secrets.
@@ -428,7 +458,7 @@ the git repo.</p>
 absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretssecretspath"><a class="header" href="#noxasecretssecretspath">noxa.secrets.secretsPath</a></h2>
 <p>The path where all secrets are stored. Subfolders are created for host specific and shared secrets.</p>
@@ -436,7 +466,7 @@ absolute path</p>
 null or absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasecretssharedsecretspath"><a class="header" href="#noxasecretssharedsecretspath">noxa.secrets.sharedSecretsPath</a></h2>
 <p>The path where secrets shared between several hosts are stored. This is the path where noxa will look for (encrypted) shared secrets.</p>
@@ -449,7 +479,7 @@ Secrets in this directory are not host specific, they are not owned by a single 
 absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets">noxa/modules/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
 </ul>
 <h2 id="noxasshhostkeysgenerate"><a class="header" href="#noxasshhostkeysgenerate">noxa.sshHostKeys.generate</a></h2>
 <p>Generates SSH host keys on boot even if the openssh service is not enabled.</p>
@@ -459,7 +489,7 @@ boolean</p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets/sshHostKeys.nix">noxa/modules/secrets/sshHostKeys.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/sshHostKeys.nix">noxa/modules/nixos/secrets/sshHostKeys.nix</a></li>
 </ul>
 <h2 id="noxasshhostkeyshostkeysprivate"><a class="header" href="#noxasshhostkeyshostkeysprivate">noxa.sshHostKeys.hostKeysPrivate</a></h2>
 <p>List of SSH private host keys, accessible during runtime.</p>
@@ -467,7 +497,7 @@ boolean</p>
 list of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets/sshHostKeys.nix">noxa/modules/secrets/sshHostKeys.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/sshHostKeys.nix">noxa/modules/nixos/secrets/sshHostKeys.nix</a></li>
 </ul>
 <h2 id="noxasshhostkeysimpermanencepathoverride"><a class="header" href="#noxasshhostkeysimpermanencepathoverride">noxa.sshHostKeys.impermanencePathOverride</a></h2>
 <p>Override the storage location for the ssh keys. Since some modules, like the <code>noxa.secrets</code> module,
@@ -480,7 +510,7 @@ null or string</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/secrets/sshHostKeys.nix">noxa/modules/secrets/sshHostKeys.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/sshHostKeys.nix">noxa/modules/nixos/secrets/sshHostKeys.nix</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="noxawireguardenable"><a class="header" href="#noxawireguardenable">noxa.wireguard.enable</a></h2>
 <p>Enables the WireGuard module, which a cross-host VPN setup utility for wireguard.</p>
@@ -490,7 +520,7 @@ boolean</p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfaces"><a class="header" href="#noxawireguardinterfaces">noxa.wireguard.interfaces</a></h2>
 <p>A set of WireGuard interfaces to configure. Each interface is defined by its name and
@@ -501,8 +531,8 @@ lazy attribute set of (submodule)</p>
 <code>{ }</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesname_deviceaddress"><a class="header" href="#noxawireguardinterfacesname_deviceaddress">noxa.wireguard.interfaces.&lt;name&gt;._deviceAddress</a></h2>
 <p>The device address assigned to the peer, based on the network address and device number.
@@ -511,7 +541,7 @@ This is automatically generated.</p>
 null or IPv4 address or IPv6 address <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertisekeepalive"><a class="header" href="#noxawireguardinterfacesnameadvertisekeepalive">noxa.wireguard.interfaces.&lt;name&gt;.advertise.keepAlive</a></h2>
 <p>The keep alive interval remote peers should use when communicating with this interface.</p>
@@ -521,7 +551,7 @@ null or signed integer</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserver"><a class="header" href="#noxawireguardinterfacesnameadvertiseserver">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server</a></h2>
 <p>Options for wireguard servers. If a wireguard interface is regarded as a server (e.g. since it has a public IP address), it may advertise its service via the <code>server.advertise</code> option.</p>
@@ -533,7 +563,7 @@ null or (submodule)</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserverdefaultgateway"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverdefaultgateway">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.defaultGateway</a></h2>
 <p>If set, this server will be the default gateway for clients.</p>
@@ -543,7 +573,7 @@ boolean</p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserverfirewallallow"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverfirewallallow">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.firewallAllow</a></h2>
 <p>If set, the nixos firewall will allow incoming connections to the advertised listen port.</p>
@@ -553,7 +583,7 @@ boolean</p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserverlistenaddress"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverlistenaddress">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.listenAddress</a></h2>
 <p>The address this server will listen on for incoming connections.</p>
@@ -561,7 +591,7 @@ boolean</p>
 IPv4 address or IPv6 address</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertiseserverlistenport"><a class="header" href="#noxawireguardinterfacesnameadvertiseserverlistenport">noxa.wireguard.interfaces.&lt;name&gt;.advertise.server.listenPort</a></h2>
 <p>The port this server will listen on for incoming connections.</p>
@@ -569,7 +599,7 @@ IPv4 address or IPv6 address</p>
 signed integer</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameautostart"><a class="header" href="#noxawireguardinterfacesnameautostart">noxa.wireguard.interfaces.&lt;name&gt;.autostart</a></h2>
 <p>Specifies whether to autostart the WireGuard interface.</p>
@@ -580,7 +610,7 @@ boolean</p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamebackend"><a class="header" href="#noxawireguardinterfacesnamebackend">noxa.wireguard.interfaces.&lt;name&gt;.backend</a></h2>
 <p>The backend to use for WireGuard config generation.</p>
@@ -594,7 +624,7 @@ one of “wireguard”, “wg-quick”</p>
 <code>"wireguard"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamedeviceaddresses"><a class="header" href="#noxawireguardinterfacesnamedeviceaddresses">noxa.wireguard.interfaces.&lt;name&gt;.deviceAddresses</a></h2>
 <p>List of ip addresses to assign to this interface. The server will forward traffic
@@ -603,7 +633,7 @@ to these addresses.</p>
 list of (IPv4 address or IPv6 address)</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamedevicenumber"><a class="header" href="#noxawireguardinterfacesnamedevicenumber">noxa.wireguard.interfaces.&lt;name&gt;.deviceNumber</a></h2>
 <p>If set, a new address will be assigned to the peer with the following schema:</p>
@@ -620,7 +650,7 @@ null or signed integer</p>
 <code>"3"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/simple.nix">noxa/modules/wireguard/simple.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamegatewayoverride"><a class="header" href="#noxawireguardinterfacesnamegatewayoverride">noxa.wireguard.interfaces.&lt;name&gt;.gatewayOverride</a></h2>
 <p>If set, this interface will use the specified hostname as the gateway for connecting to the wireguard network.</p>
@@ -630,7 +660,7 @@ null or string</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamekeepalive"><a class="header" href="#noxawireguardinterfacesnamekeepalive">noxa.wireguard.interfaces.&lt;name&gt;.keepAlive</a></h2>
 <p>The default keep alive interval this interface will use when communicating with remote peers.</p>
@@ -641,7 +671,7 @@ null or signed integer</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamekindisclient"><a class="header" href="#noxawireguardinterfacesnamekindisclient">noxa.wireguard.interfaces.&lt;name&gt;.kind.isClient</a></h2>
 <p>This interface has the role of a client, meaning it does not advertise other peers to connect to it. Instead, it connects to other peers, initiating the connection.</p>
@@ -651,7 +681,7 @@ boolean <em>(read only)</em></p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamekindisgateway"><a class="header" href="#noxawireguardinterfacesnamekindisgateway">noxa.wireguard.interfaces.&lt;name&gt;.kind.isGateway</a></h2>
 <p>This interface is a server and is marked as the default gateway for clients.
@@ -662,7 +692,7 @@ boolean <em>(read only)</em></p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamekindisserver"><a class="header" href="#noxawireguardinterfacesnamekindisserver">noxa.wireguard.interfaces.&lt;name&gt;.kind.isServer</a></h2>
 <p>This interface has the role of a server, meaning it advertises its listen port and address to peers.</p>
@@ -672,7 +702,7 @@ boolean <em>(read only)</em></p>
 <code>false</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamenetworkaddress"><a class="header" href="#noxawireguardinterfacesnamenetworkaddress">noxa.wireguard.interfaces.&lt;name&gt;.networkAddress</a></h2>
 <p>The network IP addresses. On clients, traffic of this network will be routed through the WireGuard interface.</p>
@@ -680,7 +710,7 @@ boolean <em>(read only)</em></p>
 IPv4 address, normalized network address, or (IPv6 address, normalized network address)</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/options.nix">noxa/modules/wireguard/options.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutes"><a class="header" href="#noxawireguardroutes">noxa.wireguard.routes</a></h2>
 <p>A set of intermediary connection information, automatically computed from the nixos configurations.</p>
@@ -688,7 +718,7 @@ IPv4 address, normalized network address, or (IPv6 address, normalized network a
 lazy attribute set of (submodule) <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameneighbors"><a class="header" href="#noxawireguardroutesnameneighbors">noxa.wireguard.routes.&lt;name&gt;.neighbors</a></h2>
 <p>A set of connections for this interface, automatically computed from the nixos configurations.</p>
@@ -696,7 +726,7 @@ lazy attribute set of (submodule) <em>(read only)</em></p>
 lazy attribute set of (submodule) <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameneighborsnamekeepalive"><a class="header" href="#noxawireguardroutesnameneighborsnamekeepalive">noxa.wireguard.routes.&lt;name&gt;.neighbors.&lt;name&gt;.keepAlive</a></h2>
 <p>The keep-alive interval for this connection, in seconds.
@@ -705,7 +735,7 @@ If set to <code>null</code>, no keep-alive is configured.</p>
 null or signed integer <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameparticipantsclients"><a class="header" href="#noxawireguardroutesnameparticipantsclients">noxa.wireguard.routes.&lt;name&gt;.participants.clients</a></h2>
 <p>A list of clients for this interface. Automatically populated.</p>
@@ -713,7 +743,7 @@ null or signed integer <em>(read only)</em></p>
 list of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameparticipantsgateways"><a class="header" href="#noxawireguardroutesnameparticipantsgateways">noxa.wireguard.routes.&lt;name&gt;.participants.gateways</a></h2>
 <p>A list of gateways for this interface. Automatically populated.</p>
@@ -721,7 +751,7 @@ list of string <em>(read only)</em></p>
 list of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnameparticipantsservers"><a class="header" href="#noxawireguardroutesnameparticipantsservers">noxa.wireguard.routes.&lt;name&gt;.participants.servers</a></h2>
 <p>A list of servers for this interface. Automatically populated.</p>
@@ -729,7 +759,7 @@ list of string <em>(read only)</em></p>
 list of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnamepeers"><a class="header" href="#noxawireguardroutesnamepeers">noxa.wireguard.routes.&lt;name&gt;.peers</a></h2>
 <p>A list of peers for this interface. Automatically populated.</p>
@@ -737,7 +767,7 @@ list of string <em>(read only)</em></p>
 list of (submodule) <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnamepeerstarget"><a class="header" href="#noxawireguardroutesnamepeerstarget">noxa.wireguard.routes.&lt;name&gt;.peers.*.target</a></h2>
 <p>The target hostname of the connection.</p>
@@ -745,7 +775,7 @@ list of (submodule) <em>(read only)</em></p>
 string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardroutesnamepeersvia"><a class="header" href="#noxawireguardroutesnamepeersvia">noxa.wireguard.routes.&lt;name&gt;.peers.*.via</a></h2>
 <p>The hostname of the peer this connection is routed through.</p>
@@ -753,7 +783,7 @@ string <em>(read only)</em></p>
 null or string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/routes.nix">noxa/modules/wireguard/routes.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix">noxa/modules/nixos/wireguard/routes.nix</a></li>
 </ul>
 <h2 id="noxawireguardsecrets"><a class="header" href="#noxawireguardsecrets">noxa.wireguard.secrets</a></h2>
 <p>A set of wireguard secrets. When using the <code>.interfaces</code> options,
@@ -765,7 +795,7 @@ lazy attribute set of (submodule)</p>
 <code>{ }</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
 <h2 id="noxawireguardsecretsnamepresharedkeyfiles"><a class="header" href="#noxawireguardsecretsnamepresharedkeyfiles">noxa.wireguard.secrets.&lt;name&gt;.presharedKeyFiles</a></h2>
 <p>The pre-shared key file for each peer (by hostname) of the wireguard interface</p>
@@ -773,7 +803,7 @@ lazy attribute set of (submodule)</p>
 lazy attribute set of string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
 <h2 id="noxawireguardsecretsnameprivatekeyfile"><a class="header" href="#noxawireguardsecretsnameprivatekeyfile">noxa.wireguard.secrets.&lt;name&gt;.privateKeyFile</a></h2>
 <p>The private key file of the wireguard interface</p>
@@ -781,7 +811,7 @@ lazy attribute set of string <em>(read only)</em></p>
 string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
 <h2 id="noxawireguardsecretsnamepublickey"><a class="header" href="#noxawireguardsecretsnamepublickey">noxa.wireguard.secrets.&lt;name&gt;.publicKey</a></h2>
 <p>The public key the wireguard interface</p>
@@ -789,7 +819,7 @@ string <em>(read only)</em></p>
 string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/wireguard/secrets.nix">noxa/modules/wireguard/secrets.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="noxaoverlays"><a class="header" href="#noxaoverlays">noxa.overlays</a></h2>
 <p>A list of overlays to apply to this nixos configuration. The inputs being the final
@@ -807,7 +837,7 @@ list of anything</p>
 <code>[ ]</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/overlay.nix">noxa/modules/overlay.nix</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/overlay.nix">noxa/modules/nixos/overlay.nix</a></li>
 </ul>
 
                     </main>

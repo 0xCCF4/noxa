@@ -22,6 +22,6 @@ list of anything
 ` [ ] `
 
 *Declared by:*
- - [noxa/modules/overlay\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/overlay.nix)
+ - [noxa/modules/nixos/overlay\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/overlay.nix)
 
 
