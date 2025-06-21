@@ -6,7 +6,7 @@
 , nixosOptionsDoc
 , ...
 }@inputs:
-with lib; with builtins; 
+with lib; with builtins;
 let
   makeOptionsDoc =
     module:
@@ -36,8 +36,8 @@ let
               lib = self.lib;
               nixosConfigurations = { };
             };
-            agenix-rekey = {nixosModules.default = {};};
-            agenix = {nixosModules.default = {};};
+            agenix-rekey = { nixosModules.default = { }; };
+            agenix = { nixosModules.default = { }; };
           };
         }))
         options
@@ -72,7 +72,7 @@ let
 
   groups = {
     secrets = ../modules/nixos/secrets;
-    wireguard = ../modules/nixos/wireguard ;
+    wireguard = ../modules/nixos/wireguard;
     overlay = ../modules/nixos/overlay.nix;
   };
 

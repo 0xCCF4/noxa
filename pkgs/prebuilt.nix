@@ -4,7 +4,7 @@
 , mkDerivation ? pkgs.stdenv.mkDerivation
 , agenix-rekey
 , system
-,...
+, ...
 }:
 with lib; with builtins;
 (pkgs.writeShellScriptBin "prebuilt-examples" ''
@@ -28,4 +28,4 @@ with lib; with builtins;
   done
 
   popd
-  '')
+'')

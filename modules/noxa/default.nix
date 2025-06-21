@@ -1,3 +1,1 @@
-noxa-inputs: {
-    
-}
+noxa-inputs: { }

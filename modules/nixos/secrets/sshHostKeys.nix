@@ -14,7 +14,7 @@
 }: with lib; with builtins; with types;
 let
   cfg = config.noxa.sshHostKeys;
-  cfgOpenssh = config.services.openssh or {};
+  cfgOpenssh = config.services.openssh or { };
 in
 {
   options.noxa.sshHostKeys = {

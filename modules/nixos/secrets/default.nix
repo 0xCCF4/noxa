@@ -270,15 +270,16 @@ in
     };
   };
 
-  options.age.secrets = mkOption {
-    type = attrsOf (mock (additional: { }));
-  } // (if agenix.nixosModules.default == {} then {
+  options.age.secrets = mkOption
+    {
+      type = attrsOf (mock (additional: { }));
+    } // (if agenix.nixosModules.default == { } then {
     # for building the documentation
     description = ''
       Extension of the `age` (agenix) secrets module to provide
       secrets for multi-host NixOs configurations.
     '';
-  } else {});
+  } else { });
 
   imports = [
     agenix.nixosModules.default
