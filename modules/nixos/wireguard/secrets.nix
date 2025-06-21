@@ -62,15 +62,14 @@ in
                 hosts = [ target config.networking.hostName ];
                 generator.script = "wireguard-psk";
               })
-              uniqueVias)
+              uniqueVias) ++
+            [{
+              ident = "interface-key-${name}";
+              module = "noxa.wireguard";
+              generator.script = "wireguard-key";
+            }]
           )
           (attrNames cfg.interfaces)))
-
-        [{
-          ident = "interface-key";
-          module = "noxa.wireguard";
-          generator.script = "wireguard-key";
-        }]
       ];
 
       noxa.wireguard.secrets = mkMerge (map
@@ -85,7 +84,7 @@ in
               let
                 keyFile = config.age.secrets.${noxa.lib.secrets.computeIdentifier {
                   module = "noxa.wireguard";
-                  ident = "interface-key";
+                  ident = "interface-key-${name}";
                 }};
                 publicKeyFile = noxa.lib.filesystem.withExtension keyFile.rekeyFile "pub";
               in
