@@ -409,11 +409,6 @@ A set of intermediary connection information, automatically computed from the ni
 *Type:*
 lazy attribute set of (submodule) *(read only)*
 
-
-
-*Default:*
-` { } `
-
 *Declared by:*
  - [noxa/modules/nixos/wireguard/routes\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/routes.nix)
 
