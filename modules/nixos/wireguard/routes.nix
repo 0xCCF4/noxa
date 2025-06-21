@@ -85,7 +85,6 @@ in
         A set of intermediary connection information, automatically computed from the nixos configurations.
       '';
       readOnly = true;
-      default = { };
     };
   };
 
