@@ -67,7 +67,7 @@ in
           # socket activation, it goes to the remote side (#19589).
           exec >&2
 
-          ${flip concatMapStrings cfg.hostKeys (k: ''
+          ${flip concatMapStrings cfgOpenssh.hostKeys (k: ''
             if ! [ -s "${resolvePath k.path}" ]; then
                 if ! [ -h "${resolvePath k.path}" ]; then
                     rm -f "${resolvePath k.path}"
