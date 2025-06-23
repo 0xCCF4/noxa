@@ -20,13 +20,13 @@
     age.generators.nix-store-key = { pkgs, file, ... }: ''
       mkdir -p $(dirname ${escapeShellArg file})
       TMPDIR=$(mktemp -d)
-      TRAP 'rm -rf "$TMPDIR"' EXIT
-      PRIVATE_KEY_FILE="${TMPDIR}/private-key.pem"
-      PUBLIC_KEY_FILE="${TMPDIR}/public-key.pem"
-      ${pkgs.nix}/bin/nix-store --generate-binary-cache-key "$(basename ${file})" "$PRIVATE_KEY_FILE" "$PUBLIC_KEY_FILE"
+      TRAP 'rm -rf "''${TMPDIR}"' EXIT
+      PRIVATE_KEY_FILE="''${TMPDIR}/private-key.pem"
+      PUBLIC_KEY_FILE="''${TMPDIR}/public-key.pem"
+      ${pkgs.nix}/bin/nix-store --generate-binary-cache-key "$(basename ${file})" "''${PRIVATE_KEY_FILE}}" "''${PUBLIC_KEY_FILE}"
       cp "$PUBLIC_KEY_FILE" ${escapeShellArg (removeSuffix ".age" file + ".pub")}
       cat "$PRIVATE_KEY_FILE"
-      rm -rf "$TMPDIR"
+      rm -rf "''${TMPDIR}"
     '';
     };
 }
