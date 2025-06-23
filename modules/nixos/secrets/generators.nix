@@ -1,4 +1,4 @@
-{...}: with lib; with builtins; {
+{lib, ...}: with lib; with builtins; {
     config = {
         age.generators.wireguard-key = { pkgs, file, ... }: ''
       mkdir -p $(dirname ${escapeShellArg file})
