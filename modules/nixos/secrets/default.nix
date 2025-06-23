@@ -285,6 +285,7 @@ in
     agenix.nixosModules.default
     agenix-rekey.nixosModules.default
     ./sshHostKeys.nix
+    ./generators.nix
   ];
 
   config = {
@@ -327,23 +328,6 @@ in
           };
         })
       cfg.def);
-
-    age.generators.wireguard-key = { pkgs, file, ... }: ''
-      mkdir -p $(dirname ${lib.escapeShellArg file})
-      priv=$(${pkgs.wireguard-tools}/bin/wg genkey)
-      ${pkgs.wireguard-tools}/bin/wg pubkey <<< "$priv" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".pub")}
-      echo "$priv"
-    '';
-
-    age.generators.wireguard-psk = { pkgs, file, ... }: ''
-      mkdir -p $(dirname ${lib.escapeShellArg file})
-      ${pkgs.wireguard-tools}/bin/wg genpsk
-    '';
-
-    age.generators.dummy = { pkgs, file, ... }: ''
-      mkdir -p $(dirname ${lib.escapeShellArg file})
-      echo "This is a dummy secret, not meant to be used in production."
-    '';
 
     age.rekey = mkIf (cfg.options.enable) {
       storageMode = mkDefault "local";
