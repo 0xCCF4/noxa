@@ -1,5 +1,7 @@
-{ noxa, ... }: {
+{ noxa, agenix, ... }: {
   config = {
+    system.stateVersion = "25.11";
+
     noxa.wireguard.interfaces.wg-service = {
       networkAddress = "10.22.0.0/24";
     };

@@ -23,25 +23,27 @@
     , nixpkgs
     , flake-utils
     , disko
+    , agenix
+    , agenix-rekey
     , noxa
     , ...
     }@inputs:
       with nixpkgs.lib; with builtins;
       {
-        # Nixos configuration
-        nixosConfigurations = noxa.lib.nixos-instantiate {
-          hostLocations = ./hosts;
-          nixosConfigurations = self.nixosConfigurations;
-          additionalArgs = {
-            # used for disk provisioning
-            modules = [ disko.nixosModules.disko ];
-          };
+        # Agenix rekey module configuration
+        agenix-rekey = agenix-rekey.configure {
+          userFlake = self;
+          nixosConfigurations = attrsets.mapAttrs (name: value: value.configuration) self.noxaConfiguration;
         };
 
-        # Agenix rekey module configuration
-        agenix-rekey = inputs.agenix-rekey.configure {
-          userFlake = self;
-          nixosConfigurations = self.nixosConfigurations;
+        # Noxa configuration
+        noxaConfiguration = noxa.lib.noxa-instantiate {
+          modules = [ ./config.nix ];
+          specialArgs = {
+            inherit disko;
+            inherit agenix;
+            inherit agenix-rekey;
+          };
         };
       };
 }
