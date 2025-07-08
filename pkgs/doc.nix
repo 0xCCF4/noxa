@@ -4,6 +4,7 @@
 , runCommand
 , mdbook
 , nixosOptionsDoc
+, nixpkgs
 , ...
 }@inputs:
 with lib; with builtins;
@@ -21,6 +22,8 @@ let
                 # Provide `pkgs` arg to all modules
                 config._module = {
                   args.pkgs = pkgs;
+                  args.noxaHost = "<noxa-host-id>";
+                  args.nodes = {};
                   check = false;
                 };
                 # Hide NixOS `_module.args` from nixosOptionsDoc to remain specific to noxa
@@ -31,10 +34,11 @@ let
             )
           ];
           specialArgs = inputs // {
-            noxa = {
+            noxa = self // {
+              lib = self.lib // {
               net = inputs.nix-net-lib.lib;
-              lib = self.lib;
-              nixosConfigurations = { };
+              };
+              inherit nixpkgs;
             };
             agenix-rekey = { nixosModules.default = { }; };
             agenix = { nixosModules.default = { }; };
@@ -73,7 +77,6 @@ let
   groups = {
     secrets = ../modules/nixos/secrets;
     wireguard = ../modules/nixos/wireguard;
-    overlay = ../modules/nixos/overlay.nix;
   };
 
   documentation = attrsets.mapAttrs (name: module: makeOptionsDoc module) groups;
@@ -90,7 +93,6 @@ runCommand "noxa.nix-doc"
     
     cp ${documentation.secrets.optionsCommonMark} docs/src/secrets.md
     cp ${documentation.wireguard.optionsCommonMark} docs/src/wireguard.md
-    cp ${documentation.overlay.optionsCommonMark} docs/src/overlay.md
     
     ${mdbook}/bin/mdbook build -d $out docs
     cp -r docs/ $out/docs
