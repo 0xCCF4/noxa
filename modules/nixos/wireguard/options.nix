@@ -4,7 +4,7 @@
 , noxa
 , ...
 }:
-with lib; with builtins; with types; with noxa.net.types;
+with lib; with builtins; with types; with noxa.lib.net.types;
 let
   cfg = config.noxa.wireguard;
 in

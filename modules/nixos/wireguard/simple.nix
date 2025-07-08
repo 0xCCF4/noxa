@@ -12,7 +12,7 @@
 , lib
 , noxa
 , ...
-}: with lib; with builtins; with types; with noxa.net.types;
+}: with lib; with builtins; with types; with noxa.lib.net.types;
 let
   cfg = config.noxa.wireguard;
 in
@@ -48,9 +48,9 @@ in
 
       config =
         let
-          networkAddress = (noxa.net.decompose submod.config.networkAddress).networkParts;
+          networkAddress = (noxa.lib.net.decompose submod.config.networkAddress).networkParts;
           updatedAddress = (lists.sublist 0 (length networkAddress - 1) networkAddress) ++ [ submod.config.deviceNumber ];
-          deviceAddress = (noxa.net.ip submod.config.networkAddress).composeStr updatedAddress 32;
+          deviceAddress = (noxa.lib.net.ip submod.config.networkAddress).composeStr updatedAddress 32;
         in
         {
           _deviceAddress = deviceAddress;
@@ -66,7 +66,7 @@ in
           submod = cfg.interfaces.${name};
         in
         mkIf (submod.deviceNumber != null) [{
-          assertion = noxa.net.laysWithinSubnet submod._deviceAddress submod.networkAddress;
+          assertion = noxa.lib.net.laysWithinSubnet submod._deviceAddress submod.networkAddress;
           message = "The device address ${submod._deviceAddress} must be part of the network ${submod.networkAddress}.";
         }])
       (attrNames cfg.interfaces));

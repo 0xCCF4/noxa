@@ -2,9 +2,11 @@
 , config
 , lib
 , noxa
+, nodes ? throw "Are you using this module outside of a Noxa configuration?"
+, noxaHost ? throw "Are you using this module outside of a Noxa host configuration?"
 , ...
 }:
-with lib; with builtins; with types; with noxa.net.types;
+with lib; with builtins; with types;
 let
   cfg = config.noxa.wireguard;
 in
@@ -43,8 +45,8 @@ in
 
   config =
     let
-      allmods = name: mapAttrs (key: value: value.config.noxa.wireguard.interfaces."${name}") (attrsets.filterAttrs (host: nixos: attrsets.hasAttrByPath [ "config" "noxa" "wireguard" "interfaces" name ] nixos) noxa.nixosConfigurations);
-      exceptThis = attrsets.filterAttrs (host: nixos: host != config.networking.hostName) allmods;
+      allmods = name: mapAttrs (key: value: value.noxa.wireguard.interfaces."${name}") (attrsets.filterAttrs (host: nixos: attrsets.hasAttrByPath [ "noxa" "wireguard" "interfaces" name ] nixos) nodes);
+      exceptThis = attrsets.filterAttrs (host: nixos: host != noxaHost) allmods;
     in
     {
       noxa.secrets.def = mkMerge [
@@ -59,7 +61,7 @@ in
               (target: {
                 ident = "connection-psk-${name}";
                 module = "noxa.wireguard";
-                hosts = [ target config.networking.hostName ];
+                hosts = [ target noxaHost ];
                 generator.script = "wireguard-psk";
               })
               uniqueVias) ++
@@ -95,7 +97,7 @@ in
                   (target: {
                     "${target}" = config.age.secrets.${noxa.lib.secrets.computeIdentifier {
                       module = "noxa.wireguard";
-                      hosts = [ target config.networking.hostName ];
+                      hosts = [ target noxaHost ];
                       ident = "connection-psk-${name}";
                     }}.path;
                   })

@@ -2,9 +2,11 @@
 , config
 , lib
 , noxa
+, nodes ? throw "Are you using this module outside of a Noxa configuration?"
+, noxaHost ? throw "Are you using this module outside of a Noxa host configuration?"
 , ...
 }:
-with lib; with builtins; with types; with noxa.net.types;
+with lib; with builtins; with types; with noxa.lib.net.types;
 let
   cfg = config.noxa.wireguard;
 in
@@ -90,8 +92,8 @@ in
 
   config =
     let
-      allmods = name: mapAttrs (key: value: value.config.noxa.wireguard.interfaces."${name}") (attrsets.filterAttrs (host: nixos: attrsets.hasAttrByPath [ "config" "noxa" "wireguard" "interfaces" name ] nixos) noxa.nixosConfigurations);
-      exceptThis = attrsets.filterAttrs (host: nixos: host != config.networking.hostName) allmods;
+      allmods = name: mapAttrs (key: value: value.noxa.wireguard.interfaces."${name}") (attrsets.filterAttrs (host: nixos: attrsets.hasAttrByPath [ "noxa" "wireguard" "interfaces" name ] nixos) nodes);
+      exceptThis = attrsets.filterAttrs (host: nixos: host != noxaHast) allmods;
     in
     {
       noxa.wireguard.routes = mkMerge (map
@@ -124,22 +126,23 @@ in
                     target = host;
                     via = host;
                   })
-                  (attrsets.filterAttrs (host: mod: host != config.networking.hostName) servers))
+                  (attrsets.filterAttrs (host: mod: host != noxaHost) servers))
 
                 (attrsets.mapAttrsToList
                   (host: config: {
                     target = host;
                     via = gateway;
                   })
-                  (attrsets.filterAttrs (host: mod: host != config.networking.hostName) clients))
+                  (attrsets.filterAttrs (host: mod: host != noxaHost) clients))
               ];
-              neighbors = mkMerge (map
-                (via: {
-                  "${via}" = {
-                    keepAlive = minOrNull allmod.${via}.advertise.keepAlive submod.keepAlive;
-                  };
-                })
-                (lists.unique ((map (peer: if peer.via == config.networking.hostName then peer.target else peer.via) config.noxa.wireguard.routes.${name}.peers))));
+              #neighbors = mkMerge (map
+              #  (via: {
+              #    "${via}" = {
+              #      keepAlive = minOrNull allmod.${via}.advertise.keepAlive submod.keepAlive;
+              #    };
+              #  })
+              #  (lists.unique ((map (peer: if peer.via == noxaHost then peer.target else peer.via) config.noxa.wireguard.routes.${name}.peers))));
+              neighbors = { };
               participants.servers = attrNames servers;
               participants.clients = attrNames clients;
               participants.gateways = attrNames gateways;
