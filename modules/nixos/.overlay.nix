@@ -1,4 +1,4 @@
-{ config, lib, noxa, ... }: with lib; with lib.types; {
+{ config, lib, ... }: with lib; with lib.types; {
   options.noxa.overlays = mkOption {
     type = listOf anything; # make this func of kind `final: prev: ... -> { ... }`
     default = [ ];
