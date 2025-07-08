@@ -17,6 +17,7 @@
 , noxa
 , agenix
 , agenix-rekey
+, noxaHost ? throw "Are you using this module outside of a Noxa host configuration?"
 , ...
 }:
 with lib; with builtins; with types;
@@ -88,7 +89,7 @@ let
             The hosts that have access to this secret.
           '';
           example = [ "host1" "host2" ];
-          default = [ config.networking.hostName or "<hostname>" ];
+          default = [ noxaHost ];
         };
         identifier = mkOption {
           type = str;
@@ -230,7 +231,7 @@ in
           This directory must be writable by the user that runs the `agenix-rekey` module and added to
           the git repo.
 
-          It is recommended to use `$\{config.networking.hostName}` to create a unique directory for each host.
+          It is recommended to use `$\{noxaHost}` to create a unique directory for each host.
         '';
       };
       hostPubkey = mkOption {
@@ -299,21 +300,21 @@ in
     (map
       (secret:
         {
-          assertion = length secret.hosts <= 1 -> elem config.networking.hostName secret.hosts;
-          message = "${fgYellow}Defined secret ${fgCyan}'${secret.identifier}'${fgYellow} is not defined on the host that owns it: ${fgCyan}'${config.networking.hostName}'${fgYellow}, instead it is defined on: ${fgCyan}'${head secret.hosts}Ä${default}";
+          assertion = length secret.hosts <= 1 -> elem noxaHost secret.hosts;
+          message = "${fgYellow}Defined secret ${fgCyan}'${secret.identifier}'${fgYellow} is not defined on the host that owns it: ${fgCyan}'${noxaHost}'${fgYellow}, instead it is defined on: ${fgCyan}'${head secret.hosts}Ä${default}";
         })
       cfg.def)
     ;
 
     warnings = with noxa.lib.ansi; (map
-      (secret: mkIf (!(elem config.networking.hostName secret.hosts))
-        "${fgYellow}Defined secret ${fgCyan}'${secret.identifier}'${fgYellow} is not shared to the host on which it is defined: ${fgCyan}'${config.networking.hostName}'${fgYellow}, instead it is shared to: ${fgCyan}${toJSON secret.hosts}${default}"
+      (secret: mkIf (!(elem noxaHost secret.hosts))
+        "${fgYellow}Defined secret ${fgCyan}'${secret.identifier}'${fgYellow} is not shared to the host on which it is defined: ${fgCyan}'${noxaHost}'${fgYellow}, instead it is shared to: ${fgCyan}${toJSON secret.hosts}${default}"
       )
       cfg.def);
 
-    noxa.secrets.hostSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/host/${config.networking.hostName}"));
+    noxa.secrets.hostSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/host/${noxaHost}"));
     noxa.secrets.sharedSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/shared"));
-    noxa.secrets.options.rekeyDirectory = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/rekeyed/${config.networking.hostName}"));
+    noxa.secrets.options.rekeyDirectory = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/rekeyed/${noxaHost}"));
 
     age.secrets = mkMerge (map
       (secret:

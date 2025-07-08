@@ -1,6 +1,6 @@
-{lib, ...}: with lib; with builtins; {
-    config = {
-        age.generators.wireguard-key = { pkgs, file, ... }: ''
+{ lib, ... }: with lib; with builtins; {
+  config = {
+    age.generators.wireguard-key = { pkgs, file, ... }: ''
       mkdir -p $(dirname ${escapeShellArg file})
       priv=$(${pkgs.wireguard-tools}/bin/wg genkey)
       ${pkgs.wireguard-tools}/bin/wg pubkey <<< "$priv" > ${escapeShellArg (removeSuffix ".age" file + ".pub")}
@@ -28,5 +28,5 @@
       cat "$PRIVATE_KEY_FILE"
       rm -rf "''${TMPDIR}"
     '';
-    };
+  };
 }
