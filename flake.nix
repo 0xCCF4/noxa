@@ -48,7 +48,10 @@
     }@inputs:
       with nixpkgs.lib; with builtins;
       let
-        modules = import ./modules inputs;
+        modifiedInputs = (inputs // { noxa = self; });
+        modules = import ./modules modifiedInputs;
+        prefixAttrs = prefix: attrs: attrsets.mapAttrs' (name: value: nameValuePair "${prefix}${name}" value) attrs;
+        noxaConfiguration = ((import ./examples/flake.nix).outputs modifiedInputs).noxaConfiguration;
       in
       {
         # Nixos modules
@@ -64,13 +67,17 @@
         formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
 
         # Example nixos configuration
-        nixosConfigurations = ((import ./examples/flake.nix).outputs (inputs // { noxa = self; })).nixosConfigurations;
+        nixosConfigurations =
+          { }#(prefixAttrs "plain:" ((import ./examples/plain-no-noxa-modules/flake.nix).outputs (inputs // { noxa = self; })).nixosConfigurations)
+        ; #// (prefixAttrs "noxa:" ((import ./examples/noxa-modules/flake.nix).outputs (inputs // { noxa = self; })).nixosConfigurations);
 
         # Configuration of agenix rekey for usage in the examples
         agenix-rekey = inputs.agenix-rekey.configure {
           userFlake = self;
-          nixosConfigurations = self.nixosConfigurations;
+          nixosConfigurations = attrsets.mapAttrs (name: value: { config = value.configuration; }) noxaConfiguration.config.nodes;
         };
+
+        inherit noxaConfiguration;
       }
       // flake-utils.lib.eachDefaultSystem (
         system:
