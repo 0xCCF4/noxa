@@ -14,7 +14,7 @@ with lib; with builtins;
   TMPDIR=$(mktemp -d)
   trap 'rm -rf "$TMPDIR"' EXIT
 
-  cp -P -r ./* $TMPDIR/
+  rsync -a --exclude 'result' --exclude '.git' ./ $TMPDIR/
   pushd $TMPDIR
 
   ${pkgs.git}/bin/git clean -fxd || true
@@ -22,9 +22,9 @@ with lib; with builtins;
   ${agenix-rekey.packages.${system}.default}/bin/agenix generate
   ${agenix-rekey.packages.${system}.default}/bin/agenix rekey
 
-  for host in ${concatStringsSep " " (attrNames self.nixosConfigurations)}; do
-    ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#$host build "$@"
-    rm -Rf ./result/ || true
+  for host in ${concatStringsSep " " (attrNames self.noxaConfiguration.config.nodes)}; do
+    ${pkgs.nix}/bin/nix build .#noxaConfiguration.config.nodes.$host.build.toplevel
+    rm -fd ./result/ || true
   done
 
   popd
