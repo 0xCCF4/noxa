@@ -30,7 +30,7 @@ unique list of string
 
 ```
 [
-  "<hostname>"
+  "<noxa-host-id>"
 ]
 ```
 
@@ -264,7 +264,7 @@ unique list of string
 
 ```
 [
-  "<hostname>"
+  "<noxa-host-id>"
 ]
 ```
 
@@ -500,7 +500,7 @@ The directory where the rekey files are stored\. This is used by the ` agenix-re
 This directory must be writable by the user that runs the ` agenix-rekey ` module and added to
 the git repo\.
 
-It is recommended to use ` $\{config.networking.hostName} ` to create a unique directory for each host\.
+It is recommended to use ` $\{noxaHost} ` to create a unique directory for each host\.
 
 
 
