@@ -2,10 +2,6 @@
   config = {
     system.stateVersion = "25.11";
 
-    noxa.wireguard.interfaces.wg-service = {
-      networkAddress = "10.22.0.0/24";
-    };
-
     noxa.secrets.secretsPath = ./secrets;
     noxa.secrets.options.masterIdentities = [
       {
