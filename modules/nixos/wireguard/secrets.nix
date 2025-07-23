@@ -93,7 +93,7 @@ in
               {
                 publicKey = with noxa.lib.ansi; if filesystem.pathIsRegularFile publicKeyFile then readFile publicKeyFile else throw "${fgYellow}WireGuard public key file ${fgCyan}${toString publicKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}";
                 privateKeyFile = keyFile.path;
-                presharedKeyFiles = mkMerge (map
+                presharedKeyFiles = mkMerge ((map
                   (target: {
                     "${target}" = config.age.secrets.${noxa.lib.secrets.computeIdentifier {
                       module = "noxa.wireguard";
@@ -101,7 +101,7 @@ in
                       ident = "connection-psk-${name}";
                     }}.path;
                   })
-                  uniqueTargets);
+                  uniqueTargets) ++ [{ }]);
               };
           })
         (attrNames cfg.interfaces));
