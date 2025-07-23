@@ -19,8 +19,5 @@
     ./routes.nix
     ./secrets.nix
     ./interfaces.nix
-
-    # Add the deviceNumber option to interfaces
-    ./simple.nix
   ];
 }
