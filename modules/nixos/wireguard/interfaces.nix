@@ -9,8 +9,8 @@ with builtins; with lib; let
       peers = attrsets.mapAttrs
         (neighbor: cfg:
           let
-            otherHost = noxa.nodes.${neighbor}.noxa.wireguard.interfaces.${name};
-            otherSecrets = noxa.nodes.${neighbor}.noxa.wireguard.secrets.${name};
+            otherHost = nodes.${neighbor}.noxa.wireguard.interfaces.${name};
+            otherSecrets = nodes.${neighbor}.noxa.wireguard.secrets.${name};
           in
           {
             allowedIPs = otherHost.deviceAddresses ++ (lists.optional (elem neighbor routes.participants.gateways) ourConfig.networkAddress);
