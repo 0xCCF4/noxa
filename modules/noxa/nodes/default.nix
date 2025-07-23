@@ -22,6 +22,18 @@ in
       type = let x = options; in attrsOf (submoduleInheritSpecialArgs (options.defaults.type.functor.payload.modules ++ options.defaults.definitions ++ [ noxaConfigArg ]));
     };
 
+    nodeNames = mkOption {
+      description = "A list of node names managed by Noxa. Due to the architecture of Noxa,
+      noxa modules might unwillingly create new nodes, this list contains the name of all nodes
+      that are currently managed by Noxa. Noxa modules can check this list to see if a node
+      was created by themselves.
+      
+      The user must set this to the listOf all nodes they want to manage, otherwise if you
+      don't care, set this to `attrNames config.nodes`.";
+      default = [ ];
+      type = listOf str;
+    };
+
     defaults = mkOption {
       description = "Default options applied to all nodes.";
       default = { };
