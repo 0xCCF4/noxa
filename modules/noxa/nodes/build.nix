@@ -1,4 +1,4 @@
-{ lib, config, ... }: with lib; with builtins; {
+{ lib, config, noxaConfig, ... }: with lib; with builtins; {
   options = with types; {
     build.toplevel = mkOption {
       type = package;
@@ -20,8 +20,15 @@
     };
   };
 
-  config = {
-    build.toplevel = config.configuration.system.build.toplevel;
-    build.vm = config.configuration.system.build.vm;
-  };
+  config =
+    let
+      assertWarnCheck = lib.asserts.checkAssertWarn
+        (noxaConfig.assertions)
+        (noxaConfig.warnings)
+        config.configuration.system.build;
+    in
+    {
+      build.toplevel = assertWarnCheck.toplevel;
+      build.vm = assertWarnCheck.vm;
+    };
 }
