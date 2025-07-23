@@ -11,9 +11,9 @@ with lib; with builtins;
 let
   makeOptionsDoc =
     module:
-    nixosOptionsDoc {
-      inherit
-        ((evalModules {
+    let
+      eval = (
+        (evalModules {
           modules = [
             module
             (
@@ -23,7 +23,7 @@ let
                 config._module = {
                   args.pkgs = pkgs;
                   args.noxaHost = "<noxa-host-id>";
-                  args.nodes = {};
+                  args.nodes = { };
                   check = false;
                 };
                 # Hide NixOS `_module.args` from nixosOptionsDoc to remain specific to noxa
@@ -36,16 +36,26 @@ let
           specialArgs = inputs // {
             noxa = self // {
               lib = self.lib // {
-              net = inputs.nix-net-lib.lib;
+                net = inputs.nix-net-lib.lib;
               };
               inherit nixpkgs;
             };
             agenix-rekey = { nixosModules.default = { }; };
             agenix = { nixosModules.default = { }; };
           };
-        }))
-        options
-        ;
+        })
+      );
+    in
+    nixosOptionsDoc {
+      options = (if (attrsets.hasAttrByPath [ "defaults" ] eval.options) then
+        attrsets.recursiveUpdate eval.options
+          {
+            defaults.type = types.anything;
+            nodes.type = types.attrsOf types.anything;
+          }
+      else
+        eval.options
+      );
 
       transformOptions =
         opt:
@@ -77,6 +87,8 @@ let
   groups = {
     secrets = ../modules/nixos/secrets;
     wireguard = ../modules/nixos/wireguard;
+    noxaWireguard = ../modules/noxa/wireguard.nix;
+    noxaNodes = ../modules/noxa/nodes;
   };
 
   documentation = attrsets.mapAttrs (name: module: makeOptionsDoc module) groups;
@@ -91,8 +103,10 @@ runCommand "noxa.nix-doc"
     cp -r ${../docs} docs
     chmod -R u+w docs/src
     
-    cp ${documentation.secrets.optionsCommonMark} docs/src/secrets.md
-    cp ${documentation.wireguard.optionsCommonMark} docs/src/wireguard.md
+    cp ${documentation.secrets.optionsCommonMark} docs/src/nixos-secrets.md
+    cp ${documentation.wireguard.optionsCommonMark} docs/src/nixos-wireguard.md
+    cp ${documentation.noxaWireguard.optionsCommonMark} docs/src/noxa-wireguard.md
+    cp ${documentation.noxaNodes.optionsCommonMark} docs/src/noxa-nodes.md
     
     ${mdbook}/bin/mdbook build -d $out docs
     cp -r docs/ $out/docs
