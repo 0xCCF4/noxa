@@ -53,5 +53,12 @@ in
         };
       })
     ];
+
+    assertions = with noxa.lib.ansi; attrsets.mapAttrsToList (
+      name: node: {
+        message = "${fgYellow}Node ${fgGreen}'${name}'${fgYellow} is not defined in ${fgGreen}config.nodes${fgYellow}.${default}";
+        assertion = elem name config.nodeNames;
+      }
+    ) config.nodes;
   };
 }
