@@ -35,25 +35,7 @@ lazy attribute set of (submodule)
 ` { } `
 
 *Declared by:*
- - [noxa/modules/nixos/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix)
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
-
-
-
-## noxa\.wireguard\.interfaces\.\<name>\._deviceAddress
-
-
-
-The device address assigned to the peer, based on the network address and device number\.
-This is automatically generated\.
-
-
-
-*Type:*
-null or IPv4 address or IPv6 address *(read only)*
-
-*Declared by:*
- - [noxa/modules/nixos/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix)
 
 
 
@@ -238,39 +220,6 @@ list of (IPv4 address or IPv6 address)
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
-
-
-
-## noxa\.wireguard\.interfaces\.\<name>\.deviceNumber
-
-
-
-If set, a new address will be assigned to the peer with the following schema:
-
-The network prefix defined in ` noxa.wireguard.interfaces.<name>.networkAddress ` will be used as the base
-for the device address, and the value of ` noxa.wireguard.interfaces.<name>.deviceNumber ` will be used
-in the device part\. For example, if the network prefix is ` 1.2.0.0/16 ` and the device number is ` 11 `,
-the address added to the peer will be ` 1.2.0.11/32 `\.
-
-The device number might be a single number passed into the last component of the address\.
-
-
-
-*Type:*
-null or signed integer
-
-
-
-*Default:*
-` null `
-
-
-
-*Example:*
-` "3" `
-
-*Declared by:*
- - [noxa/modules/nixos/wireguard/simple\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix)
 
 
 

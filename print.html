@@ -531,17 +531,7 @@ lazy attribute set of (submodule)</p>
 <code>{ }</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
-</ul>
-<h2 id="noxawireguardinterfacesname_deviceaddress"><a class="header" href="#noxawireguardinterfacesname_deviceaddress">noxa.wireguard.interfaces.&lt;name&gt;._deviceAddress</a></h2>
-<p>The device address assigned to the peer, based on the network address and device number.
-This is automatically generated.</p>
-<p><em>Type:</em>
-null or IPv4 address or IPv6 address <em>(read only)</em></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnameadvertisekeepalive"><a class="header" href="#noxawireguardinterfacesnameadvertisekeepalive">noxa.wireguard.interfaces.&lt;name&gt;.advertise.keepAlive</a></h2>
 <p>The keep alive interval remote peers should use when communicating with this interface.</p>
@@ -634,23 +624,6 @@ list of (IPv4 address or IPv6 address)</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix">noxa/modules/nixos/wireguard/options.nix</a></li>
-</ul>
-<h2 id="noxawireguardinterfacesnamedevicenumber"><a class="header" href="#noxawireguardinterfacesnamedevicenumber">noxa.wireguard.interfaces.&lt;name&gt;.deviceNumber</a></h2>
-<p>If set, a new address will be assigned to the peer with the following schema:</p>
-<p>The network prefix defined in <code>noxa.wireguard.interfaces.&lt;name&gt;.networkAddress</code> will be used as the base
-for the device address, and the value of <code>noxa.wireguard.interfaces.&lt;name&gt;.deviceNumber</code> will be used
-in the device part. For example, if the network prefix is <code>1.2.0.0/16</code> and the device number is <code>11</code>,
-the address added to the peer will be <code>1.2.0.11/32</code>.</p>
-<p>The device number might be a single number passed into the last component of the address.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em>
-<code>null</code></p>
-<p><em>Example:</em>
-<code>"3"</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/simple.nix">noxa/modules/nixos/wireguard/simple.nix</a></li>
 </ul>
 <h2 id="noxawireguardinterfacesnamegatewayoverride"><a class="header" href="#noxawireguardinterfacesnamegatewayoverride">noxa.wireguard.interfaces.&lt;name&gt;.gatewayOverride</a></h2>
 <p>If set, this interface will use the specified hostname as the gateway for connecting to the wireguard network.</p>
