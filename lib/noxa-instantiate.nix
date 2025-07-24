@@ -25,7 +25,7 @@ in
       ```
   */
   noxa-instantiate = args: nixpkgs.lib.evalModules {
-    class = if args ? "class" then (with noxa.lib.ansi; trace "${fgPurple}Warning: You are overwriting the class argument to ${fgCyan+toString args.class+fgPurple}. Hopefully you know what you are doing...${reset}" args.class) else "noxa";
+    class = if args ? "class" then (with noxa.lib.ansi; trace "${fgPurple}Warning: You are overwriting the class argument to ${fgCyan+toString args.class+fgPurple}. Hopefully you know what you are doing...${default}" args.class) else "noxa";
     modules = args.modules ++ [
       ../modules/noxa
     ];
