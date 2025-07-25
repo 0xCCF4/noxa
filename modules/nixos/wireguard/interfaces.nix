@@ -21,13 +21,20 @@ with builtins; with lib; let
             presharedKeyFile = ourSecrets.presharedKeyFiles.${neighbor};
           })
         routes.neighbors;
+
+      ips =
+        if backend == "wg-quick"
+        then {
+          address = ourConfig.deviceAddresses;
+        } else {
+          ips = ourConfig.deviceAddresses;
+        };
     in
     {
       privateKeyFile = ourSecrets.privateKeyFile;
       listenPort = mkIf (ourConfig.advertise.server != null) (ourConfig.advertise.server.listenPort or "<invalid>");
-      ips = ourConfig.deviceAddresses;
       peers = attrValues peers;
-    };
+    } // ips;
 in
 {
   config = {
