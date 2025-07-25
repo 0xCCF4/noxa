@@ -37,6 +37,28 @@ boolean
 
 
 
+## wireguard\.\<name>\.autoConfigureGateway
+
+
+
+If set to true, the gateways for this network will be automatically configured based
+on the ` nodes.<name>.reachable.internet ` attribute\.
+
+
+
+*Type:*
+boolean
+
+
+
+*Default:*
+` true `
+
+*Declared by:*
+ - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
+
+
+
 ## wireguard\.\<name>\.members
 
 
