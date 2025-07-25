@@ -7,7 +7,7 @@
       default = { };
       type = attrsOf
         (submodule
-          (submod: {
+          (network: {
             options = {
               networkAddress = mkOption {
                 type = ipNetwork;
@@ -23,9 +23,17 @@
                   If set to false, nodes may only join this network if declared in this network configuration.
                 '';
               };
+              autoConfigureGateway = mkOption {
+                type = bool;
+                default = true;
+                description = ''
+                  If set to true, the gateways for this network will be automatically configured based
+                  on the `nodes.<name>.reachable.internet` attribute.
+                '';
+              };
               members = mkOption
                 {
-                  type = attrsOf (submodule (submod: {
+                  type = attrsOf (submodule ({ name, ... }: {
                     options = {
                       autostart = mkOption {
                         type = nullOr bool;
@@ -148,6 +156,17 @@
                           If set to any other value than null, the value will be applied to the nodes configuration.
                         '';
                       };
+                    };
+
+                    config = {
+                      advertise.server =
+                        let
+                          advertisedPublicIps = config.nodes.${name}.reachable.internet or [ ];
+                        in
+                        mkIf (length advertisedPublicIps > 0 && network.config.autoConfigureGateway) (mkDefault {
+                          listenAddress = head advertisedPublicIps;
+                          defaultGateway = mkDefault true;
+                        });
                     };
                   }));
                   description = ''
