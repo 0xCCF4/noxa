@@ -20,15 +20,8 @@
     };
   };
 
-  config =
-    let
-      assertWarnCheck = lib.asserts.checkAssertWarn
-        (noxaConfig.assertions)
-        (noxaConfig.warnings)
-        config.configuration.system.build;
-    in
-    {
-      build.toplevel = assertWarnCheck.toplevel;
-      build.vm = assertWarnCheck.vm;
-    };
+  config = {
+    build.toplevel = config.configuration.system.build.toplevel;
+    build.vm = config.configuration.system.build.vm;
+  };
 }

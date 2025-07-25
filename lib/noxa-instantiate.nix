@@ -24,21 +24,28 @@ in
       A Noxa NixOS configuration
       ```
   */
-  noxa-instantiate = args: nixpkgs.lib.evalModules {
-    class = if args ? "class" then (with noxa.lib.ansi; trace "${fgPurple}Warning: You are overwriting the class argument to ${fgCyan+toString args.class+fgPurple}. Hopefully you know what you are doing...${default}" args.class) else "noxa";
-    modules = args.modules ++ [
-      ../modules/noxa
-    ];
+  noxa-instantiate = args:
+    let
+      eval = nixpkgs.lib.evalModules {
+        class = if args ? "class" then (with noxa.lib.ansi; trace "${fgPurple}Warning: You are overwriting the class argument to ${fgCyan+toString args.class+fgPurple}. Hopefully you know what you are doing...${default}" args.class) else "noxa";
+        modules = args.modules ++ [
+          ../modules/noxa
+        ];
 
-    specialArgs = (args.specialArgs or { }) // {
-      noxa = ((args.specialArgs or { }).noxa or noxa) // {
-        inherit nixpkgs;
-        nixosModules = noxa.nixosModules;
-        noxaModules = noxa.noxaModules;
-        lib = (args.specialArgs.noxa or noxa).lib // {
-          net = nix-net-lib.lib;
-        };
+        specialArgs = (args.specialArgs or { }) // {
+          noxa = ((args.specialArgs or { }).noxa or noxa) // {
+            inherit nixpkgs;
+            nixosModules = noxa.nixosModules;
+            noxaModules = noxa.noxaModules;
+            lib = (args.specialArgs.noxa or noxa).lib // {
+              net = nix-net-lib.lib;
+            };
+          };
+        } // (removeAttrs args [ "modules" "class" "specialArgs" ]);
       };
-    } // (removeAttrs args [ "modules" "class" "specialArgs" ]);
-  };
+    in
+    lib.asserts.checkAssertWarn
+      (eval.config.assertions)
+      (eval.config.warnings)
+      eval;
 }
