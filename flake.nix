@@ -61,7 +61,7 @@
         noxaModules = modules.noxa;
 
         # Libraries
-        lib = import ./lib inputs;
+        lib = import ./lib modifiedInputs;
 
         # Source code formatter
         formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
