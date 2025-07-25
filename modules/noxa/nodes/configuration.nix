@@ -1,4 +1,5 @@
 { lib, config, name, noxa, noxaConfig, agenix, agenix-rekey, ... }: with lib; with builtins; let
+  
   evalConfig = import (config.nixpkgs + "/nixos/lib/eval-config.nix") {
     system = null;
     modules = [
@@ -15,7 +16,7 @@
       inherit agenix;
       inherit agenix-rekey;
     } // config.specialArgs // {
-      noxa.lib = noxa.lib // {
+      noxa = noxa // {
         nixpkgs = throw "Do not use the global nixpkgs of noxa. This is reserved for building the Noxa configuration.";
       };
     };
