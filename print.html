@@ -176,32 +176,78 @@ Starting with the motivation, design goals, and design decisions, this handbook 
 you through setting up a multi-host NixOS configuration.</p>
 <h2 id="motivation"><a class="header" href="#motivation">Motivation</a></h2>
 <p>NixOS is a Linux distribution configuration solution composed of modules and packages <a href="https://nixos.org/manual/nixos/stable/#preface">NixOS Manual</a>. While <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> provides many modules for configuring NixOS machines, it lacks fundamental support for configuration beyond the scope of a single host.</p>
-<p>In practice, some hosts share configuration settings. Imagine that you configure four different NixOS machines and would like to set up a Wireguard network between them. In the end, you will configure <code>networking.wireguard.interfaces.&lt;name&gt;</code> on each host, but there are several open questions:</p>
+<p>In practice, some hosts share configuration settings. Imagine that you configure four different NixOS machines and would like to set up a WireGuard network between them. In the end, you will configure <code>networking.wireguard.interfaces.&lt;name&gt;</code> on each host, but there are several open questions:</p>
 <ol>
-<li>How do you manage secrets? For some secrets, how do you share public interface keys with each host or handle connection keys shared between two hosts?</li>
-<li>Some hosts will have public IP addresses and a direct connection should be established, while others take on a client role and do not own a public IP address. The trait of having a public IP address will ultimately belong to the configuration of each host, while each other host needs to configure their connection settings accordingly.</li>
+<li>Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network once globally should be enough.</li>
+<li>How do you manage secrets efficiently? Preshared connection keys, for example, are owned not by one but by two hosts. Should you specify them on several hosts redundantly, or would it be sufficient to declare the network topology globally?</li>
 </ol>
-<p>To summarize, there are configuration settings shared among different hosts and do not belong to any specific one, and there are configuration values owned by hosts but accessed by others to configure their NixOS configuration.</p>
-<p>Currently, <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> does not support these multi-host configuration scenarios and multi-host dependency.</p>
+<p>To summarize, some configuration settings are shared among different hosts and do not belong to any specific one. For example, the existence of a WireGuard network and its configuration fundamentally does not belong to the configuration of a single NixOS host. Further, one host's configuration might depend on another's configuration.</p>
+<p>Currently, <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> does not support these multi-host configuration scenarios and multi-host dependencies.</p>
 <h2 id="goal"><a class="header" href="#goal">Goal</a></h2>
-<p>The goal of <strong>Noxa</strong> is to fill this gap and provide a framework to support the configuration of hosts that depend on each other.</p>
+<p>The goal of <strong>Noxa</strong> is to fill this gap and provide a framework to support the configuration of multiple hosts that:</p>
+<ol>
+<li>Potentially depend on each other</li>
+<li>Depend on a global configuration</li>
+</ol>
+<p>Whats contained in <strong>Noxa</strong>:</p>
+<ol>
+<li>The module system scaffolding to set up a <strong>noxa</strong> configuration.</li>
+<li><em>Noxa modules</em> covering standard use-cases.</li>
+<li><em>Nixos modules</em> that configure the specified hosts according to the global configuration from <em>noxa modules</em></li>
+</ol>
+<h2 id="how-does-it-work"><a class="header" href="#how-does-it-work">How does it work</a></h2>
+<p>At the highest level, <strong>Noxa</strong> uses the module system to provide a configuration environment. A <em>Noxa module</em> can extend the functionality of your configuration (like with standard NixOS modules).
+The difference to the "normal" NixOS module system being the provided configuration options. Hosts are, for example, defined using the configuration value <code>nodes.&lt;name&gt;.***</code>. NixOS
+configuration is then supplied via the <code>nodes.&lt;name&gt;.configuration</code> option.</p>
+<p>For example, the following <em>Noxa module</em> declares two hosts, while <code>hostB</code> depends on the configuration values of <code>hostA</code>.</p>
+<pre><code class="language-nix">{config, ...}: {
+    # Declaration of `hostA`
+    nodes.hostA.configuration = {
+        services.openssh.enable = true;
+
+        /* Other NixOS configuration options */
+    };
+
+    # Declaration of `hostB`
+    nodes.hostB.configuration = {
+        imports = [
+            ./some-nixos-module.nix
+        ];
+
+        # Access config values from other hosts
+        networking.hostName =
+           "${config.nodes.hostA.configuration.networking.hostName}-copy";
+    };
+
+    imports = [
+        ./some-other-noxa-module.nix
+    ];
+
+    /* Other Noxa configuration options */
+}
+</code></pre>
+<p>For a reference, which options are available to <em>noxa modules</em> checkout <a href="./options.html">options</a>.</p>
 <h2 id="contributing"><a class="header" href="#contributing">Contributing</a></h2>
-<p>Contributions are welcome. Suggest new features and bugs via issue. Pull requests are welcome.</p>
+<p>Contributions are welcome. Suggest new features and bugs via issues. Pull requests are welcome.</p>
 <h2 id="related-projects"><a class="header" href="#related-projects">Related projects</a></h2>
 <p>Other frameworks already aim to implement multi-host NixOS configuration; the list is provided below.
-Why another framework? 1. Because of the following design goal: Plug-and-play, new hosts added, should have minimal configuration already configured according to the existing hosts. 2. Learning of Nix language and ecosystem.</p>
-<p>List of other multi-host configuration framework (feel free to add others):</p>
+Why another framework? Learning the Nix language and ecosystem.</p>
+<p>List of other multi-host configuration frameworks (feel free to add others):</p>
 <ul>
-<li><a href="https://github.com/infinisil/nixus/">nixus</a></li>
+<li><a href="https://github.com/infinisil/nixus/">nixus @infinisil (GPLv3)</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<p>todo</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="options"><a class="header" href="#options">Options</a></h1>
-<p>This section is the option specification of <strong>Noxa</strong>. The specification is split into the following parts:</p>
-<ul>
-<li><a href="./secrets.html">Multi-host secret management</a> Courtesy of the NixOS module <code>noxa.nixosModules.secrets</code></li>
-<li><a href="./wireguard.html">Multi-host wireguard setup</a> Courtesy of the NixOS module <code>noxa.nixosModules.wireguard</code></li>
-<li><a href="./overlay.html">Noxa overlays</a> Courtesy of the NixOS module <code>noxa.nixosModules.overlay</code></li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="agesecrets"><a class="header" href="#agesecrets">age.secrets</a></h2>
+<p>You found the documentation/reference of all options and configuration values noxa exposes to the user.</p>
+<h2 id="documentation-by-module"><a class="header" href="#documentation-by-module">Documentation by Module</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Module</th><th>Link</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Noxa Nodes</strong></td><td><a href="./options-noxa-nodes.html">Options</a></td><td>Define and manage hosts; per-host/node configuration.</td></tr>
+<tr><td><strong>NixOS Secrets</strong></td><td><a href="./options-nixos-secrets.html">Options</a></td><td>Manage secrets across multiple hosts.</td></tr>
+<tr><td><strong>Noxa Wireguard</strong></td><td><a href="./options-noxa-wireguard.html">Options</a></td><td>Declare Wireguard networks.</td></tr>
+<tr><td><strong>NixOS Wireguard</strong></td><td><a href="./options-nixos-wireguard.html">Options</a></td><td>Configure hosts according to globally defined Wireguard networks.</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h2 id="agesecrets"><a class="header" href="#agesecrets">age.secrets</a></h2>
 <p>Extension of the <code>age</code> (agenix) secrets module to provide
 secrets for multi-host NixOs configurations.</p>
 <p><em>Type:</em>
@@ -794,7 +840,6 @@ string <em>(read only)</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="nixos-info"><a class="header" href="#nixos-info">NixOS Info</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="defaults"><a class="header" href="#defaults">defaults</a></h2>
 <p>Default options applied to all nodes.</p>
 <p><em>Type:</em>
