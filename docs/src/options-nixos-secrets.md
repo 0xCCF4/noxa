@@ -9,7 +9,7 @@ secrets for multi-host NixOs configurations\.
 attribute set of (submodule)
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -46,7 +46,7 @@ unique list of string
 ```
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -69,7 +69,7 @@ string
 ` "wg-interface-key" `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -91,7 +91,7 @@ string *(read only)*
 ` "host:noxa.wireguard.interfaces.some-interface::wg-interface-key" `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -114,7 +114,7 @@ string
 ` "services.openssh" `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -135,7 +135,7 @@ boolean
 ` true `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -163,7 +163,7 @@ list of (submodule)
 ` [ ] `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -189,7 +189,7 @@ null or (list of unspecified value) or attribute set of unspecified value
 ` [ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ] `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -210,7 +210,7 @@ null or string or function that evaluates to a(n) string
 ` null `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -243,7 +243,7 @@ null or (list of string)
 ```
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -280,7 +280,7 @@ unique list of string
 ```
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -303,7 +303,7 @@ string
 ` "wg-interface-key" `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -325,7 +325,7 @@ string *(read only)*
 ` "host:noxa.wireguard.interfaces.some-interface::wg-interface-key" `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -348,7 +348,7 @@ string
 ` "services.openssh" `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -364,7 +364,7 @@ The path to the rekey file for this secret\. This is used by the ` agenix-rekey 
 absolute path *(read only)*
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -389,7 +389,7 @@ ATTENTION: Since this path is copied to the nix store, it must not contain any s
 absolute path
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -413,7 +413,7 @@ boolean
 ` true `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -434,7 +434,7 @@ null or string
 ` null `
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -450,7 +450,7 @@ A list of identities that are used to decrypt encrypted secrets for rekeying\.
 list of (submodule)
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -469,7 +469,7 @@ This is the private key file used\.
 null or string
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -488,7 +488,7 @@ This is the public key file used\.
 null or string
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -508,7 +508,7 @@ It is recommended to use ` $\{noxaHost} ` to create a unique directory for each 
 absolute path
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -524,7 +524,7 @@ The path where all secrets are stored\. Subfolders are created for host specific
 null or absolute path
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 
@@ -549,7 +549,7 @@ ATTENTION: Since this path is copied to the nix store, it must not contain any s
 absolute path
 
 *Declared by:*
- - [noxa/modules/nixos/secrets](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets)
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
 
 
 

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Options - Noxa</title>
+        <title>NixOS Info - Noxa</title>
 
 
         <!-- Custom HTML head -->
@@ -169,23 +169,46 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="options"><a class="header" href="#options">Options</a></h1>
-<p>This section is the option specification of <strong>Noxa</strong>. The specification is split into the following parts:</p>
+                        <h2 id="noxainforeachableallowhostconfiguration"><a class="header" href="#noxainforeachableallowhostconfiguration">noxa.info.reachable.allowHostConfiguration</a></h2>
+<p>Allow the host to configure its own reachable addresses. If set to false, values can only be set on the Noxa module level.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
 <ul>
-<li><a href="./secrets.html">Multi-host secret management</a> Courtesy of the NixOS module <code>noxa.nixosModules.secrets</code></li>
-<li><a href="./wireguard.html">Multi-host wireguard setup</a> Courtesy of the NixOS module <code>noxa.nixosModules.wireguard</code></li>
-<li><a href="./overlay.html">Noxa overlays</a> Courtesy of the NixOS module <code>noxa.nixosModules.overlay</code></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/info.nix">noxa/modules/nixos/info.nix</a></li>
+</ul>
+<h2 id="noxainforeachableinternet"><a class="header" href="#noxainforeachableinternet">noxa.info.reachable.internet</a></h2>
+<p>List of external IP addresses this host is reachable at via using a public IP address.</p>
+<p><em>Type:</em>
+list of (IPv4 address or IPv6 address)</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/info.nix">noxa/modules/nixos/info.nix</a></li>
+</ul>
+<h2 id="noxainforeachablewireguardnetwork"><a class="header" href="#noxainforeachablewireguardnetwork">noxa.info.reachable.wireguardNetwork</a></h2>
+<p>List of IP addresses this host is reachable at via WireGuard (specified via name).</p>
+<p><em>Type:</em>
+attribute set of list of (IPv4 address or IPv6 address)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/info.nix">noxa/modules/nixos/info.nix</a></li>
 </ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="options-nixos-wireguard.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="options-nixos-secrets.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="options-noxa-nodes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -195,11 +218,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="options-nixos-wireguard.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="options-nixos-secrets.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="options-noxa-nodes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

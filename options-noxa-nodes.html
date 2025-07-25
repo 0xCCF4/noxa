@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Options - Noxa</title>
+        <title>Noxa Nodes - Noxa</title>
 
 
         <!-- Custom HTML head -->
@@ -169,23 +169,52 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="options"><a class="header" href="#options">Options</a></h1>
-<p>This section is the option specification of <strong>Noxa</strong>. The specification is split into the following parts:</p>
+                        <h2 id="defaults"><a class="header" href="#defaults">defaults</a></h2>
+<p>Default options applied to all nodes.</p>
+<p><em>Type:</em>
+anything</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
 <ul>
-<li><a href="./secrets.html">Multi-host secret management</a> Courtesy of the NixOS module <code>noxa.nixosModules.secrets</code></li>
-<li><a href="./wireguard.html">Multi-host wireguard setup</a> Courtesy of the NixOS module <code>noxa.nixosModules.wireguard</code></li>
-<li><a href="./overlay.html">Noxa overlays</a> Courtesy of the NixOS module <code>noxa.nixosModules.overlay</code></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
+</ul>
+<h2 id="nodenames"><a class="header" href="#nodenames">nodeNames</a></h2>
+<p>A list of node names managed by Noxa. Due to the architecture of Noxa,
+noxa modules might unwillingly create new nodes, this list contains the name of all nodes
+that are currently managed by Noxa. Noxa modules can check this list to see if a node
+was created by themselves.</p>
+<pre><code>  The user must set this to the listOf all nodes they want to manage, otherwise if you
+  don't care, set this to `attrNames config.nodes`.
+</code></pre>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
+</ul>
+<h2 id="nodes"><a class="header" href="#nodes">nodes</a></h2>
+<p>A set of nixos hosts managed by Noxa.</p>
+<p><em>Type:</em>
+attribute set of anything</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
 </ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="options-nixos-info.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="options-nixos-secrets.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="options-noxa-wireguard.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -195,11 +224,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="options-nixos-info.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="options-nixos-secrets.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="options-noxa-wireguard.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

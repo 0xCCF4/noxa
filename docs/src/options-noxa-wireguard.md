@@ -240,7 +240,7 @@ to these addresses\.
 
 
 *Type:*
-null or (list of (IPv4 address or IPv6 address))
+null or ((list of (IPv4 address or IPv6 address)) or (IPv4 address or IPv6 address) convertible to it)
 
 
 

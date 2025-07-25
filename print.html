@@ -208,7 +208,7 @@ secrets for multi-host NixOs configurations.</p>
 attribute set of (submodule)</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="agesecretsnamehosts"><a class="header" href="#agesecretsnamehosts">age.secrets.&lt;name&gt;.hosts</a></h2>
 <p>The hosts that have access to this secret.</p>
@@ -227,7 +227,7 @@ unique list of string</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="agesecretsnameident"><a class="header" href="#agesecretsnameident">age.secrets.&lt;name&gt;.ident</a></h2>
 <p>The name of the secret.</p>
@@ -238,7 +238,7 @@ string</p>
 <code>"wg-interface-key"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="agesecretsnameidentifier"><a class="header" href="#agesecretsnameidentifier">age.secrets.&lt;name&gt;.identifier</a></h2>
 <p>A unique identifier for the secret, derived from the module and name.
@@ -249,7 +249,7 @@ string <em>(read only)</em></p>
 <code>"host:noxa.wireguard.interfaces.some-interface::wg-interface-key"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="agesecretsnamemodule"><a class="header" href="#agesecretsnamemodule">age.secrets.&lt;name&gt;.module</a></h2>
 <p>The owning module of that secret.</p>
@@ -260,7 +260,7 @@ string</p>
 <code>"services.openssh"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsenable"><a class="header" href="#noxasecretsenable">noxa.secrets.enable</a></h2>
 <p>Enables the secrets module, multi-host secret management.</p>
@@ -270,7 +270,7 @@ boolean</p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdef"><a class="header" href="#noxasecretsdef">noxa.secrets.def</a></h2>
 <p>A list of secrets that are managed by the noxa secrets module.</p>
@@ -285,7 +285,7 @@ list of (submodule)</p>
 <code>[ ]</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdefgeneratordependencies"><a class="header" href="#noxasecretsdefgeneratordependencies">noxa.secrets.def.*.generator.dependencies</a></h2>
 <p>Other secrets on which this secret depends. See <code>agenix-rekey</code> documentation.</p>
@@ -297,7 +297,7 @@ null or (list of unspecified value) or attribute set of unspecified value</p>
 <code>[ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ]</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdefgeneratorscript"><a class="header" href="#noxasecretsdefgeneratorscript">noxa.secrets.def.*.generator.script</a></h2>
 <p>Generator script, see <code>agenix-rekey</code> documentation.</p>
@@ -307,7 +307,7 @@ null or string or function that evaluates to a(n) string</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdefgeneratortags"><a class="header" href="#noxasecretsdefgeneratortags">noxa.secrets.def.*.generator.tags</a></h2>
 <p>Optional list of tags that may be used to refer to secrets that use this generator.</p>
@@ -323,7 +323,7 @@ null or (list of string)</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdefhosts"><a class="header" href="#noxasecretsdefhosts">noxa.secrets.def.*.hosts</a></h2>
 <p>The hosts that have access to this secret.</p>
@@ -342,7 +342,7 @@ unique list of string</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdefident"><a class="header" href="#noxasecretsdefident">noxa.secrets.def.*.ident</a></h2>
 <p>The name of the secret.</p>
@@ -353,7 +353,7 @@ string</p>
 <code>"wg-interface-key"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdefidentifier"><a class="header" href="#noxasecretsdefidentifier">noxa.secrets.def.*.identifier</a></h2>
 <p>A unique identifier for the secret, derived from the module and name.
@@ -364,7 +364,7 @@ string <em>(read only)</em></p>
 <code>"host:noxa.wireguard.interfaces.some-interface::wg-interface-key"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdefmodule"><a class="header" href="#noxasecretsdefmodule">noxa.secrets.def.*.module</a></h2>
 <p>The owning module of that secret.</p>
@@ -375,7 +375,7 @@ string</p>
 <code>"services.openssh"</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsdefrekeyfile"><a class="header" href="#noxasecretsdefrekeyfile">noxa.secrets.def.*.rekeyFile</a></h2>
 <p>The path to the rekey file for this secret. This is used by the <code>agenix-rekey</code> module to rekey the secret.</p>
@@ -383,7 +383,7 @@ string</p>
 absolute path <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretshostsecretspath"><a class="header" href="#noxasecretshostsecretspath">noxa.secrets.hostSecretsPath</a></h2>
 <p>The path where host secrets are stored. This is the path where noxa will look for (encrypted) host specific secrets.</p>
@@ -397,7 +397,7 @@ shared with other hosts.</p>
 absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsoptionsenable"><a class="header" href="#noxasecretsoptionsenable">noxa.secrets.options.enable</a></h2>
 <p>Enables the ‘simple’ options, by providing settings proxy, a user can set the options, inside the <code>noxa.secrets.options</code> module
@@ -409,7 +409,7 @@ boolean</p>
 <code>true</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsoptionshostpubkey"><a class="header" href="#noxasecretsoptionshostpubkey">noxa.secrets.options.hostPubkey</a></h2>
 <p>The public key of the host that is used to encrypt the secrets for this host.</p>
@@ -419,7 +419,7 @@ null or string</p>
 <code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsoptionsmasteridentities"><a class="header" href="#noxasecretsoptionsmasteridentities">noxa.secrets.options.masterIdentities</a></h2>
 <p>A list of identities that are used to decrypt encrypted secrets for rekeying.</p>
@@ -427,7 +427,7 @@ null or string</p>
 list of (submodule)</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsoptionsmasteridentitiesidentity"><a class="header" href="#noxasecretsoptionsmasteridentitiesidentity">noxa.secrets.options.masterIdentities.*.identity</a></h2>
 <p>The identity that is used to encrypt and store secrets as .age files.
@@ -437,7 +437,7 @@ This must be an absolute path, given as string to not publish keys to the nix st
 null or string</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsoptionsmasteridentitiespubkey"><a class="header" href="#noxasecretsoptionsmasteridentitiespubkey">noxa.secrets.options.masterIdentities.*.pubkey</a></h2>
 <p>The identity that is used to encrypt and store secrets as .age files.
@@ -447,7 +447,7 @@ This is the age public key of the identity, used to encrypt the secrets.</p>
 null or string</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretsoptionsrekeydirectory"><a class="header" href="#noxasecretsoptionsrekeydirectory">noxa.secrets.options.rekeyDirectory</a></h2>
 <p>The directory where the rekey files are stored. This is used by the <code>agenix-rekey</code> module to rekey the secrets.
@@ -458,7 +458,7 @@ the git repo.</p>
 absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretssecretspath"><a class="header" href="#noxasecretssecretspath">noxa.secrets.secretsPath</a></h2>
 <p>The path where all secrets are stored. Subfolders are created for host specific and shared secrets.</p>
@@ -466,7 +466,7 @@ absolute path</p>
 null or absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasecretssharedsecretspath"><a class="header" href="#noxasecretssharedsecretspath">noxa.secrets.sharedSecretsPath</a></h2>
 <p>The path where secrets shared between several hosts are stored. This is the path where noxa will look for (encrypted) shared secrets.</p>
@@ -479,7 +479,7 @@ Secrets in this directory are not host specific, they are not owned by a single 
 absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets">noxa/modules/nixos/secrets</a></li>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
 <h2 id="noxasshhostkeysgenerate"><a class="header" href="#noxasshhostkeysgenerate">noxa.sshHostKeys.generate</a></h2>
 <p>Generates SSH host keys on boot even if the openssh service is not enabled.</p>
@@ -794,6 +794,72 @@ string <em>(read only)</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="noxainforeachableallowhostconfiguration"><a class="header" href="#noxainforeachableallowhostconfiguration">noxa.info.reachable.allowHostConfiguration</a></h2>
+<p>Allow the host to configure its own reachable addresses. If set to false, values can only be set on the Noxa module level.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/info.nix">noxa/modules/nixos/info.nix</a></li>
+</ul>
+<h2 id="noxainforeachableinternet"><a class="header" href="#noxainforeachableinternet">noxa.info.reachable.internet</a></h2>
+<p>List of external IP addresses this host is reachable at via using a public IP address.</p>
+<p><em>Type:</em>
+list of (IPv4 address or IPv6 address)</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/info.nix">noxa/modules/nixos/info.nix</a></li>
+</ul>
+<h2 id="noxainforeachablewireguardnetwork"><a class="header" href="#noxainforeachablewireguardnetwork">noxa.info.reachable.wireguardNetwork</a></h2>
+<p>List of IP addresses this host is reachable at via WireGuard (specified via name).</p>
+<p><em>Type:</em>
+attribute set of list of (IPv4 address or IPv6 address)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/info.nix">noxa/modules/nixos/info.nix</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="defaults"><a class="header" href="#defaults">defaults</a></h2>
+<p>Default options applied to all nodes.</p>
+<p><em>Type:</em>
+anything</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
+</ul>
+<h2 id="nodenames"><a class="header" href="#nodenames">nodeNames</a></h2>
+<p>A list of node names managed by Noxa. Due to the architecture of Noxa,
+noxa modules might unwillingly create new nodes, this list contains the name of all nodes
+that are currently managed by Noxa. Noxa modules can check this list to see if a node
+was created by themselves.</p>
+<pre><code>  The user must set this to the listOf all nodes they want to manage, otherwise if you
+  don't care, set this to `attrNames config.nodes`.
+</code></pre>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
+</ul>
+<h2 id="nodes"><a class="header" href="#nodes">nodes</a></h2>
+<p>A set of nixos hosts managed by Noxa.</p>
+<p><em>Type:</em>
+attribute set of anything</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="wireguard"><a class="header" href="#wireguard">wireguard</a></h2>
 <p><em>Type:</em>
 attribute set of (submodule)</p>
@@ -914,7 +980,7 @@ null or one of “wireguard”, “wg-quick”</p>
 <p>List of ip addresses to assign to this interface. The server will forward traffic
 to these addresses.</p>
 <p><em>Type:</em>
-null or (list of (IPv4 address or IPv6 address))</p>
+null or ((list of (IPv4 address or IPv6 address)) or (IPv4 address or IPv6 address) convertible to it)</p>
 <p><em>Default:</em>
 <code>null</code></p>
 <p><em>Declared by:</em></p>

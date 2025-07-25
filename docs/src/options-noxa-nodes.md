@@ -13,7 +13,7 @@ anything
 ` { } `
 
 *Declared by:*
- - [noxa/modules/noxa/nodes](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes)
+ - [noxa/modules/noxa/nodes/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix)
 
 
 
@@ -42,7 +42,7 @@ list of string
 ` [ ] `
 
 *Declared by:*
- - [noxa/modules/noxa/nodes](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes)
+ - [noxa/modules/noxa/nodes/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix)
 
 
 
@@ -63,6 +63,6 @@ attribute set of anything
 ` { } `
 
 *Declared by:*
- - [noxa/modules/noxa/nodes](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes)
+ - [noxa/modules/noxa/nodes/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix)
 
 
