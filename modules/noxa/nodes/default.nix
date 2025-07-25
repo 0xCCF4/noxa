@@ -19,7 +19,7 @@ in
     nodes = mkOption {
       description = "A set of nixos hosts managed by Noxa.";
       default = { };
-      type = let x = options; in attrsOf (submoduleInheritSpecialArgs (options.defaults.type.functor.payload.modules ++ options.defaults.definitions ++ [ noxaConfigArg ]));
+      type = let x = options; in attrsOf (options.defaults.type.substSubModules (options.defaults.type.functor.payload.modules ++ options.defaults.definitions ++ [ noxaConfigArg ]));
     };
 
     nodeNames = mkOption {
