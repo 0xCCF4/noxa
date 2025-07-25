@@ -21,21 +21,7 @@
   };
 
   config = {
-    configuration.noxa.info = {
-      reachable.internet = config.reachable.internet;
-      reachable.wireguardNetwork = config.reachable.wireguardNetwork;
-    };
-
-    assertions = with noxa.lib.ansi; [
-      {
-        assertion = !config.reachable.allowHostConfiguration -> (config.reachable.internet == config.configuration.noxa.info.reachable.internet);
-        message = "${fgYellow}The host ${fgCyan}${name}${fgYellow} defines its own reachable addresses ${fgCyan}${toJSON config.configuration.noxa.info.reachable.internet}${fgYellow}, but the Noxa module it set to not allow this, it has configured them as ${fgCyan}${toJSON config.reachable.internet}${fgYellow}.${default}";
-      }
-      {
-        assertion = !config.reachable.allowHostConfiguration -> (config.reachable.wireguardNetwork == config.configuration.noxa.info.reachable.wireguardNetwork);
-        message = "${fgYellow}The host ${fgCyan}${name}${fgYellow} defines its own reachable WireGuard addresses ${fgCyan}${toJSON config.configuration.noxa.info.reachable.wireguardNetwork}${fgYellow}, but the Noxa module it set to not allow this, it has configured them as ${fgCyan}${toJSON config.reachable.wireguardNetwork}${fgYellow}.${default}";
-      }
-    ] ++ (attrsets.mapAttrsToList
+    assertions = with noxa.lib.ansi; (attrsets.mapAttrsToList
       (netName: ip: {
         assertion = hasAttr netName noxaConfig.wireguard;
         message = "${fgYellow}The host ${fgCyan}${name}${fgYellow} defines a reachability via a WireGuard network ${fgCyan}${netName}${fgYellow}, but the Noxa module does not declare a WireGuard network with that name.${default}";

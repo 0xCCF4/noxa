@@ -208,36 +208,38 @@
           })
         nodesContainedInConfig);
 
-      assertions = with noxa.lib.ansi; lists.flatten ((attrsets.mapAttrsToList
-        (nodeName: node: map
-          (networkName: [
-            {
-              assertion = (hasAttr networkName lockedNetworksMembers) -> (elem nodeName lockedNetworksMembers.${networkName});
-              message = "${fgYellow}Node ${fgCyan}'${nodeName}'${fgYellow} is not allowed to join the locked network ${fgCyan}'${networkName}'${fgYellow}.${default}";
-            }
-            {
-              assertion = (
-                (hasAttr networkName config.wireguard) &&
+      assertions = with noxa.lib.ansi; lists.flatten (
+        (attrsets.mapAttrsToList
+          (nodeName: node: map
+            (networkName: [
+              {
+                assertion = (hasAttr networkName lockedNetworksMembers) -> (elem nodeName lockedNetworksMembers.${networkName});
+                message = "${fgYellow}Node ${fgCyan}'${nodeName}'${fgYellow} is not allowed to join the locked network ${fgCyan}'${networkName}'${fgYellow}.${default}";
+              }
+              {
+                assertion = (
+                  (hasAttr networkName config.wireguard) &&
                   (hasAttr nodeName config.wireguard.${networkName}.members) &&
                   config.wireguard.${networkName}.members.${nodeName}.onlySpecifiedDeviceAddresses
-              )
-              ->
-              (node.configuration.noxa.wireguard.interfaces.${networkName}.deviceAddresses ==
+                )
+                ->
+                (node.configuration.noxa.wireguard.interfaces.${networkName}.deviceAddresses ==
                 config.wireguard.${networkName}.members.${nodeName}.deviceAddresses);
-              message = "${fgYellow}Node ${fgCyan}'${nodeName}'${fgYellow} has device addresses set ${fgGreen+(toJSON (node.configuration.noxa.wireguard.interfaces.${networkName}.deviceAddresses or []))+fgYellow} for network ${fgCyan}'${networkName}'${fgYellow}, but the global network configuration requires that only the stated device addresses ${fgGreen+(toJSON (config.wireguard.${networkName}.members.${nodeName}.deviceAddresses or []))+fgYellow} are used.${default}";
-            }
-          ])
-          (attrNames node.configuration.noxa.wireguard.interfaces))
-        config.nodes)
-      ++
-      (attrsets.mapAttrsToList
-        (networkName: netConfig: map
-          (nodeName: {
-            assertion = (hasAttr nodeName config.nodes) && (elem nodeName config.nodeNames);
-            message = "${fgYellow}Network ${fgCyan}'${networkName}'${fgYellow} declared a configuration for node ${fgCyan}'${nodeName}'${fgYellow}, but this node does not exist in ${fgCyan}'nodes'${fgYellow}; or did you forget to add ${fgCyan}'${nodeName}'${fgYellow} to ${fgGreen}'nodeNames'${fgYellow}?.${default}";
-          })
-          (attrNames netConfig.members))
-        config.wireguard));
+                message = "${fgYellow}Node ${fgCyan}'${nodeName}'${fgYellow} has device addresses set ${fgGreen+(toJSON (node.configuration.noxa.wireguard.interfaces.${networkName}.deviceAddresses or []))+fgYellow} for network ${fgCyan}'${networkName}'${fgYellow}, but the global network configuration requires that only the stated device addresses ${fgGreen+(toJSON (config.wireguard.${networkName}.members.${nodeName}.deviceAddresses or []))+fgYellow} are used.${default}";
+              }
+            ])
+            (attrNames node.configuration.noxa.wireguard.interfaces))
+          config.nodes)
+        ++
+        (attrsets.mapAttrsToList
+          (networkName: netConfig: map
+            (nodeName: {
+              assertion = (hasAttr nodeName config.nodes) && (elem nodeName config.nodeNames);
+              message = "${fgYellow}Network ${fgCyan}'${networkName}'${fgYellow} declared a configuration for node ${fgCyan}'${nodeName}'${fgYellow}, but this node does not exist in ${fgCyan}'nodes'${fgYellow}; or did you forget to add ${fgCyan}'${nodeName}'${fgYellow} to ${fgGreen}'nodeNames'${fgYellow}?.${default}";
+            })
+            (attrNames netConfig.members))
+          config.wireguard)
+      );
     };
 
 }

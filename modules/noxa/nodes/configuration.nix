@@ -7,8 +7,6 @@
           inherit name;
           noxaHost = name;
           nodes = attrsets.mapAttrs (x: v: v.configuration) noxaConfig.nodes;
-          options = evalConfig.options;
-          config = evalConfig.config;
         };
       }
       noxa.nixosModules.default
