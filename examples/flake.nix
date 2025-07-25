@@ -33,7 +33,11 @@
         # Agenix rekey module configuration
         agenix-rekey = agenix-rekey.configure {
           userFlake = self;
-          nixosConfigurations = attrsets.mapAttrs (name: value: value.configuration) self.noxaConfiguration;
+          nixosConfigurations = attrsets.mapAttrs
+            (name: value: {
+              config = value.configuration;
+            })
+            self.noxaConfiguration.config.nodes;
         };
 
         # Noxa configuration
