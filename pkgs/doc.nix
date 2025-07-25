@@ -84,14 +84,20 @@ let
         };
     };
 
-  groups = {
-    secrets = ../modules/nixos/secrets;
-    wireguard = ../modules/nixos/wireguard;
-    noxaWireguard = ../modules/noxa/wireguard.nix;
-    noxaNodes = ../modules/noxa/nodes;
-  };
+  nixosPaths = self.lib.nixDirectoryToAttr' ../modules/nixos;
+  noxaPaths = self.lib.nixDirectoryToAttr' ../modules/noxa;
+
+  groups = { } //
+    (attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair ("nixos-" + name) value) nixosPaths) //
+    (attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair ("noxa-" + name) value) noxaPaths);
 
   documentation = attrsets.mapAttrs (name: module: makeOptionsDoc module) groups;
+
+  docCommands = attrsets.mapAttrsToList
+    (name: value:
+      "cp ${value.optionsCommonMark} docs/src/options-${name}.md"
+    )
+    documentation;
 
 in
 runCommand "noxa.nix-doc"
@@ -103,10 +109,7 @@ runCommand "noxa.nix-doc"
     cp -r ${../docs} docs
     chmod -R u+w docs/src
     
-    cp ${documentation.secrets.optionsCommonMark} docs/src/nixos-secrets.md
-    cp ${documentation.wireguard.optionsCommonMark} docs/src/nixos-wireguard.md
-    cp ${documentation.noxaWireguard.optionsCommonMark} docs/src/noxa-wireguard.md
-    cp ${documentation.noxaNodes.optionsCommonMark} docs/src/noxa-nodes.md
+    ${concatStringsSep "\n" docCommands}
     
     ${mdbook}/bin/mdbook build -d $out docs
     cp -r docs/ $out/docs

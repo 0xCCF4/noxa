@@ -2,6 +2,8 @@
 
 - [Intro](./introduction.md)
 - [Options](./options.md)
-    - [NixOS Secrets](./nixos-secrets.md)
-    - [NixOS Wireguard](./nixos-wireguard.md)
-    - [Noxa Wireguard](./noxa-wireguard.md)
+    - [NixOS Secrets](./options-nixos-secrets.md)
+    - [NixOS Wireguard](./options-nixos-wireguard.md)
+    - [NixOS Info](./options-nixos-info.md)
+    - [Noxa Nodes](./options-noxa-nodes.md)
+    - [Noxa Wireguard](./options-noxa-wireguard.md)
