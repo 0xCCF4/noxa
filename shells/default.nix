@@ -4,4 +4,4 @@
 , ...
 }@inputs:
 with lib; with builtins;
-noxa.lib.nixDirectoryToAttr' ./.;
+noxa.lib.nixDirectoryToAttr' ./.
