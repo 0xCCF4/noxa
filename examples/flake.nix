@@ -27,7 +27,7 @@
     , agenix-rekey
     , noxa
     , ...
-    }@inputs:
+    }:
       with nixpkgs.lib; with builtins;
       {
         # Agenix rekey module configuration
