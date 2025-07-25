@@ -1,5 +1,6 @@
 { nixpkgs
 , lib ? nixpkgs.lib
+, noxa ? throw "nix-dir-listing.nix called without required argument 'noxa'"
 , ...
 }:
 with lib; with builtins;
@@ -65,7 +66,7 @@ rec {
       files = attrNames (filterAttrs (name: type: type == "regular") entries);
       directories = attrNames (filterAttrs (name: type: type == "directory") entries);
 
-      filterNixFiles = files: filter (name: match ".*?\.nix$" name != null) files;
+      filterNixFiles = files: filter (name: match "[^\.].*?\.nix$" name != null) files;
       nixFilesRoot = filter (f: f != "default.nix") (filterNixFiles files);
 
       # Build attribute set from .nix files (excluding default.nix)
@@ -85,6 +86,35 @@ rec {
         (filter (dir: builtins.pathExists (path + "/${dir}/default.nix")) directories));
     in
     dirAttrs // fileAttrs;
+
+
+  /**
+      Generates a set of all `<name>.nix` files and `<name>/default.nix` files in the specified directory.
+
+      # Inputs
+      `path` : The directory to search for Nix files.
+
+      # Output
+      A set of paths to the found files, with the file names (no .nix extension) as keys.
+      ```
+      {
+        "<name1>" = <path>; # e.g. <name1>.nix
+        "<name2>" = <path>; # e.g. <name2>/default.nix
+        ...
+      }
+      ```
+
+      # Type
+      ```
+      Path -> { <name> : Path }
+      ```
+
+      # Note
+      If a file `<name>.nix` and a directory `<name>/default.nix` exist the file will be preferred.
+      */
+  nixDirectoryToAttr' = path: (attrsets.mapAttrs'
+    (name: path: attrsets.nameValuePair (noxa.lib.filesystem.baseNameWithoutExtension name) path)
+    (noxa.lib.nixDirectoryToAttr path));
 
 
   /**

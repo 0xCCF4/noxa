@@ -1,9 +1,7 @@
 { noxa, lib, disko, ... }: with lib; {
   config =
     let
-      filesInHostDir = (attrsets.mapAttrs'
-        (name: path: attrsets.nameValuePair (noxa.lib.filesystem.baseNameWithoutExtension name) path)
-        (noxa.lib.nixDirectoryToAttr ./hosts));
+      filesInHostDir = noxa.lib.nixDirectoryToAttr' ./hosts;
     in
     {
       defaults = { config, name, lib, ... }: {
