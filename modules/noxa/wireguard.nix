@@ -52,7 +52,7 @@
                       };
 
                       deviceAddresses = mkOption {
-                        type = nullOr (listOf ip);
+                        type = nullOr (coercedTo ip toList (listOf ip));
                         default = null;
                         description = ''
                           List of ip addresses to assign to this interface. The server will forward traffic
