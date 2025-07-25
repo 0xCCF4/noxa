@@ -1,5 +1,5 @@
 { noxa, config, options, lib, specialArgs, ... }: with lib; with builtins; let
-  parts = noxa.lib.nixDirectoryToList ./.;
+  parts = (noxa.lib.nixDirectoryToList ./.) ++ [ (noxa.nixpkgs + "/nixos/modules/misc/assertions.nix") ];
 
   noxaConfigArg = {
     _module.args = {
@@ -46,19 +46,15 @@ in
       noxaConfig = config.noxa;
     };
 
-    defaults.configuration.imports = [
-      ({ ... }: {
-        _module.args = {
-          noxaConfig = throw "TEST";
-        };
-      })
-    ];
+    assertions = with noxa.lib.ansi; mkMerge (attrsets.mapAttrsToList
+      (
+        name: node: [{
+          message = "${fgYellow}Node ${fgGreen}'${name}'${fgYellow} is not defined in ${fgGreen}config.nodes${fgYellow}.${default}";
+          assertion = elem name config.nodeNames;
+        }] ++ node.assertions
+      )
+      config.nodes);
 
-    assertions = with noxa.lib.ansi; attrsets.mapAttrsToList (
-      name: node: {
-        message = "${fgYellow}Node ${fgGreen}'${name}'${fgYellow} is not defined in ${fgGreen}config.nodes${fgYellow}.${default}";
-        assertion = elem name config.nodeNames;
-      }
-    ) config.nodes;
+    warnings = mkMerge (attrsets.mapAttrsToList (name: node: node.warnings) config.nodes);
   };
 }
