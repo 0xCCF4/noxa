@@ -31,6 +31,20 @@
     noxa = {
       url = "github:0xCCF4/noxa";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.agenix.follows = "agenix";
+      inputs.agenix-rekey.follows = "agenix-rekey";
+    };
+
+    # Secret management
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Secret management
+    agenix-rekey = {
+      url = "github:oddlama/agenix-rekey";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
