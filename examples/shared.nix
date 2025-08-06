@@ -8,6 +8,8 @@
         # ATTENTION: CHANGE THIS FROM A PATH TO A STRING WHEN
         # COPYING THIS TO YOUR OWN CONFIGURATION!
         # just use something like "/home/user/.noxa/master.key"
+        #
+        # example: identity = "/home/user/.noxa/master.key";
         identity = builtins.toString ./secrets/master.key;
         pubkey = "age1l4enxs8e9ysregy76axj5alcrk86nljtsm4rje775lu0jn3r955sr4kv73";
       }

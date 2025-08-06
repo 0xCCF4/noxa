@@ -77,7 +77,14 @@
           nixosConfigurations = attrsets.mapAttrs (name: value: { config = value.configuration; }) noxaConfiguration.config.nodes;
         };
 
+        # Expose example configuration
         inherit noxaConfiguration;
+
+        # Templates
+        templates = {
+          path = ./examples;
+          description = "Basic noxa configuration example";
+        };
       }
       // flake-utils.lib.eachDefaultSystem (
         system:

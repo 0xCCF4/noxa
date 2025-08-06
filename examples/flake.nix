@@ -1,6 +1,22 @@
 {
   description = "Noxa multi-host example flake";
 
+  #########################################################
+  #
+  # Todos when using this example as a template:
+  # 1. Remove the secrets/master.key file from your repository.
+  #       git rm secrets/master.key ; rm secrets/master.key
+  # 2. Change the url of the master key to a string value, see file `shared.nix`.
+  # 3. Generate a new master key:
+  #       nix shell nixpkgs#age
+  #       age-keygen -o <your-master-key-file-location>
+  # 4. Update the public key part of your master key in `shared.nix`.
+  # 5. Delete `hosts/*` files that you do not need.
+  # 6. Remove config from `config.nix` that you do not need.
+  # 7. Your are ready to go!
+  #
+  #########################################################
+
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
