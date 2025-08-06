@@ -31,8 +31,9 @@ in
     };
 
     configuration = mkOption {
-      type = evalConfig.type;
+      type = if (noxa.__buildDocs or false) then anything else evalConfig.type;
       description = "Nixos configuration for this node.";
+      visible = false;
     };
   };
 }

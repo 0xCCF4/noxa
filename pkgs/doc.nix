@@ -39,6 +39,7 @@ let
                 net = inputs.nix-net-lib.lib;
               };
               inherit nixpkgs;
+              __buildDocs = true;
             };
             agenix-rekey = { nixosModules.default = { }; };
             agenix = { nixosModules.default = { }; };
@@ -47,15 +48,7 @@ let
       );
     in
     nixosOptionsDoc {
-      options = (if (attrsets.hasAttrByPath [ "defaults" ] eval.options) then
-        attrsets.recursiveUpdate eval.options
-          {
-            defaults.type = types.anything;
-            nodes.type = types.attrsOf types.anything;
-          }
-      else
-        eval.options
-      );
+      options = eval.options;
 
       transformOptions =
         opt:

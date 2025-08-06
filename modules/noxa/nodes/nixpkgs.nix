@@ -7,7 +7,7 @@
 
         By default, if not explicitly set, it uses the same version than the Noxa flake itself.
       '';
-      default = noxa.nixpkgs;
+      default = if (noxa.__buildDocs or false) then "<nixpkgs>" else noxa.nixpkgs;
     };
   };
 }
