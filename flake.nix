@@ -81,7 +81,7 @@
         inherit noxaConfiguration;
 
         # Templates
-        templates = {
+        templates.default = {
           path = ./examples;
           description = "Basic noxa configuration example";
         };
