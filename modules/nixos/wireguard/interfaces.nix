@@ -1,4 +1,4 @@
-{ config, noxa, lib, ... }:
+{ config, noxa, lib, nodes, ... }:
 with builtins; with lib; let
   template = backend: name:
     let

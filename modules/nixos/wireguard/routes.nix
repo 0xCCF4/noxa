@@ -135,14 +135,13 @@ in
                   })
                   (attrsets.filterAttrs (host: mod: host != noxaHost) clients))
               ];
-              #neighbors = mkMerge (map
-              #  (via: {
-              #    "${via}" = {
-              #      keepAlive = minOrNull allmod.${via}.advertise.keepAlive submod.keepAlive;
-              #    };
-              #  })
-              #  (lists.unique ((map (peer: if peer.via == noxaHost then peer.target else peer.via) config.noxa.wireguard.routes.${name}.peers))));
-              neighbors = { };
+              neighbors = mkMerge (map
+                (via: {
+                  "${via}" = {
+                    keepAlive = minOrNull allmod.${via}.advertise.keepAlive submod.keepAlive;
+                  };
+                })
+                (lists.unique ((map (peer: if peer.via == noxaHost || peer.via == null then peer.target else peer.via) config.noxa.wireguard.routes.${name}.peers))));
               participants.servers = attrNames servers;
               participants.clients = attrNames clients;
               participants.gateways = attrNames gateways;
