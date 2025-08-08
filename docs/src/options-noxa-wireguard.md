@@ -134,12 +134,12 @@ If set, this server will be the default gateway for clients\.
 
 
 *Type:*
-boolean
+null or boolean
 
 
 
 *Default:*
-` false `
+` null `
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -178,7 +178,12 @@ The address this server will listen on for incoming connections\.
 
 
 *Type:*
-IPv4 address or IPv6 address
+null or IPv4 address or IPv6 address
+
+
+
+*Default:*
+` null `
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -194,7 +199,12 @@ The port this server will listen on for incoming connections\.
 
 
 *Type:*
-signed integer
+null or signed integer
+
+
+
+*Default:*
+` null `
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
