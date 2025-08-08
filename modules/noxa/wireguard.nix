@@ -81,22 +81,24 @@
                         type = nullOr (submodule (submod: {
                           options = {
                             listenPort = mkOption {
-                              type = int;
+                              type = nullOr int;
+                              default = null;
                               description = ''
                                 The port this server will listen on for incoming connections.
                               '';
                             };
 
                             listenAddress = mkOption {
-                              type = ip;
+                              type = nullOr ip;
+                              default = null;
                               description = ''
                                 The address this server will listen on for incoming connections.
                               '';
                             };
 
                             defaultGateway = mkOption {
-                              type = bool;
-                              default = false;
+                              type = nullOr bool;
+                              default = null;
                               description = ''
                                 If set, this server will be the default gateway for clients.
                               '';
@@ -163,10 +165,10 @@
                         let
                           advertisedPublicIps = config.nodes.${name}.reachable.internet or [ ];
                         in
-                        mkIf (length advertisedPublicIps > 0 && network.config.autoConfigureGateway) (mkDefault {
-                          listenAddress = head advertisedPublicIps;
+                        mkIf (length advertisedPublicIps > 0 && network.config.autoConfigureGateway) {
+                          listenAddress = mkDefault (head advertisedPublicIps);
                           defaultGateway = mkDefault true;
-                        });
+                        };
                     };
                   }));
                   description = ''
@@ -196,7 +198,13 @@
                 autostart = setIfNotNull netConfig.members.${nodeName}.autostart;
                 backend = setIfNotNull netConfig.members.${nodeName}.backend;
                 deviceAddresses = setIfNotNull netConfig.members.${nodeName}.deviceAddresses;
-                advertise.server = setIfNotNull netConfig.members.${nodeName}.advertise.server;
+                advertise.server = let server = netConfig.members.${nodeName}.advertise.server; in
+                    mkIf (server != null) {
+                      listenPort = setIfNotNull server.listenPort;
+                      listenAddress = setIfNotNull server.listenAddress;
+                      defaultGateway = setIfNotNull server.defaultGateway;
+                      firewallAllow = setIfNotNull server.firewallAllow;
+                    };
                 advertise.keepAlive = setIfNotNull netConfig.members.${nodeName}.advertise.keepAlive;
                 keepAlive = setIfNotNull netConfig.members.${nodeName}.keepAlive;
                 gatewayOverride = setIfNotNull netConfig.members.${nodeName}.gatewayOverride;
