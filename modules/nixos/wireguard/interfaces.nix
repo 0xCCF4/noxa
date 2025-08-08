@@ -16,7 +16,6 @@ with builtins; with lib; let
             allowedIPs = otherHost.deviceAddresses ++ (lists.optional (elem neighbor routes.participants.gateways) ourConfig.networkAddress);
             persistentKeepalive = mkIf (cfg.keepAlive != null) cfg.keepAlive;
             endpoint = mkIf (otherHost.advertise.server != null) "${otherHost.advertise.server.listenAddress or "<invalid>"}:${toString otherHost.advertise.server.listenPort or "<invalid>"}";
-            name = mkIf (backend == "wireguard") neighbor;
             publicKey = otherSecrets.publicKey;
             presharedKeyFile = ourSecrets.presharedKeyFiles.${neighbor};
           })
@@ -28,6 +27,7 @@ with builtins; with lib; let
           address = ourConfig.deviceAddresses;
         } else {
           ips = ourConfig.deviceAddresses;
+          name = neighbor;
         };
     in
     {
