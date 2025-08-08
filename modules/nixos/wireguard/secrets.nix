@@ -91,7 +91,7 @@ in
                 publicKeyFile = noxa.lib.filesystem.withExtension keyFile.rekeyFile "pub";
               in
               {
-                publicKey = with noxa.lib.ansi; if filesystem.pathIsRegularFile publicKeyFile then readFile publicKeyFile else throw "${fgYellow}WireGuard public key file ${fgCyan}${toString publicKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}";
+                publicKey = with noxa.lib.ansi; if filesystem.pathIsRegularFile publicKeyFile then (replaceStrings [ "\n" ] [ "" ] (readFile publicKeyFile)) else throw "${fgYellow}WireGuard public key file ${fgCyan}${toString publicKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}";
                 privateKeyFile = keyFile.path;
                 presharedKeyFiles = mkMerge ((map
                   (target: {

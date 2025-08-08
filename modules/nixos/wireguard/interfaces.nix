@@ -17,6 +17,7 @@ with builtins; with lib; let
             persistentKeepalive = mkIf (cfg.keepAlive != null) cfg.keepAlive;
             endpoint = mkIf (otherHost.advertise.server != null) "${otherHost.advertise.server.listenAddress or "<invalid>"}:${toString otherHost.advertise.server.listenPort or "<invalid>"}";
             publicKey = otherSecrets.publicKey;
+            name = neighbor;
             presharedKeyFile = ourSecrets.presharedKeyFiles.${neighbor};
           })
         routes.neighbors;
@@ -27,13 +28,14 @@ with builtins; with lib; let
           address = ourConfig.deviceAddresses;
         } else {
           ips = ourConfig.deviceAddresses;
-          name = neighbor;
         };
+
+      peersWgQuick = map (peer: removeAttrs peer [ "name" ]) peers;
     in
     {
       privateKeyFile = ourSecrets.privateKeyFile;
       listenPort = mkIf (ourConfig.advertise.server != null) (ourConfig.advertise.server.listenPort or "<invalid>");
-      peers = attrValues peers;
+      peers = attrValues (if backend == "wg-quick" then peersWgQuick else peers);
     } // ips;
 in
 {
