@@ -1,7 +1,7 @@
 { noxa, lib, disko, ... }: with lib; {
   config =
     let
-      
+
       filesInHostDir = noxa.lib.nixDirectoryToAttr' ./hosts;
     in
     {

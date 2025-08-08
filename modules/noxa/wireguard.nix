@@ -199,12 +199,12 @@
                 backend = setIfNotNull netConfig.members.${nodeName}.backend;
                 deviceAddresses = setIfNotNull netConfig.members.${nodeName}.deviceAddresses;
                 advertise.server = let server = netConfig.members.${nodeName}.advertise.server; in
-                    mkIf (server != null) {
-                      listenPort = setIfNotNull server.listenPort;
-                      listenAddress = setIfNotNull server.listenAddress;
-                      defaultGateway = setIfNotNull server.defaultGateway;
-                      firewallAllow = setIfNotNull server.firewallAllow;
-                    };
+                  mkIf (server != null) {
+                    listenPort = setIfNotNull server.listenPort;
+                    listenAddress = setIfNotNull server.listenAddress;
+                    defaultGateway = setIfNotNull server.defaultGateway;
+                    firewallAllow = setIfNotNull server.firewallAllow;
+                  };
                 advertise.keepAlive = setIfNotNull netConfig.members.${nodeName}.advertise.keepAlive;
                 keepAlive = setIfNotNull netConfig.members.${nodeName}.keepAlive;
                 gatewayOverride = setIfNotNull netConfig.members.${nodeName}.gatewayOverride;
