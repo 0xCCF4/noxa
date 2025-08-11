@@ -30,7 +30,7 @@ with builtins; with lib; let
           ips = ourConfig.deviceAddresses;
         };
 
-      peersWgQuick = map (peer: removeAttrs peer [ "name" ]) peers;
+      peersWgQuick = attrsets.mapAttrs (name: peer: removeAttrs peer [ "name" ]) peers;
     in
     {
       privateKeyFile = ourSecrets.privateKeyFile;
