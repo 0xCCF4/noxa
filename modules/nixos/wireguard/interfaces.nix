@@ -51,5 +51,11 @@ in
         "${name}" = mkIf (cfg.backend == "wg-quick") (template cfg.backend name);
       })
       config.noxa.wireguard.interfaces);
+
+    networking.firewall.allowedUDPPorts = mkMerge (attrsets.mapAttrsToList
+      (name: cfg: mkIf (cfg.advertise.server != null && cfg.advertise.server.firewallAllow)
+        [ cfg.advertise.server.listenPort ]
+      )
+      config.noxa.wireguard.interfaces);
   };
 }
