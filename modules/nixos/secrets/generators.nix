@@ -20,12 +20,35 @@
     age.generators.nix-store-key = { pkgs, file, ... }: ''
       mkdir -p $(dirname ${escapeShellArg file})
       TMPDIR=$(mktemp -d)
+      trap "rm -rf ''${TMPDIR}" EXIT
+
       chmod 700 "''${TMPDIR}"
       PRIVATE_KEY_FILE="''${TMPDIR}/private-key.pem"
       PUBLIC_KEY_FILE="''${TMPDIR}/public-key.pem"
       ${pkgs.nix}/bin/nix-store --generate-binary-cache-key "$(basename ${file})" "''${PRIVATE_KEY_FILE}" "''${PUBLIC_KEY_FILE}"
       cp "$PUBLIC_KEY_FILE" ${escapeShellArg (removeSuffix ".age" file + ".pub")}
       cat "$PRIVATE_KEY_FILE"
+      
+      rm -rf "''${TMPDIR}"
+    '';
+
+    age.generators.tor-hidden-service = { pkgs, file, ... }: ''
+      mkdir -p $(dirname ${escapeShellArg file})
+      TMPDIR=$(mktemp -d)
+      trap "rm -rf ''${TMPDIR}" EXIT
+      chmod 700 "''${TMPDIR}"
+
+      mkdir -p "''${TMPDIR}/onion-service/"
+      chmod 700 "''${TMPDIR}/onion-service/"
+      mkdir -p "''${TMPDIR}/tor-data/"
+      chmod 700 "''${TMPDIR}/tor-data/"
+
+      unshare --net --map-current-user timeout 5s ${pkgs.tor}/bin/tor --RunAsDaemon 0 --DataDirectory ''${TMPDIR}/tor-data --HiddenServiceDir ''${TMPDIR}/onion-service --HiddenServicePort 9999 > /dev/null
+
+      cat "''${TMPDIR}/onion-service/hs_ed25519_secret_key"
+      cp "''${TMPDIR}/onion-service/hs_ed25519_public_key" ${escapeShellArg (removeSuffix ".age" file + ".pub")}
+      cp "''${TMPDIR}/onion-service/hostname" ${escapeShellArg (removeSuffix ".age" file + ".name")}
+
       rm -rf "''${TMPDIR}"
     '';
   };
