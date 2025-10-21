@@ -282,7 +282,6 @@ in
 
   options.age.rekey.initialRollout = mkOption {
     type = bool;
-    default = options.age.rekey.hostPubkey.default == config.age.rekey.hostPubkey;
     readOnly = true;
     description = ''
       Indicates whether this is the initial rollout. Secrets will not be available on the target host yet.
@@ -353,6 +352,8 @@ in
       localStorageDir = mkDefault cfg.options.rekeyDirectory;
       hostPubkey = mkIf (cfg.options.hostPubkey != null) (mkDefault cfg.options.hostPubkey);
       masterIdentities = mkDefault cfg.options.masterIdentities;
+
+      initialRollout = options.age.rekey.hostPubkey.default == config.age.rekey.hostPubkey;
     };
 
     age.identityPaths = config.noxa.sshHostKeys.hostKeysPrivate;
