@@ -1,4 +1,20 @@
+## age\.rekey\.initialRollout
+
+Indicates whether this is the initial rollout\. Secrets will not be available on the target host yet\.
+
+
+
+*Type:*
+boolean *(read only)*
+
+*Declared by:*
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
+
+
+
 ## age\.secrets
+
+
 
 Extension of the ` age ` (agenix) secrets module to provide
 secrets for multi-host NixOs configurations\.
@@ -161,6 +177,27 @@ list of (submodule)
 
 *Default:*
 ` [ ] `
+
+*Declared by:*
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
+
+
+
+## noxa\.secrets\.def\.\*\.generator
+
+
+
+The generator configuration for this secret\. See ` agenix-rekey ` documentation\.
+
+
+
+*Type:*
+null or (submodule)
+
+
+
+*Default:*
+` null `
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)

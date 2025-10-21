@@ -256,7 +256,15 @@ Why another framework? Learning the Nix language and ecosystem.</p>
 <tr><td><strong>Noxa Wireguard</strong></td><td><a href="./options-noxa-wireguard.html">Options</a></td><td>Declare Wireguard networks.</td></tr>
 <tr><td><strong>NixOS Wireguard</strong></td><td><a href="./options-nixos-wireguard.html">Options</a></td><td>Configure hosts according to globally defined Wireguard networks.</td></tr>
 </tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h2 id="agesecrets"><a class="header" href="#agesecrets">age.secrets</a></h2>
+</div><div style="break-before: page; page-break-before: always;"></div><h2 id="agerekeyinitialrollout"><a class="header" href="#agerekeyinitialrollout">age.rekey.initialRollout</a></h2>
+<p>Indicates whether this is the initial rollout. Secrets will not be available on the target host yet.</p>
+<p><em>Type:</em>
+boolean <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
+</ul>
+<h2 id="agesecrets"><a class="header" href="#agesecrets">age.secrets</a></h2>
 <p>Extension of the <code>age</code> (agenix) secrets module to provide
 secrets for multi-host NixOs configurations.</p>
 <p><em>Type:</em>
@@ -338,6 +346,16 @@ The identifier is derived from the module and name of the secret, e.g.
 list of (submodule)</p>
 <p><em>Default:</em>
 <code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
+</ul>
+<h2 id="noxasecretsdefgenerator"><a class="header" href="#noxasecretsdefgenerator">noxa.secrets.def.*.generator</a></h2>
+<p>The generator configuration for this secret. See <code>agenix-rekey</code> documentation.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em>
+<code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
