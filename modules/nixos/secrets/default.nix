@@ -13,6 +13,7 @@
 */
 { pkgs
 , config
+, options
 , lib
 , noxa
 , agenix
@@ -269,6 +270,15 @@ in
         '';
       };
     };
+  };
+
+  options.age.rekey.initialRollout = mkOption {
+    type = bool;
+    default = options.age.rekey.hostPubkey.default == config.age.rekey.hostPubkey;
+    readOnly = true;
+    description = ''
+      Indicates whether this is the initial rollout. Secrets will not be available on the target host yet.
+    '';
   };
 
   options.age.secrets = mkOption
