@@ -310,7 +310,7 @@ in
   config = {
     assertions = with noxa.lib.ansi; [
       {
-        assertion = length (attrNames config.age.secrets) > 0 -> (config.age.rekey.storageMode == "local" -> filesystem.pathIsDirectory config.age.rekey.localStorageDir);
+        assertion = ((!config.age.rekey.initialRollout) && length (attrNames config.age.secrets) > 0) -> (config.age.rekey.storageMode == "local" -> filesystem.pathIsDirectory config.age.rekey.localStorageDir);
         message = "${bold+fgRed}The local storage directory for rekeying secrets ${fgCyan}'${toString config.age.rekey.localStorageDir}'${fgRed} does not exist. Did you run ${noBold}${fgCyan}'agenix rekey'${default}${bold}${fgRed} to create it?${default}";
       }
     ]
