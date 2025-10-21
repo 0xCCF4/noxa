@@ -26,37 +26,39 @@ let
   cfg = config.noxa.secrets;
 
   generatorType = {
-    dependencies = mkOption {
-      type =
-        nullOr (
-          oneOf [
-            (listOf unspecified)
-            (attrsOf unspecified)
-          ]);
-      example = literalExpression ''[ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ]'';
-      default = null;
-      description = ''
-        Other secrets on which this secret depends. See `agenix-rekey` documentation.
-      '';
-    };
+    options = {
+      dependencies = mkOption {
+        type =
+          nullOr (
+            oneOf [
+              (listOf unspecified)
+              (attrsOf unspecified)
+            ]);
+        example = literalExpression ''[ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ]'';
+        default = null;
+        description = ''
+          Other secrets on which this secret depends. See `agenix-rekey` documentation.
+        '';
+      };
 
-    script = mkOption {
-      type = nullOr (either str (functionTo str));
-      default = null;
-      description = ''
-        Generator script, see `agenix-rekey` documentation.
-      '';
-    };
+      script = mkOption {
+        type = nullOr (either str (functionTo str));
+        default = null;
+        description = ''
+          Generator script, see `agenix-rekey` documentation.
+        '';
+      };
 
-    tags = mkOption {
-      type = nullOr (listOf str);
-      default = null;
-      example = [ "wireguard" ];
-      description = ''
-        Optional list of tags that may be used to refer to secrets that use this generator.
+      tags = mkOption {
+        type = nullOr (listOf str);
+        default = null;
+        example = [ "wireguard" ];
+        description = ''
+          Optional list of tags that may be used to refer to secrets that use this generator.
           
-        See `agenix-rekey` documentation for more information.
-      '';
+          See `agenix-rekey` documentation for more information.
+        '';
+      };
     };
   };
 
@@ -190,7 +192,13 @@ in
                   The path to the rekey file for this secret. This is used by the `agenix-rekey` module to rekey the secret.
                 '';
               };
-              generator = generatorType;
+              generator = mkOption {
+                type = nullOr (submodule generatorType);
+                default = null;
+                description = ''
+                  The generator configuration for this secret. See `agenix-rekey` documentation.
+                '';
+              };
             };
             default = [ ];
             description = ''
