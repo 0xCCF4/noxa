@@ -39,7 +39,7 @@ with builtins; with lib; let
     } // ips;
 in
 {
-  config = {
+  config = mkIf (!(config.age.rekey.initialRollout or false)) {
     networking.wireguard.interfaces = mkMerge (attrsets.mapAttrsToList
       (name: cfg: {
         "${name}" = mkIf (cfg.backend == "wireguard") (template cfg.backend name);
