@@ -1,4 +1,4 @@
-{ noxa, lib, disko, ... }: with lib; {
+{ noxa, lib, disko, config, ... }: with lib; {
   config =
     let
 
@@ -57,5 +57,12 @@
           };
         };
       };
+
+      # Define ssh access between nodes.
+      ssh.grant.hostA.bob.accessTo.hostB.users = [ "bob" ];
+      ssh.grant.hostB.bob.accessTo.hostA.users = [ "bob" ];
+
+      # Grant alice from hostC access to all "normal" users on hostA
+      ssh.grant.hostC.alice.accessTo.hostA.users = attrNames (filterAttrs (userName: user: user.isNormalUser) config.nodes.hostA.configuration.users.users);
     };
 }

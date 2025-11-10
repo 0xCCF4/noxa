@@ -18,5 +18,14 @@
       # informing the user, when just copying this example
       "${bold+fgRed}=== YOU ARE USING THE ${underline}PUBLIC${noUnderline} MASTER KEY! ===${default}"
     ];
+
+    users.users = builtins.listToAttrs (map
+      (name: {
+        inherit name;
+        value = {
+          isNormalUser = true;
+          createHome = true;
+        };
+      }) [ "alice" "bob" "steve" ]);
   };
 }
