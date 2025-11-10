@@ -81,14 +81,14 @@ let
   noxaPaths = self.lib.nixDirectoryToAttr' ../modules/noxa;
 
   groups = { } //
-    (attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair ("nixos-" + name) value) nixosPaths) //
-    (attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair ("noxa-" + name) value) noxaPaths);
+    (attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair (name + ".nixos") value) nixosPaths) //
+    (attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair (name + ".noxa") value) noxaPaths);
 
   documentation = attrsets.mapAttrs (name: module: makeOptionsDoc module) groups;
 
   docCommands = attrsets.mapAttrsToList
     (name: value:
-      "cp ${value.optionsCommonMark} docs/src/options-${name}.md"
+      "cp ${value.optionsCommonMark} docs/src/options/${name}.md"
     )
     documentation;
 
