@@ -247,16 +247,61 @@ Why another framework? Learning the Nix language and ecosystem.</p>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
 <p>todo</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="options"><a class="header" href="#options">Options</a></h1>
-<p>You found the documentation/reference of all options and configuration values noxa exposes to the user.</p>
-<h2 id="documentation-by-module"><a class="header" href="#documentation-by-module">Documentation by Module</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>Module</th><th>Link</th><th>Description</th></tr></thead><tbody>
-<tr><td><strong>Noxa Nodes</strong></td><td><a href="./options-noxa-nodes.html">Options</a></td><td>Define and manage hosts; per-host/node configuration.</td></tr>
-<tr><td><strong>NixOS Secrets</strong></td><td><a href="./options-nixos-secrets.html">Options</a></td><td>Manage secrets across multiple hosts.</td></tr>
-<tr><td><strong>Noxa Wireguard</strong></td><td><a href="./options-noxa-wireguard.html">Options</a></td><td>Declare Wireguard networks.</td></tr>
-<tr><td><strong>NixOS Wireguard</strong></td><td><a href="./options-nixos-wireguard.html">Options</a></td><td>Configure hosts according to globally defined Wireguard networks.</td></tr>
-</tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h2 id="agerekeyinitialrollout"><a class="header" href="#agerekeyinitialrollout">age.rekey.initialRollout</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="modules"><a class="header" href="#modules">Modules</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ssh-module"><a class="header" href="#ssh-module">SSH Module</a></h1>
+<p>The SSH module automated the distribution of SSH host config between managed hosts.</p>
+<p>By specifying which user on which node has access to which user on a different node, SSH configuration and authorized SSH keys can be generated and distributed automatically.</p>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<pre><code class="language-nix">{...}: {
+    config = {
+        ssh.grant."sourceNodeName"."sourceNodeUser".
+            accessTo."targetNodeName".users = [ "targetUser" ];
+    };
+};
+</code></pre>
+<p>Will grant <code>sourceNodeUser@sourceNodeName</code> SSH access to the machine <code>targetUser@targetNodeName</code> by</p>
+<ol>
+<li>Generating a SSH keypair.</li>
+<li>The private key part will be placed inside the sourceNode's agenix keystore using the <a href="modules/./secrets.html">NixOS Secrets</a> module.</li>
+<li>The public key part will be registered as an authorizedKey on the target node for the targetUser.</li>
+</ol>
+<p>Each step is configurable, e.g. instead of generating a custom keypair a local path may be used, an SSH command forced, ... . Reference the <a href="modules/../options/ssh.noxa.html">SSH module option's reference</a> for a detailed list of options.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="sshdebug"><a class="header" href="#sshdebug">ssh.debug</a></h2>
+<p>Enable debug logging for the SSH module.</p>
+<p><em>Type:</em>
+anything <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/ssh.nix">noxa/modules/noxa/ssh.nix</a></li>
+</ul>
+<h2 id="sshgrant"><a class="header" href="#sshgrant">ssh.grant</a></h2>
+<p>Grant SSH access from from node users to to node users.</p>
+<p><em>Type:</em>
+attribute set of attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/ssh.nix">noxa/modules/noxa/ssh.nix</a></li>
+</ul>
+<h2 id="sshgrantnamenameaccessto"><a class="header" href="#sshgrantnamenameaccessto">ssh.grant.&lt;name&gt;.&lt;name&gt;.accessTo</a></h2>
+<p>List of users on the to node to grant access to.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/ssh.nix">noxa/modules/noxa/ssh.nix</a></li>
+</ul>
+<h2 id="sshgrantnamenameaccesstonameusers"><a class="header" href="#sshgrantnamenameaccesstonameusers">ssh.grant.&lt;name&gt;.&lt;name&gt;.accessTo.&lt;name&gt;.users</a></h2>
+<p>List of users on the to node to grant access to.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/ssh.nix">noxa/modules/noxa/ssh.nix</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="nixos-secrets"><a class="header" href="#nixos-secrets">NixOS Secrets</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="agerekeyinitialrollout"><a class="header" href="#agerekeyinitialrollout">age.rekey.initialRollout</a></h2>
 <p>Indicates whether this is the initial rollout. Secrets will not be available on the target host yet.</p>
 <p><em>Type:</em>
 boolean <em>(read only)</em></p>
@@ -585,6 +630,183 @@ null or string</p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/sshHostKeys.nix">noxa/modules/nixos/secrets/sshHostKeys.nix</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="nodes"><a class="header" href="#nodes">Nodes</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="defaults"><a class="header" href="#defaults">defaults</a></h2>
+<p>Default options applied to all nodes.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
+</ul>
+<h2 id="defaultsbuildtoplevel"><a class="header" href="#defaultsbuildtoplevel">defaults.build.toplevel</a></h2>
+<p>Build this node’s configuration into a NixOS system package.</p>
+<p>Alias to <code>config.system.build.toplevel</code>.</p>
+<p><em>Type:</em>
+package <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/build.nix">noxa/modules/noxa/nodes/build.nix</a></li>
+</ul>
+<h2 id="defaultsbuildvm"><a class="header" href="#defaultsbuildvm">defaults.build.vm</a></h2>
+<p>Build this node’s configuration into a VM testing package.</p>
+<p>Alias to <code>config.system.build.vm</code>.</p>
+<p><em>Type:</em>
+package <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/build.nix">noxa/modules/noxa/nodes/build.nix</a></li>
+</ul>
+<h2 id="defaultsnixpkgs"><a class="header" href="#defaultsnixpkgs">defaults.nixpkgs</a></h2>
+<p>The nixpkgs version to use when building this node.</p>
+<p>By default, if not explicitly set, it uses the same version than the Noxa flake itself.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Default:</em>
+<code>"&lt;nixpkgs&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
+</ul>
+<h2 id="defaultsreachableallowhostconfiguration"><a class="header" href="#defaultsreachableallowhostconfiguration">defaults.reachable.allowHostConfiguration</a></h2>
+<p>Allow the host to configure its own reachable addresses. If set to false, values can only be set on the Noxa module level.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
+</ul>
+<h2 id="defaultsreachableinternet"><a class="header" href="#defaultsreachableinternet">defaults.reachable.internet</a></h2>
+<p>List of external IP addresses this host is reachable at via using a public IP address.</p>
+<p><em>Type:</em>
+list of (IPv4 address or IPv6 address)</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
+</ul>
+<h2 id="defaultsreachablewireguardnetwork"><a class="header" href="#defaultsreachablewireguardnetwork">defaults.reachable.wireguardNetwork</a></h2>
+<p>List of IP addresses this host is reachable at via WireGuard (specified via name).</p>
+<p><em>Type:</em>
+attribute set of list of (IPv4 address or IPv6 address)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
+</ul>
+<h2 id="defaultsspecialargs"><a class="header" href="#defaultsspecialargs">defaults.specialArgs</a></h2>
+<p>Special arguments passed to the host modules.</p>
+<p><em>Type:</em>
+attribute set of anything</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/configuration.nix">noxa/modules/noxa/nodes/configuration.nix</a></li>
+</ul>
+<h2 id="nodenames"><a class="header" href="#nodenames">nodeNames</a></h2>
+<p>A list of node names managed by Noxa. Due to the architecture of Noxa,
+noxa modules might unwillingly create new nodes, this list contains the name of all nodes
+that are currently managed by Noxa. Noxa modules can check this list to see if a node
+was created by themselves.</p>
+<pre><code>  The user must set this to the listOf all nodes they want to manage, otherwise if you
+  don't care, set this to `attrNames config.nodes`.
+</code></pre>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
+</ul>
+<h2 id="nodes-1"><a class="header" href="#nodes-1">nodes</a></h2>
+<p>A set of nixos hosts managed by Noxa.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
+</ul>
+<h2 id="nodesnamebuildtoplevel"><a class="header" href="#nodesnamebuildtoplevel">nodes.&lt;name&gt;.build.toplevel</a></h2>
+<p>Build this node’s configuration into a NixOS system package.</p>
+<p>Alias to <code>config.system.build.toplevel</code>.</p>
+<p><em>Type:</em>
+package <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/build.nix">noxa/modules/noxa/nodes/build.nix</a></li>
+</ul>
+<h2 id="nodesnamebuildvm"><a class="header" href="#nodesnamebuildvm">nodes.&lt;name&gt;.build.vm</a></h2>
+<p>Build this node’s configuration into a VM testing package.</p>
+<p>Alias to <code>config.system.build.vm</code>.</p>
+<p><em>Type:</em>
+package <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/build.nix">noxa/modules/noxa/nodes/build.nix</a></li>
+</ul>
+<h2 id="nodesnamenixpkgs"><a class="header" href="#nodesnamenixpkgs">nodes.&lt;name&gt;.nixpkgs</a></h2>
+<p>The nixpkgs version to use when building this node.</p>
+<p>By default, if not explicitly set, it uses the same version than the Noxa flake itself.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Default:</em>
+<code>"&lt;nixpkgs&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
+</ul>
+<h2 id="nodesnamereachableallowhostconfiguration"><a class="header" href="#nodesnamereachableallowhostconfiguration">nodes.&lt;name&gt;.reachable.allowHostConfiguration</a></h2>
+<p>Allow the host to configure its own reachable addresses. If set to false, values can only be set on the Noxa module level.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
+</ul>
+<h2 id="nodesnamereachableinternet"><a class="header" href="#nodesnamereachableinternet">nodes.&lt;name&gt;.reachable.internet</a></h2>
+<p>List of external IP addresses this host is reachable at via using a public IP address.</p>
+<p><em>Type:</em>
+list of (IPv4 address or IPv6 address)</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
+</ul>
+<h2 id="nodesnamereachablewireguardnetwork"><a class="header" href="#nodesnamereachablewireguardnetwork">nodes.&lt;name&gt;.reachable.wireguardNetwork</a></h2>
+<p>List of IP addresses this host is reachable at via WireGuard (specified via name).</p>
+<p><em>Type:</em>
+attribute set of list of (IPv4 address or IPv6 address)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
+</ul>
+<h2 id="nodesnamespecialargs"><a class="header" href="#nodesnamespecialargs">nodes.&lt;name&gt;.specialArgs</a></h2>
+<p>Special arguments passed to the host modules.</p>
+<p><em>Type:</em>
+attribute set of anything</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/configuration.nix">noxa/modules/noxa/nodes/configuration.nix</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started-1"><a class="header" href="#getting-started-1">Getting Started</a></h1>
+<p>todo</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="noxawireguardenable"><a class="header" href="#noxawireguardenable">noxa.wireguard.enable</a></h2>
 <p>Enables the WireGuard module, which a cross-host VPN setup utility for wireguard.</p>
 <p><em>Type:</em>
@@ -866,180 +1088,6 @@ string <em>(read only)</em></p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix">noxa/modules/nixos/wireguard/secrets.nix</a></li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="defaults"><a class="header" href="#defaults">defaults</a></h2>
-<p>Default options applied to all nodes.</p>
-<p><em>Type:</em>
-submodule</p>
-<p><em>Default:</em>
-<code>{ }</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
-</ul>
-<h2 id="defaultsbuildtoplevel"><a class="header" href="#defaultsbuildtoplevel">defaults.build.toplevel</a></h2>
-<p>Build this node’s configuration into a NixOS system package.</p>
-<p>Alias to <code>config.system.build.toplevel</code>.</p>
-<p><em>Type:</em>
-package <em>(read only)</em></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/build.nix">noxa/modules/noxa/nodes/build.nix</a></li>
-</ul>
-<h2 id="defaultsbuildvm"><a class="header" href="#defaultsbuildvm">defaults.build.vm</a></h2>
-<p>Build this node’s configuration into a VM testing package.</p>
-<p>Alias to <code>config.system.build.vm</code>.</p>
-<p><em>Type:</em>
-package <em>(read only)</em></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/build.nix">noxa/modules/noxa/nodes/build.nix</a></li>
-</ul>
-<h2 id="defaultsnixpkgs"><a class="header" href="#defaultsnixpkgs">defaults.nixpkgs</a></h2>
-<p>The nixpkgs version to use when building this node.</p>
-<p>By default, if not explicitly set, it uses the same version than the Noxa flake itself.</p>
-<p><em>Type:</em>
-absolute path</p>
-<p><em>Default:</em>
-<code>"&lt;nixpkgs&gt;"</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
-</ul>
-<h2 id="defaultsreachableallowhostconfiguration"><a class="header" href="#defaultsreachableallowhostconfiguration">defaults.reachable.allowHostConfiguration</a></h2>
-<p>Allow the host to configure its own reachable addresses. If set to false, values can only be set on the Noxa module level.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em>
-<code>false</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
-</ul>
-<h2 id="defaultsreachableinternet"><a class="header" href="#defaultsreachableinternet">defaults.reachable.internet</a></h2>
-<p>List of external IP addresses this host is reachable at via using a public IP address.</p>
-<p><em>Type:</em>
-list of (IPv4 address or IPv6 address)</p>
-<p><em>Default:</em>
-<code>[ ]</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
-</ul>
-<h2 id="defaultsreachablewireguardnetwork"><a class="header" href="#defaultsreachablewireguardnetwork">defaults.reachable.wireguardNetwork</a></h2>
-<p>List of IP addresses this host is reachable at via WireGuard (specified via name).</p>
-<p><em>Type:</em>
-attribute set of list of (IPv4 address or IPv6 address)</p>
-<p><em>Default:</em>
-<code>{ }</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
-</ul>
-<h2 id="defaultsspecialargs"><a class="header" href="#defaultsspecialargs">defaults.specialArgs</a></h2>
-<p>Special arguments passed to the host modules.</p>
-<p><em>Type:</em>
-attribute set of anything</p>
-<p><em>Default:</em>
-<code>{ }</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/configuration.nix">noxa/modules/noxa/nodes/configuration.nix</a></li>
-</ul>
-<h2 id="nodenames"><a class="header" href="#nodenames">nodeNames</a></h2>
-<p>A list of node names managed by Noxa. Due to the architecture of Noxa,
-noxa modules might unwillingly create new nodes, this list contains the name of all nodes
-that are currently managed by Noxa. Noxa modules can check this list to see if a node
-was created by themselves.</p>
-<pre><code>  The user must set this to the listOf all nodes they want to manage, otherwise if you
-  don't care, set this to `attrNames config.nodes`.
-</code></pre>
-<p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em>
-<code>[ ]</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
-</ul>
-<h2 id="nodes"><a class="header" href="#nodes">nodes</a></h2>
-<p>A set of nixos hosts managed by Noxa.</p>
-<p><em>Type:</em>
-attribute set of (submodule)</p>
-<p><em>Default:</em>
-<code>{ }</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
-</ul>
-<h2 id="nodesnamebuildtoplevel"><a class="header" href="#nodesnamebuildtoplevel">nodes.&lt;name&gt;.build.toplevel</a></h2>
-<p>Build this node’s configuration into a NixOS system package.</p>
-<p>Alias to <code>config.system.build.toplevel</code>.</p>
-<p><em>Type:</em>
-package <em>(read only)</em></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/build.nix">noxa/modules/noxa/nodes/build.nix</a></li>
-</ul>
-<h2 id="nodesnamebuildvm"><a class="header" href="#nodesnamebuildvm">nodes.&lt;name&gt;.build.vm</a></h2>
-<p>Build this node’s configuration into a VM testing package.</p>
-<p>Alias to <code>config.system.build.vm</code>.</p>
-<p><em>Type:</em>
-package <em>(read only)</em></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/build.nix">noxa/modules/noxa/nodes/build.nix</a></li>
-</ul>
-<h2 id="nodesnamenixpkgs"><a class="header" href="#nodesnamenixpkgs">nodes.&lt;name&gt;.nixpkgs</a></h2>
-<p>The nixpkgs version to use when building this node.</p>
-<p>By default, if not explicitly set, it uses the same version than the Noxa flake itself.</p>
-<p><em>Type:</em>
-absolute path</p>
-<p><em>Default:</em>
-<code>"&lt;nixpkgs&gt;"</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
-</ul>
-<h2 id="nodesnamereachableallowhostconfiguration"><a class="header" href="#nodesnamereachableallowhostconfiguration">nodes.&lt;name&gt;.reachable.allowHostConfiguration</a></h2>
-<p>Allow the host to configure its own reachable addresses. If set to false, values can only be set on the Noxa module level.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em>
-<code>false</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
-</ul>
-<h2 id="nodesnamereachableinternet"><a class="header" href="#nodesnamereachableinternet">nodes.&lt;name&gt;.reachable.internet</a></h2>
-<p>List of external IP addresses this host is reachable at via using a public IP address.</p>
-<p><em>Type:</em>
-list of (IPv4 address or IPv6 address)</p>
-<p><em>Default:</em>
-<code>[ ]</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
-</ul>
-<h2 id="nodesnamereachablewireguardnetwork"><a class="header" href="#nodesnamereachablewireguardnetwork">nodes.&lt;name&gt;.reachable.wireguardNetwork</a></h2>
-<p>List of IP addresses this host is reachable at via WireGuard (specified via name).</p>
-<p><em>Type:</em>
-attribute set of list of (IPv4 address or IPv6 address)</p>
-<p><em>Default:</em>
-<code>{ }</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix">noxa/modules/noxa/nodes/info.nix</a></li>
-</ul>
-<h2 id="nodesnamespecialargs"><a class="header" href="#nodesnamespecialargs">nodes.&lt;name&gt;.specialArgs</a></h2>
-<p>Special arguments passed to the host modules.</p>
-<p><em>Type:</em>
-attribute set of anything</p>
-<p><em>Default:</em>
-<code>{ }</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/configuration.nix">noxa/modules/noxa/nodes/configuration.nix</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="wireguard"><a class="header" href="#wireguard">wireguard</a></h2>
 <p><em>Type:</em>
