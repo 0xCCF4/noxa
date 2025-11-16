@@ -57,4 +57,27 @@ rec {
       val
     else
       val + "/../${filesystem.baseNameWithoutExtension val}.${ext}";
+
+  /**
+    Reads the content of a file at the given path.
+    If the file does not exist, throws an error with the provided message.
+    
+    # Inputs
+    `path` : The file path to read.
+    `error` : The error message to throw if the file does not exist.
+    
+    # Output
+    The content of the file as a string.
+    
+    # Type
+    ```
+    Path -> String -> String
+    ```
+    */
+  filesystem.readFileWithError = path: error:
+    if lib.filesystem.pathIsRegularFile path then
+      readFile path
+    else
+      throw error;
+
 }
