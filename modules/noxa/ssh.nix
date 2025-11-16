@@ -45,6 +45,16 @@ in
             type = str;
             default = "${submod.config.to.node}-${submod.config.to.user}";
           };
+          hostname = mkOption {
+            description = "Hostname or IP address of the target node.";
+            type = str;
+            default = submod.config.to.node;
+          };
+          port = mkOption {
+            description = "SSH port of the target node.";
+            type = int;
+            default = 22;
+          };
           connectionOptions = mkOption {
             description = ''
               Additional SSH connection options to use when connecting to the target node.
@@ -173,7 +183,14 @@ in
       ssh.computed.grants = mergedGrants;
 
       nodes = mkMerge (flatten (map
-        (grant: [
+        (grant: let 
+        sshPubKeyFile = noxa.lib.filesystem.withExtension config.nodes."${grant.from.node}".configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
+                    ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
+                    module = "noxa.ssh";
+                  }}.rekeyFile "pub";
+                  sshPubKey = with noxa.lib.ansi; replaceStrings [ "\n" "\r" ] [ "" "" ] (noxa.lib.filesystem.readFileWithError sshPubKeyFile "${fgYellow}SSH public key file ${fgCyan}${toString sshPubKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}");
+                  pkgs = config.nodes."${grant.to.node}".pkgs;
+        in [
           {
             "${grant.from.node}" = {
               configuration.noxa.secrets.def = [
@@ -181,20 +198,34 @@ in
                   ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
                   module = "noxa.ssh";
                   generator.script = "ssh-keys-${config.ssh.sshKeyType}";
+                  owner = grant.from.user;
                 }
               ];
+              configuration.home-manager.users."${grant.from.user}".programs.ssh.matchBlocks."${grant.name}" =
+                {
+                  host = grant.name;
+                  hostname = grant.hostname;
+                  port = grant.port;
+                  identitiesOnly = true;
+                  identityFile = config.nodes.${grant.from.node}.configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
+                    ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
+                    module = "noxa.ssh";
+                  }}.path;
+                  user = grant.to.user;
+                  userKnownHostsFile = concatStringsSep " " [
+                    (pkgs.writeTextFile {
+                      name = "known-hosts-${grant.name}";
+                      text = "${grant.name} ${sshPubKey}";
+                    })
+                    "~/.ssh/known_hosts"
+                  ];
+                };
             };
           }
           {
             "${grant.to.node}" = {
               configuration.users.users."${grant.to.user}".openssh.authorizedKeys.keys =
                 let
-                  sshPubKeyFile = noxa.lib.filesystem.withExtension config.nodes."${grant.from.node}".configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
-                    ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
-                    module = "noxa.ssh";
-                  }}.rekeyFile "pub";
-                  sshPubKey = with noxa.lib.ansi; replaceStrings [ "\n" "\r" ] [ "" "" ] (noxa.lib.filesystem.readFileWithError sshPubKeyFile "${fgYellow}SSH public key file ${fgCyan}${toString sshPubKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}");
-                  pkgs = config.nodes."${grant.to.node}".pkgs;
                   captureParameters = capture:
                     if capture then ''
                       ${pkgs.busybox}/bin/read -r params

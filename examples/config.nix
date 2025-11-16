@@ -77,6 +77,7 @@
           from.user = "bob";
           to.node = "hostA";
           to.user = "bob";
+          hostname = "hostA.example.com";
           showAvailableCommands = false;
           commands = with config.nodes."${to.node}".pkgs; [
             hello
