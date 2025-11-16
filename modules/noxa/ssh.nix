@@ -6,7 +6,7 @@ in
   options.ssh = with types; {
     grants = mkOption {
       description = "Grant SSH access from from node users to to node users.";
-      default = { };
+      default = [ ];
 
       type = listOf (submodule (submod: {
         options = {
@@ -43,7 +43,7 @@ in
           name = mkOption {
             description = "Alias name under which the user can `ssh {alias}` to the target.";
             type = str;
-            default = "${submod.config.to.node}-${submod.config.to.user}";
+            default = "${submod.config.to.node}";
           };
           hostname = mkOption {
             description = "Hostname or IP address of the target node.";
