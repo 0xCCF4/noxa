@@ -7,7 +7,7 @@
 
         By default, if not explicitly set, it uses the same version than the Noxa flake itself.
       '';
-      default = if (noxa.__buildDocs or false) then mkLiteral "<nixpkgs>" else noxa.nixpkgs;
+      default = if (noxa.__buildDocs or false) then "<nixpkgs>" else noxa.nixpkgs;
     };
     pkgs = mkOption {
       type = raw;
@@ -15,6 +15,14 @@
         The pkgs set with overlays and for the target system of this node.
       '';
       default = config.configuration.pkgs;
+      readOnly = true;
+    };
+    options = mkOption {
+      type = raw;
+      description = ''
+        The contents of the options defined by the nixpkgs module for this node.
+      '';
+      default = config.configuration.options;
       readOnly = true;
     };
   };
