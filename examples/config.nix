@@ -58,11 +58,35 @@
         };
       };
 
-      # Define ssh access between nodes.
-      ssh.grant.hostA.bob.accessTo.hostB.users = [ "bob" ];
-      ssh.grant.hostB.bob.accessTo.hostA.users = [ "bob" ];
-
-      # Grant alice from hostC access to all "normal" users on hostA
-      ssh.grant.hostC.alice.accessTo.hostA.users = attrNames (filterAttrs (userName: user: user.isNormalUser) config.nodes.hostA.configuration.users.users);
+      ssh.grants = [
+        {
+          from.node = "hostA";
+          from.user = "bob";
+          to.node = "hostB";
+          to.user = "bob";
+        }
+        {
+          from.node = "hostA";
+          from.user = "bob";
+          to.node = "hostB";
+          to.user = "bob";
+        }
+        rec {
+          from.node = "hostB";
+          from.user = "bob";
+          to.node = "hostA";
+          to.user = "bob";
+          showAvailableCommands = false;
+          commands = with config.nodes."${to.node}".pkgs; [
+            hello
+            cowsay
+            {
+              command = "${pkgs.busybox}/bin/echo";
+              aliases = [ "echo" "print" ];
+              passParameters = true;
+            }
+          ];
+        }
+      ];
     };
 }
