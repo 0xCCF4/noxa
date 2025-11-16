@@ -9,7 +9,7 @@
       
         ${pkgs.openssh}/bin/ssh-keygen -t ${type} -f "''${TMPDIR}/key" -N "" -C "" -q
         ${pkgs.busybox}/bin/cat "''${TMPDIR}/key"
-        ${pkgs.busybox}/bin/cp "''${TMPDIR}/key.pub" ${escapeShellArg (removeSuffix ".age" file + ".pub")}
+        ${pkgs.busybox}/bin/cat "''${TMPDIR}/key.pub" | ${pkgs.busybox}/bin/xargs > ${escapeShellArg (removeSuffix ".age" file + ".pub")}
 
         ${pkgs.busybox}/bin/rm -rf "''${TMPDIR}"
       '';
