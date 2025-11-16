@@ -28,19 +28,19 @@
         };
       }) [ "alice" "bob" "steve" ]);
 
-      home-manager = {
-        backupFileExtension = "hmbackup";
-        useUserPackages = true;
-        useGlobalPkgs = true;
+    home-manager = {
+      backupFileExtension = "hmbackup";
+      useUserPackages = true;
+      useGlobalPkgs = true;
 
-        users = builtins.listToAttrs (map
-      (name: {
-        inherit name;
-        value = {
-          home.username = name;
-          home.stateVersion = mkDefault config.system.stateVersion;
-        };
-      }) [ "alice" "bob" "steve" ]);
-      };
+      users = builtins.listToAttrs (map
+        (name: {
+          inherit name;
+          value = {
+            home.username = name;
+            home.stateVersion = mkDefault config.system.stateVersion;
+          };
+        }) [ "alice" "bob" "steve" ]);
+    };
   };
 }

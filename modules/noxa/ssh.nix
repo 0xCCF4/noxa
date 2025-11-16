@@ -183,109 +183,111 @@ in
       ssh.computed.grants = mergedGrants;
 
       nodes = mkMerge (flatten (map
-        (grant: let 
-        sshPubKeyFile = noxa.lib.filesystem.withExtension config.nodes."${grant.from.node}".configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
+        (grant:
+          let
+            sshPubKeyFile = noxa.lib.filesystem.withExtension config.nodes."${grant.from.node}".configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
+              ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
+              module = "noxa.ssh";
+            }}.rekeyFile "pub";
+            sshPubKey = with noxa.lib.ansi; replaceStrings [ "\n" "\r" ] [ "" "" ] (noxa.lib.filesystem.readFileWithError sshPubKeyFile "${fgYellow}SSH public key file ${fgCyan}${toString sshPubKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}");
+            pkgs = config.nodes."${grant.to.node}".pkgs;
+          in
+          [
+            {
+              "${grant.from.node}" = {
+                configuration.noxa.secrets.def = [
+                  {
                     ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
                     module = "noxa.ssh";
-                  }}.rekeyFile "pub";
-                  sshPubKey = with noxa.lib.ansi; replaceStrings [ "\n" "\r" ] [ "" "" ] (noxa.lib.filesystem.readFileWithError sshPubKeyFile "${fgYellow}SSH public key file ${fgCyan}${toString sshPubKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}");
-                  pkgs = config.nodes."${grant.to.node}".pkgs;
-        in [
-          {
-            "${grant.from.node}" = {
-              configuration.noxa.secrets.def = [
-                {
-                  ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
-                  module = "noxa.ssh";
-                  generator.script = "ssh-keys-${config.ssh.sshKeyType}";
-                  owner = grant.from.user;
-                }
-              ];
-              configuration.home-manager.users."${grant.from.user}".programs.ssh.matchBlocks."${grant.name}" =
-                {
-                  host = grant.name;
-                  hostname = grant.hostname;
-                  port = grant.port;
-                  identitiesOnly = true;
-                  identityFile = config.nodes.${grant.from.node}.configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
-                    ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
-                    module = "noxa.ssh";
-                  }}.path;
-                  user = grant.to.user;
-                  userKnownHostsFile = concatStringsSep " " [
-                    (pkgs.writeTextFile {
-                      name = "known-hosts-${grant.name}";
-                      text = "${grant.name} ${sshPubKey}";
-                    })
-                    "~/.ssh/known_hosts"
-                  ];
-                };
-            };
-          }
-          {
-            "${grant.to.node}" = {
-              configuration.users.users."${grant.to.user}".openssh.authorizedKeys.keys =
-                let
-                  captureParameters = capture:
-                    if capture then ''
-                      ${pkgs.busybox}/bin/read -r params
-                    '' else ''
-                      params=""
-                    '';
-                  multipleCommands = commands: config.nodes."${grant.to.node}".pkgs.writeShellApplication {
-                    name = "ssh-command-wrapper";
-
-                    text = ''
-                      echo "TODO: REMOVE THIS DEBUG LINE: $SSH_ORIGINAL_COMMAND"
-
-                      case "$SSH_ORIGINAL_COMMAND" in
-                      ${concatMapStringsSep "\n" (command: let
-                        aliasesPattern = if length command.aliases == 0 then
-                          command.command
-                        else
-                          concatStringsSep "|" (map (alias: escapeShellArg alias) command.aliases);
-                      in
-                      "
-                        ${aliasesPattern})
-                            ${captureParameters command.passParameters}
-                            # shellcheck disable=SC2086 # glob is ok on next line
-                            exec ${command.command} \${params}
-                          ;;
-                      ") grant.commands}
-                      *)
-                        ${pkgs.busybox}/bin/echo "Access denied."
-                        ${if !grant.showAvailableCommands then "exit 1" else ''
-                        ${pkgs.busybox}/bin/echo "Available commands are:"
-                        ${concatMapStringsSep "\n" (command: let
-                          aliasesList = if length command.aliases == 0 then
-                            [ command.command ]
-                          else
-                            command.aliases;
-                        in
-                        concatMapStringsSep "\n  " (alias: "  echo  - \"${escapeShellArg alias}\"") aliasesList) grant.commands}
-                        exit 1
-                        ''}
-                        ;;
-                      esac
-                      exit 1
-                    '';
-                  };
-                  command =
-                    if length grant.commands == 0 then
-                      ""
-                    else if length grant.commands == 1 then
-                      "command=\"${escapeShellArg (head grant.commands).command}\""
-                    else
-                      "command=\"${multipleCommands grant.commands}/bin/ssh-command-wrapper\"";
-                  allOptions = concatStringsSep "," (grant.connectionOptions ++ [ command ]);
-                  allOptionsWithSpace = if allOptions == "" then "" else allOptions + " ";
-                in
-                [
-                  "${allOptionsWithSpace}${sshPubKey}"
+                    generator.script = "ssh-keys-${config.ssh.sshKeyType}";
+                    owner = grant.from.user;
+                  }
                 ];
-            };
-          }
-        ])
+                configuration.home-manager.users."${grant.from.user}".programs.ssh.matchBlocks."${grant.name}" =
+                  {
+                    host = grant.name;
+                    hostname = grant.hostname;
+                    port = grant.port;
+                    identitiesOnly = true;
+                    identityFile = config.nodes.${grant.from.node}.configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
+                      ident = "ssh-key-${grant.from.node}-${grant.from.user}-to-${grant.to.node}-${grant.to.user}-alias-${grant.name}";
+                      module = "noxa.ssh";
+                    }}.path;
+                    user = grant.to.user;
+                    userKnownHostsFile = concatStringsSep " " [
+                      (pkgs.writeTextFile {
+                        name = "known-hosts-${grant.name}";
+                        text = "${grant.name} ${sshPubKey}";
+                      })
+                      "~/.ssh/known_hosts"
+                    ];
+                  };
+              };
+            }
+            {
+              "${grant.to.node}" = {
+                configuration.users.users."${grant.to.user}".openssh.authorizedKeys.keys =
+                  let
+                    captureParameters = capture:
+                      if capture then ''
+                        ${pkgs.busybox}/bin/read -r params
+                      '' else ''
+                        params=""
+                      '';
+                    multipleCommands = commands: config.nodes."${grant.to.node}".pkgs.writeShellApplication {
+                      name = "ssh-command-wrapper";
+
+                      text = ''
+                        echo "TODO: REMOVE THIS DEBUG LINE: $SSH_ORIGINAL_COMMAND"
+
+                        case "$SSH_ORIGINAL_COMMAND" in
+                        ${concatMapStringsSep "\n" (command: let
+                          aliasesPattern = if length command.aliases == 0 then
+                            command.command
+                          else
+                            concatStringsSep "|" (map (alias: escapeShellArg alias) command.aliases);
+                        in
+                        "
+                          ${aliasesPattern})
+                              ${captureParameters command.passParameters}
+                              # shellcheck disable=SC2086 # glob is ok on next line
+                              exec ${command.command} \${params}
+                            ;;
+                        ") grant.commands}
+                        *)
+                          ${pkgs.busybox}/bin/echo "Access denied."
+                          ${if !grant.showAvailableCommands then "exit 1" else ''
+                          ${pkgs.busybox}/bin/echo "Available commands are:"
+                          ${concatMapStringsSep "\n" (command: let
+                            aliasesList = if length command.aliases == 0 then
+                              [ command.command ]
+                            else
+                              command.aliases;
+                          in
+                          concatMapStringsSep "\n  " (alias: "  echo  - \"${escapeShellArg alias}\"") aliasesList) grant.commands}
+                          exit 1
+                          ''}
+                          ;;
+                        esac
+                        exit 1
+                      '';
+                    };
+                    command =
+                      if length grant.commands == 0 then
+                        [ ]
+                      else if length grant.commands == 1 then
+                        [ "command=\"${escapeShellArg (head grant.commands).command}\"" ]
+                      else
+                        [ "command=\"${multipleCommands grant.commands}/bin/ssh-command-wrapper\"" ];
+                    allOptions = concatStringsSep "," (grant.connectionOptions ++ command);
+                    allOptionsWithSpace = if allOptions == "" then "" else allOptions + " ";
+                  in
+                  [
+                    "${allOptionsWithSpace}${sshPubKey}"
+                  ];
+              };
+            }
+          ])
         config.ssh.computed.grants));
 
       ssh.debug = { };

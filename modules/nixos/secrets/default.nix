@@ -364,9 +364,9 @@ in
               dependencies = mkIf (secret.generator.dependencies != null) secret.generator.dependencies;
               tags = mkIf (secret.generator.tags != null) secret.generator.tags;
             };
-              mode = mkIf (secret.mode != null) secret.mode;
-              owner = mkIf (secret.owner != null) secret.owner;
-              group = mkIf (secret.group != null) secret.group;
+            mode = mkIf (secret.mode != null) secret.mode;
+            owner = mkIf (secret.owner != null) secret.owner;
+            group = mkIf (secret.group != null) secret.group;
           };
         })
       cfg.def);
