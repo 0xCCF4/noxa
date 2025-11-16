@@ -1,4 +1,4 @@
-{ noxa, lib, disko, config, ... }: with lib; {
+{ noxa, lib, disko, config, home-manager, ... }: with lib; {
   config =
     let
 
@@ -12,6 +12,7 @@
             ./shared.nix
             ./hardware/vm.nix
             disko.nixosModules.disko
+            home-manager.nixosModules.default
           ];
           # Set the default hostname based on the file name in `./hosts`
           config.networking.hostName = lib.mkDefault name;

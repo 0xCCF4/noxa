@@ -46,6 +46,12 @@
       url = "github:oddlama/agenix-rekey";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Home Manager
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -56,6 +62,7 @@
     , agenix
     , agenix-rekey
     , noxa
+    , home-manager
     , ...
     }:
       with nixpkgs.lib; with builtins;
@@ -77,6 +84,7 @@
             inherit disko;
             inherit agenix;
             inherit agenix-rekey;
+            inherit home-manager;
           };
         };
       };
