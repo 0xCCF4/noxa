@@ -199,6 +199,27 @@ in
                   The generator configuration for this secret. See `agenix-rekey` documentation.
                 '';
               };
+              mode = mkOption {
+                type = nullOr str;
+                default = null;
+                description = ''
+                  The file mode to set on the secret file when it is created.
+                '';
+              };
+              owner = mkOption {
+                type = nullOr str;
+                default = null;
+                description = ''
+                  The owner to set on the secret file when it is created.
+                '';
+              };
+              group = mkOption {
+                type = nullOr str;
+                default = null;
+                description = ''
+                  The group to set on the secret file when it is created.
+                '';
+              };
             };
             default = [ ];
             description = ''
@@ -343,6 +364,9 @@ in
               dependencies = mkIf (secret.generator.dependencies != null) secret.generator.dependencies;
               tags = mkIf (secret.generator.tags != null) secret.generator.tags;
             };
+              mode = mkIf (secret.mode != null) secret.mode;
+              owner = mkIf (secret.owner != null) secret.owner;
+              group = mkIf (secret.group != null) secret.group;
           };
         })
       cfg.def);
