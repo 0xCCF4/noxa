@@ -58,7 +58,7 @@
         ${pkgs.busybox}/bin/mkdir -p "''${TMPDIR}/tor-data/"
         ${pkgs.busybox}/bin/chmod 700 "''${TMPDIR}/tor-data/"
 
-        ${pkgs.busybox}/bin/unshare --net --map-current-user ${pkgs.busybox}/bin/timeout 5s ${pkgs.tor}/bin/tor --RunAsDaemon 0 --DataDirectory ''${TMPDIR}/tor-data --HiddenServiceDir ''${TMPDIR}/onion-service --HiddenServicePort 9999 > /dev/null
+        ${pkgs.util-linux}/bin/unshare --net --map-current-user ${pkgs.busybox}/bin/timeout 5s ${pkgs.tor}/bin/tor --RunAsDaemon 0 --DataDirectory ''${TMPDIR}/tor-data --HiddenServiceDir ''${TMPDIR}/onion-service --HiddenServicePort 9999 > /dev/null
 
         ${pkgs.busybox}/bin/cat "''${TMPDIR}/onion-service/hs_ed25519_secret_key"
         ${pkgs.busybox}/bin/cp "''${TMPDIR}/onion-service/hs_ed25519_public_key" ${escapeShellArg (removeSuffix ".age" file + ".pub")}
