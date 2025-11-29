@@ -14,7 +14,7 @@
       description = ''
         The pkgs set with overlays and for the target system of this node.
       '';
-      default = config.configuration.pkgs;
+      default = if (noxa.__buildDocs or false) then "<nixpkgs>" else config.configuration.pkgs;
       readOnly = true;
     };
     options = mkOption {
@@ -22,7 +22,7 @@
       description = ''
         The contents of the options defined by the nixpkgs module for this node.
       '';
-      default = config.configuration.options;
+      default = if (noxa.__buildDocs or false) then "<nixpkgs>" else config.configuration.options;
       readOnly = true;
     };
   };
