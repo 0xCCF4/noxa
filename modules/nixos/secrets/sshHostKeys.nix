@@ -50,7 +50,7 @@ in
     let
       resolvePath = path:
         if cfg.impermanencePathOverride != null
-        then cfg.impermanencePathOverride
+        then (replaceStrings ["/etc/ssh/"] [cfg.impermanencePathOverride] path)
         else path;
     in
     {
@@ -67,10 +67,10 @@ in
           # socket activation, it goes to the remote side (#19589).
           exec >&2
 
-          ${flip concatMapStrings cfgOpenssh.hostKeys (k: ''
-            if ! [ -s "${resolvePath k.path}" ]; then
-                if ! [ -h "${resolvePath k.path}" ]; then
-                    rm -f "${resolvePath k.path}"
+          ${flip concatMapStrings cfgOpenssh.hostKeys (k: let path = resolvePath k.path; in ''
+            if ! [ -s "${path}" ]; then
+                if ! [ -h "${path}" ]; then
+                    rm -f "${path}"
                 fi
                 mkdir -m 0755 -p "$(dirname '${k.path}')"
                 ${pkgs.openssh}/bin/ssh-keygen \
@@ -79,7 +79,7 @@ in
                   ${optionalString (k ? rounds) "-a ${toString k.rounds}"} \
                   ${optionalString (k ? comment) "-C '${k.comment}'"} \
                   ${optionalString (k ? openSSHFormat && k.openSSHFormat) "-o"} \
-                  -f "${resolvePath k.path}" \
+                  -f "${path}" \
                   -N ""
             fi
           '')}
