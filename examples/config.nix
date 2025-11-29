@@ -58,37 +58,50 @@
           };
         };
       };
-
-      ssh.grants = [
-        {
-          from.node = "hostA";
-          from.user = "bob";
-          to.node = "hostB";
-          to.user = "bob";
-        }
-        {
-          from.node = "hostA";
-          from.user = "bob";
-          to.node = "hostB";
-          to.user = "bob";
-        }
-        rec {
-          from.node = "hostB";
-          from.user = "bob";
-          to.node = "hostA";
-          to.user = "bob";
-          hostname = "hostA.example.com";
-          showAvailableCommands = false;
-          commands = with config.nodes."${to.node}".pkgs; [
-            hello
-            cowsay
-            {
-              command = "${pkgs.busybox}/bin/echo";
-              aliases = [ "echo" "print" ];
-              passParameters = true;
-            }
-          ];
-        }
-      ];
     };
+  imports = [
+    {
+      nodes = {
+        hostA = {
+          ssh.grants = {
+            hostB =
+              {
+                from = "bob";
+                to.node = "hostB";
+                to.user = "bob";
+              };
+          };
+        };
+        hostB = {
+          ssh.grants = {
+            hostA = {
+              from = "bob";
+              to.node = "hostA";
+              to.user = "bob";
+            };
+          };
+        };
+
+        hostC = {
+          ssh.grants = {
+            hostC = rec {
+              from = "alice";
+              to.node = "hostA";
+              to.user = "alice";
+
+              commands = { busybox, hello, cowsay, ... }: [
+                hello
+                cowsay
+                {
+                  command = "${busybox}/bin/echo";
+                  aliases = [ "echo" "print" ];
+                  passParameters = true;
+                }
+              ];
+            };
+          };
+        };
+      };
+    }
+  ];
 }
