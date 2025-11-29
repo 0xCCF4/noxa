@@ -50,7 +50,7 @@ in
     let
       resolvePath = path:
         if cfg.impermanencePathOverride != null
-        then (replaceStrings ["/etc/ssh/"] [cfg.impermanencePathOverride] path)
+        then (replaceStrings [ "/etc/ssh/" ] [ cfg.impermanencePathOverride ] path)
         else path;
     in
     {
