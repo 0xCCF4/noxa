@@ -40,6 +40,7 @@
             };
             to = mkOption {
               description = "Destination node and user.";
+              defaultText = "<to>";
               type = submodule (submodInner: {
                 options = {
                   node = mkOption {
@@ -59,6 +60,7 @@
                     description = "Hostname or IP address of the target node.";
                     type = str;
                     default = submod.config.to.node;
+                    defaultText = "<to.node>";
                   };
                   port = mkOption {
                     description = "SSH port of the target node.";

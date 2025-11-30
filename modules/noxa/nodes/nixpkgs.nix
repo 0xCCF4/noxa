@@ -7,14 +7,16 @@
 
         By default, if not explicitly set, it uses the same version than the Noxa flake itself.
       '';
-      default = if (noxa.__buildDocs or false) then "<nixpkgs>" else noxa.nixpkgs;
+      default = noxa.nixpkgs;
+      defaultText = "<nixpkgs>";
     };
     pkgs = mkOption {
       type = raw;
       description = ''
         The pkgs set with overlays and for the target system of this node.
       '';
-      default = if (noxa.__buildDocs or false) then "<nixpkgs>" else config.configuration.pkgs;
+      default = config.configuration.pkgs;
+      defaultText = "<pkgs>";
       readOnly = true;
     };
     options = mkOption {
@@ -22,7 +24,8 @@
       description = ''
         The contents of the options defined by the nixpkgs module for this node.
       '';
-      default = if (noxa.__buildDocs or false) then "<nixpkgs>" else config.configuration.options;
+      default = config.configuration.options;
+      defaultText = "<options>";
       readOnly = true;
     };
   };

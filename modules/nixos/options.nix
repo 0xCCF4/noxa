@@ -6,7 +6,8 @@
         The options set, useful for package lookups for options.
       '';
       readOnly = true;
-      default = if (noxa.__buildDocs or false) then "<options>" else options;
+      default = options;
+      defaultText = "<options>";
     };
   };
 }

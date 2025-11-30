@@ -6,7 +6,8 @@
         The pkgs variable, useful for package lookups inside Noxa modules.
       '';
       readOnly = true;
-      default = if (noxa.__buildDocs or false) then "<pkgs>" else pkgs;
+      default = pkgs;
+      defaultText = "<pkgs>";
     };
   };
 }
