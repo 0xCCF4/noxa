@@ -266,41 +266,10 @@ Why another framework? Learning the Nix language and ecosystem.</p>
 <li>The public key part will be registered as an authorizedKey on the target node for the targetUser.</li>
 </ol>
 <p>Each step is configurable, e.g. instead of generating a custom keypair a local path may be used, an SSH command forced, ... . Reference the <a href="modules/../options/ssh.noxa.html">SSH module option's reference</a> for a detailed list of options.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="sshdebug"><a class="header" href="#sshdebug">ssh.debug</a></h2>
-<p>Enable debug logging for the SSH module.</p>
-<p><em>Type:</em>
-anything <em>(read only)</em></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/ssh.nix">noxa/modules/noxa/ssh.nix</a></li>
-</ul>
-<h2 id="sshgrant"><a class="header" href="#sshgrant">ssh.grant</a></h2>
-<p>Grant SSH access from from node users to to node users.</p>
-<p><em>Type:</em>
-attribute set of attribute set of (submodule)</p>
-<p><em>Default:</em>
-<code>{ }</code></p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/ssh.nix">noxa/modules/noxa/ssh.nix</a></li>
-</ul>
-<h2 id="sshgrantnamenameaccessto"><a class="header" href="#sshgrantnamenameaccessto">ssh.grant.&lt;name&gt;.&lt;name&gt;.accessTo</a></h2>
-<p>List of users on the to node to grant access to.</p>
-<p><em>Type:</em>
-attribute set of (submodule)</p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/ssh.nix">noxa/modules/noxa/ssh.nix</a></li>
-</ul>
-<h2 id="sshgrantnamenameaccesstonameusers"><a class="header" href="#sshgrantnamenameaccesstonameusers">ssh.grant.&lt;name&gt;.&lt;name&gt;.accessTo.&lt;name&gt;.users</a></h2>
-<p>List of users on the to node to grant access to.</p>
-<p><em>Type:</em>
-list of string</p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/ssh.nix">noxa/modules/noxa/ssh.nix</a></li>
-</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nixos-secrets"><a class="header" href="#nixos-secrets">NixOS Secrets</a></h1>
+<p>This file is overwritten by the github ci.
+To compile a local version use <code>nix build .#doc</code></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="nixos-secrets-1"><a class="header" href="#nixos-secrets-1">NixOS Secrets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="agerekeyinitialrollout"><a class="header" href="#agerekeyinitialrollout">age.rekey.initialRollout</a></h2>
 <p>Indicates whether this is the initial rollout. Secrets will not be available on the target host yet.</p>
 <p><em>Type:</em>
@@ -443,6 +412,16 @@ null or (list of string)</p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
+<h2 id="noxasecretsdefgroup"><a class="header" href="#noxasecretsdefgroup">noxa.secrets.def.*.group</a></h2>
+<p>The group to set on the secret file when it is created.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
+</ul>
 <h2 id="noxasecretsdefhosts"><a class="header" href="#noxasecretsdefhosts">noxa.secrets.def.*.hosts</a></h2>
 <p>The hosts that have access to this secret.</p>
 <p><em>Type:</em>
@@ -484,6 +463,16 @@ string <em>(read only)</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
 </ul>
+<h2 id="noxasecretsdefmode"><a class="header" href="#noxasecretsdefmode">noxa.secrets.def.*.mode</a></h2>
+<p>The file mode to set on the secret file when it is created.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
+</ul>
 <h2 id="noxasecretsdefmodule"><a class="header" href="#noxasecretsdefmodule">noxa.secrets.def.*.module</a></h2>
 <p>The owning module of that secret.</p>
 <p>Typically this is the name of module declaring the secret, e.g. “noxa.wireguard.interfaces.&lt;name&gt;”.</p>
@@ -491,6 +480,16 @@ string <em>(read only)</em></p>
 string</p>
 <p><em>Example:</em>
 <code>"services.openssh"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
+</ul>
+<h2 id="noxasecretsdefowner"><a class="header" href="#noxasecretsdefowner">noxa.secrets.def.*.owner</a></h2>
+<p>The owner to set on the secret file when it is created.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em>
+<code>null</code></p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix">noxa/modules/nixos/secrets/default.nix</a></li>
@@ -670,6 +669,26 @@ absolute path</p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
 </ul>
+<h2 id="defaultsoptions"><a class="header" href="#defaultsoptions">defaults.options</a></h2>
+<p>The contents of the options defined by the nixpkgs module for this node.</p>
+<p><em>Type:</em>
+raw value <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>"&lt;options&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
+</ul>
+<h2 id="defaultspkgs"><a class="header" href="#defaultspkgs">defaults.pkgs</a></h2>
+<p>The pkgs set with overlays and for the target system of this node.</p>
+<p><em>Type:</em>
+raw value <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>"&lt;pkgs&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
+</ul>
 <h2 id="defaultsreachableallowhostconfiguration"><a class="header" href="#defaultsreachableallowhostconfiguration">defaults.reachable.allowHostConfiguration</a></h2>
 <p>Allow the host to configure its own reachable addresses. If set to false, values can only be set on the Noxa module level.</p>
 <p><em>Type:</em>
@@ -709,6 +728,233 @@ attribute set of anything</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/configuration.nix">noxa/modules/noxa/nodes/configuration.nix</a></li>
+</ul>
+<h2 id="defaultssshgrants"><a class="header" href="#defaultssshgrants">defaults.ssh.grants</a></h2>
+<p>Grant SSH access from from node users to to node users.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnamecommands"><a class="header" href="#defaultssshgrantsnamecommands">defaults.ssh.grants.&lt;name&gt;.commands</a></h2>
+<p>Function that evaluates to a list of commands the user is allowed to execute on the target node. If empty, all commands are allowed.</p>
+<p>This function will be called with the pkgs.callPackage function taken from the target node.</p>
+<p><em>Type:</em>
+function that evaluates to a(n) list of ((submodule) or package convertible to it)</p>
+<p><em>Default:</em>
+<code>&lt;function&gt;</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnamecommandsfunction-bodyaliases"><a class="header" href="#defaultssshgrantsnamecommandsfunction-bodyaliases">defaults.ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.aliases</a></h2>
+<p>The SSH command that is requested by the user, mapping to this command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnamecommandsfunction-bodycommand"><a class="header" href="#defaultssshgrantsnamecommandsfunction-bodycommand">defaults.ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.command</a></h2>
+<p>The command to allow.</p>
+<p><em>Type:</em>
+string or package convertible to it</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnamecommandsfunction-bodypassparameters"><a class="header" href="#defaultssshgrantsnamecommandsfunction-bodypassparameters">defaults.ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.passParameters</a></h2>
+<p>Whether to pass any parameters given by the user to the command.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameextraconnectionoptions"><a class="header" href="#defaultssshgrantsnameextraconnectionoptions">defaults.ssh.grants.&lt;name&gt;.extraConnectionOptions</a></h2>
+<p>Additional SSH connection options to use when connecting to the target node.</p>
+<p>View man SSH(8) - AUTHORIZED_KEYS</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnamefrom"><a class="header" href="#defaultssshgrantsnamefrom">defaults.ssh.grants.&lt;name&gt;.from</a></h2>
+<p>Source user name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnamename"><a class="header" href="#defaultssshgrantsnamename">defaults.ssh.grants.&lt;name&gt;.name</a></h2>
+<p>Alias name under which the user can <code>ssh {alias}</code> to the target.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"&lt;name&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameoptionsagentforwarding"><a class="header" href="#defaultssshgrantsnameoptionsagentforwarding">defaults.ssh.grants.&lt;name&gt;.options.agentForwarding</a></h2>
+<p>Apply the “agent-forwarding” option to this SSH key, allowing SSH agent forwarding.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameoptionslisten"><a class="header" href="#defaultssshgrantsnameoptionslisten">defaults.ssh.grants.&lt;name&gt;.options.listen</a></h2>
+<p>Apply the “permitlisten” option to this SSH key, remote listening and
+forwarding of ports to local ports.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameoptionsopen"><a class="header" href="#defaultssshgrantsnameoptionsopen">defaults.ssh.grants.&lt;name&gt;.options.open</a></h2>
+<p>Apply the “permitopen” option to this SSH key, allowing to open
+specific host:port combinations.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameoptionspty"><a class="header" href="#defaultssshgrantsnameoptionspty">defaults.ssh.grants.&lt;name&gt;.options.pty</a></h2>
+<p>Apply the “pty” option to this SSH key, allowing to allocate a pseudo-terminal.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameoptionsrestrict"><a class="header" href="#defaultssshgrantsnameoptionsrestrict">defaults.ssh.grants.&lt;name&gt;.options.restrict</a></h2>
+<p>Apply the “restrict” option to this SSH key, disabling every feature
+except executing commands. Disabling this option, will circumvent all
+other options set via .options .</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameoptionsx11forwarding"><a class="header" href="#defaultssshgrantsnameoptionsx11forwarding">defaults.ssh.grants.&lt;name&gt;.options.x11Forwarding</a></h2>
+<p>Apply the “x11-forwarding” option to this SSH key, allowing X11 forwarding.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameresolvedcommands"><a class="header" href="#defaultssshgrantsnameresolvedcommands">defaults.ssh.grants.&lt;name&gt;.resolvedCommands</a></h2>
+<p>The resolved commands after evaluating the <code>commands</code> function.</p>
+<p><em>Type:</em>
+(list of ((submodule) or package convertible to it)) or string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameshowavailablecommands"><a class="header" href="#defaultssshgrantsnameshowavailablecommands">defaults.ssh.grants.&lt;name&gt;.showAvailableCommands</a></h2>
+<p>If set to true, when the user tries to execute an unauthorized command,
+the list of available commands will be shown.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnamesshgenkeytype"><a class="header" href="#defaultssshgrantsnamesshgenkeytype">defaults.ssh.grants.&lt;name&gt;.sshGenKeyType</a></h2>
+<p>When generating SSH keys use this key type.</p>
+<p><em>Type:</em>
+one of “ed25519”, “rsa”</p>
+<p><em>Default:</em>
+<code>"ed25519"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnameto"><a class="header" href="#defaultssshgrantsnameto">defaults.ssh.grants.&lt;name&gt;.to</a></h2>
+<p>Destination node and user.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em>
+<code>"&lt;to&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnametohostname"><a class="header" href="#defaultssshgrantsnametohostname">defaults.ssh.grants.&lt;name&gt;.to.hostname</a></h2>
+<p>Hostname or IP address of the target node.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"&lt;to.node&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnametonode"><a class="header" href="#defaultssshgrantsnametonode">defaults.ssh.grants.&lt;name&gt;.to.node</a></h2>
+<p>Destination node name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnametoport"><a class="header" href="#defaultssshgrantsnametoport">defaults.ssh.grants.&lt;name&gt;.to.port</a></h2>
+<p>SSH port of the target node.</p>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Default:</em>
+<code>22</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnametosshfingerprint"><a class="header" href="#defaultssshgrantsnametosshfingerprint">defaults.ssh.grants.&lt;name&gt;.to.sshFingerprint</a></h2>
+<p>Expected SSH host key fingerprint of the destination node.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="defaultssshgrantsnametouser"><a class="header" href="#defaultssshgrantsnametouser">defaults.ssh.grants.&lt;name&gt;.to.user</a></h2>
+<p>Destination user name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
 </ul>
 <h2 id="nodenames"><a class="header" href="#nodenames">nodeNames</a></h2>
 <p>A list of node names managed by Noxa. Due to the architecture of Noxa,
@@ -765,6 +1011,26 @@ absolute path</p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
 </ul>
+<h2 id="nodesnameoptions"><a class="header" href="#nodesnameoptions">nodes.&lt;name&gt;.options</a></h2>
+<p>The contents of the options defined by the nixpkgs module for this node.</p>
+<p><em>Type:</em>
+raw value <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>"&lt;options&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
+</ul>
+<h2 id="nodesnamepkgs"><a class="header" href="#nodesnamepkgs">nodes.&lt;name&gt;.pkgs</a></h2>
+<p>The pkgs set with overlays and for the target system of this node.</p>
+<p><em>Type:</em>
+raw value <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>"&lt;pkgs&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix">noxa/modules/noxa/nodes/nixpkgs.nix</a></li>
+</ul>
 <h2 id="nodesnamereachableallowhostconfiguration"><a class="header" href="#nodesnamereachableallowhostconfiguration">nodes.&lt;name&gt;.reachable.allowHostConfiguration</a></h2>
 <p>Allow the host to configure its own reachable addresses. If set to false, values can only be set on the Noxa module level.</p>
 <p><em>Type:</em>
@@ -804,6 +1070,233 @@ attribute set of anything</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/configuration.nix">noxa/modules/noxa/nodes/configuration.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrants"><a class="header" href="#nodesnamesshgrants">nodes.&lt;name&gt;.ssh.grants</a></h2>
+<p>Grant SSH access from from node users to to node users.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnamecommands"><a class="header" href="#nodesnamesshgrantsnamecommands">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.commands</a></h2>
+<p>Function that evaluates to a list of commands the user is allowed to execute on the target node. If empty, all commands are allowed.</p>
+<p>This function will be called with the pkgs.callPackage function taken from the target node.</p>
+<p><em>Type:</em>
+function that evaluates to a(n) list of ((submodule) or package convertible to it)</p>
+<p><em>Default:</em>
+<code>&lt;function&gt;</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnamecommandsfunction-bodyaliases"><a class="header" href="#nodesnamesshgrantsnamecommandsfunction-bodyaliases">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.aliases</a></h2>
+<p>The SSH command that is requested by the user, mapping to this command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnamecommandsfunction-bodycommand"><a class="header" href="#nodesnamesshgrantsnamecommandsfunction-bodycommand">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.command</a></h2>
+<p>The command to allow.</p>
+<p><em>Type:</em>
+string or package convertible to it</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnamecommandsfunction-bodypassparameters"><a class="header" href="#nodesnamesshgrantsnamecommandsfunction-bodypassparameters">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.passParameters</a></h2>
+<p>Whether to pass any parameters given by the user to the command.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameextraconnectionoptions"><a class="header" href="#nodesnamesshgrantsnameextraconnectionoptions">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.extraConnectionOptions</a></h2>
+<p>Additional SSH connection options to use when connecting to the target node.</p>
+<p>View man SSH(8) - AUTHORIZED_KEYS</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnamefrom"><a class="header" href="#nodesnamesshgrantsnamefrom">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.from</a></h2>
+<p>Source user name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnamename"><a class="header" href="#nodesnamesshgrantsnamename">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.name</a></h2>
+<p>Alias name under which the user can <code>ssh {alias}</code> to the target.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"&lt;name&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameoptionsagentforwarding"><a class="header" href="#nodesnamesshgrantsnameoptionsagentforwarding">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.options.agentForwarding</a></h2>
+<p>Apply the “agent-forwarding” option to this SSH key, allowing SSH agent forwarding.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameoptionslisten"><a class="header" href="#nodesnamesshgrantsnameoptionslisten">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.options.listen</a></h2>
+<p>Apply the “permitlisten” option to this SSH key, remote listening and
+forwarding of ports to local ports.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameoptionsopen"><a class="header" href="#nodesnamesshgrantsnameoptionsopen">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.options.open</a></h2>
+<p>Apply the “permitopen” option to this SSH key, allowing to open
+specific host:port combinations.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameoptionspty"><a class="header" href="#nodesnamesshgrantsnameoptionspty">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.options.pty</a></h2>
+<p>Apply the “pty” option to this SSH key, allowing to allocate a pseudo-terminal.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameoptionsrestrict"><a class="header" href="#nodesnamesshgrantsnameoptionsrestrict">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.options.restrict</a></h2>
+<p>Apply the “restrict” option to this SSH key, disabling every feature
+except executing commands. Disabling this option, will circumvent all
+other options set via .options .</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameoptionsx11forwarding"><a class="header" href="#nodesnamesshgrantsnameoptionsx11forwarding">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.options.x11Forwarding</a></h2>
+<p>Apply the “x11-forwarding” option to this SSH key, allowing X11 forwarding.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameresolvedcommands"><a class="header" href="#nodesnamesshgrantsnameresolvedcommands">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.resolvedCommands</a></h2>
+<p>The resolved commands after evaluating the <code>commands</code> function.</p>
+<p><em>Type:</em>
+(list of ((submodule) or package convertible to it)) or string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameshowavailablecommands"><a class="header" href="#nodesnamesshgrantsnameshowavailablecommands">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.showAvailableCommands</a></h2>
+<p>If set to true, when the user tries to execute an unauthorized command,
+the list of available commands will be shown.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnamesshgenkeytype"><a class="header" href="#nodesnamesshgrantsnamesshgenkeytype">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.sshGenKeyType</a></h2>
+<p>When generating SSH keys use this key type.</p>
+<p><em>Type:</em>
+one of “ed25519”, “rsa”</p>
+<p><em>Default:</em>
+<code>"ed25519"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnameto"><a class="header" href="#nodesnamesshgrantsnameto">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.to</a></h2>
+<p>Destination node and user.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em>
+<code>"&lt;to&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnametohostname"><a class="header" href="#nodesnamesshgrantsnametohostname">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.to.hostname</a></h2>
+<p>Hostname or IP address of the target node.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"&lt;to.node&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnametonode"><a class="header" href="#nodesnamesshgrantsnametonode">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.to.node</a></h2>
+<p>Destination node name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnametoport"><a class="header" href="#nodesnamesshgrantsnametoport">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.to.port</a></h2>
+<p>SSH port of the target node.</p>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Default:</em>
+<code>22</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnametosshfingerprint"><a class="header" href="#nodesnamesshgrantsnametosshfingerprint">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.to.sshFingerprint</a></h2>
+<p>Expected SSH host key fingerprint of the destination node.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
+</ul>
+<h2 id="nodesnamesshgrantsnametouser"><a class="header" href="#nodesnamesshgrantsnametouser">nodes.&lt;name&gt;.ssh.grants.&lt;name&gt;.to.user</a></h2>
+<p>Destination user name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/ssh.nix">noxa/modules/noxa/nodes/ssh.nix</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started-1"><a class="header" href="#getting-started-1">Getting Started</a></h1>
 <p>todo</p>

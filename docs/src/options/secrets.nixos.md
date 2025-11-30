@@ -284,6 +284,27 @@ null or (list of string)
 
 
 
+## noxa\.secrets\.def\.\*\.group
+
+
+
+The group to set on the secret file when it is created\.
+
+
+
+*Type:*
+null or string
+
+
+
+*Default:*
+` null `
+
+*Declared by:*
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
+
+
+
 ## noxa\.secrets\.def\.\*\.hosts
 
 
@@ -366,6 +387,27 @@ string *(read only)*
 
 
 
+## noxa\.secrets\.def\.\*\.mode
+
+
+
+The file mode to set on the secret file when it is created\.
+
+
+
+*Type:*
+null or string
+
+
+
+*Default:*
+` null `
+
+*Declared by:*
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
+
+
+
 ## noxa\.secrets\.def\.\*\.module
 
 
@@ -383,6 +425,27 @@ string
 
 *Example:*
 ` "services.openssh" `
+
+*Declared by:*
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
+
+
+
+## noxa\.secrets\.def\.\*\.owner
+
+
+
+The owner to set on the secret file when it is created\.
+
+
+
+*Type:*
+null or string
+
+
+
+*Default:*
+` null `
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
