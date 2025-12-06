@@ -63,7 +63,7 @@
     {
       nodes = {
         hostA = {
-          ssh.grants = {
+          configuration.ssh.grants = {
             hostB =
               {
                 from = "bob";
@@ -73,7 +73,7 @@
           };
         };
         hostB = {
-          ssh.grants = {
+          configuration.ssh.grants = {
             hostA = {
               from = "bob";
               to.node = "hostA";
@@ -83,7 +83,7 @@
         };
 
         hostC = {
-          ssh.grants = {
+          configuration.ssh.grants = {
             hostC = rec {
               from = "alice";
               to.node = "hostA";

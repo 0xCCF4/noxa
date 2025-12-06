@@ -7,6 +7,7 @@
         _module.args = {
           inherit name;
           noxaHost = name;
+          inherit noxaConfig;
           nodes = attrsets.mapAttrs (x: v: v.configuration) noxaConfig.nodes;
         };
       }

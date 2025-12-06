@@ -1,5 +1,4 @@
-{ lib, config, noxaConfig, options, noxa, name, ... }: with lib; with builtins;
-# todo: still missing assertion sanity checks
+{ lib, noxaConfig, ... }: with lib; with builtins;
 {
   options.ssh = with types; {
     grants = mkOption {
@@ -57,10 +56,51 @@
                     default = null;
                   };
                   hostname = mkOption {
-                    description = "Hostname or IP address of the target node.";
-                    type = str;
+                    description = ''
+                      Hostname or IP address of the target node.
+                      
+                      Multiple addresses may be specified by providing a executable
+                      each that when exiting with code 0 selects the corresponding address,
+                      see the example value.
+                    '';
+                    type = either str (attrsOf (submodule {
+                      options = {
+                        priority = mkOption {
+                          description = "Priority of this address option, lower values are preferred over higher ones.";
+                          type = int;
+                        };
+                        command = mkOption {
+                          description = "Command that when executed returns exit code 0 if this address should be used.";
+                          type = coercedTo package (value: "${value}/bin/${value.meta.mainProgram}") str;
+                          example = "ping -c 1 -W 1 192.168.0.55 > /dev/null";
+                        };
+                        host = mkOption {
+                          description = "The hostname or IP address to use if this option is selected.";
+                          type = str;
+                          example = "192.168.0.55";
+                        };
+                        port = mkOption {
+                          description = "SSH port of the target node for this address.";
+                          type = int;
+                          default = submodInner.config.port;
+                          defaultText = "same as to.port";
+                        };
+                      };
+                    }));
                     default = submod.config.to.node;
                     defaultText = "<to.node>";
+                    example = {
+                      local = {
+                        priority = 10;
+                        command = "ping -c 1 -W 1 192.168.0.55 > /dev/null";
+                        host = "192.168.0.55";
+                      };
+                      public = {
+                        priority = 20;
+                        command = "true";
+                        host = "host.example.com";
+                      };
+                    };
                   };
                   port = mkOption {
                     description = "SSH port of the target node.";
@@ -228,139 +268,4 @@
       }));
     };
   };
-
-  config = {
-    configuration = mkMerge
-      (flatten ((mapAttrsToList
-        (grantName: grant:
-          let
-            sshKeySecret = config.configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
-              ident = "ssh-key-${grantName}";
-              module = "noxa.ssh";
-            }};
-            pkgs = noxaConfig.nodes."${grant.to.node}".pkgs;
-          in
-          [{
-            noxa.secrets.def = [
-              {
-                ident = "ssh-key-${grantName}";
-                module = "noxa.ssh";
-                generator.script = "ssh-keys-${grant.sshGenKeyType}";
-                owner = grant.from;
-              }
-            ];
-            home-manager.users."${grant.from}".programs.ssh.matchBlocks."${grantName}" =
-              {
-                host = grant.name;
-                hostname = grant.to.hostname;
-                port = grant.to.port;
-                identitiesOnly = true;
-                identityFile = sshKeySecret.path;
-                user = grant.to.user;
-                userKnownHostsFile =
-                  if grant.to.sshFingerprint != null then
-                    toString
-                      (
-                        pkgs.writeTextFile {
-                          name = "known-hosts-${grant.name}";
-                          text = "${grant.name} ${grant.to.sshFingerprint}\n";
-                        }
-                      )
-                  else
-                    "~/.ssh/known_hosts";
-              };
-            assertions = [
-              {
-                message = "${fgYellow}SSH grant config error: " + (if typeOf grant.resolvedCommands == "string" then grant.resolvedCommands else "invocation of function to resolve commands failed") + "${default}";
-                assertion = typeOf grant.resolvedCommands == "list";
-              }
-            ];
-          }])
-        config.ssh.grants)
-      ++
-      flatten
-        (map
-          (fromNodeName:
-            let
-              grants = noxaConfig.nodes."${fromNodeName}".ssh.grants;
-              matching = filterAttrs (grantName: grant: grant.to.node == name) grants;
-              pkgs = noxaConfig.nodes."${fromNodeName}".pkgs;
-            in
-            mapAttrsToList
-              (grantName: grant:
-                let
-                  sshKeySecret = noxaConfig.nodes."${fromNodeName}".configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
-                    ident = "ssh-key-${grantName}";
-                    module = "noxa.ssh";
-                  }};
-                  sshPubKeyFile = noxa.lib.filesystem.withExtension sshKeySecret.rekeyFile "pub";
-                  sshPubKey = with noxa.lib.ansi; replaceStrings [ "\n" "\r" ] [ "" "" ] (noxa.lib.filesystem.readFileWithError sshPubKeyFile "${fgYellow}SSH public key file ${fgCyan}${toString sshPubKeyFile}${fgYellow} does not exist.\n       Did you run ${fgCyan}agenix generate${fgYellow} and ${fgCyan}git add${fgYellow}?${default}");
-                in
-                {
-                  users.users."${grant.to.user}".openssh.authorizedKeys.keys =
-                    let
-                      resolvedCommands = grant.resolvedCommands;
-                      execute = command:
-                        if command.passParameters then ''
-                          params=("''${CMD[@]:1}")
-                          exec ${command.command} "''${params[@]}"
-                        '' else ''
-                          exec ${command.command}
-                        '';
-                      multipleCommands = commands: pkgs.writeShellApplication {
-                        name = "ssh-command-wrapper";
-
-                        text = ''
-                          IFS=' ' read -r -a CMD <<< "''${SSH_ORIGINAL_COMMAND:-}"
-
-                          case "''${CMD[0]:-}" in
-                          ${concatMapStringsSep "\n" (command: let
-                            aliasesPattern = if length command.aliases == 0 then
-                              command.command
-                            else
-                              concatStringsSep "|" (map (alias: escapeShellArg alias) command.aliases);
-                          in
-                          "
-                            ${aliasesPattern})
-                                ${execute command}
-                              ;;
-                          ") resolvedCommands}
-                            *)
-                            ${pkgs.busybox}/bin/echo "Access denied."
-                            ${if !grant.showAvailableCommands then "exit 1" else ''
-                            ${pkgs.busybox}/bin/echo "Available commands are:"
-                            ${concatMapStringsSep "\n" (command: let
-                              aliasesList = if length command.aliases == 0 then
-                                [ command.command ]
-                              else
-                                command.aliases;
-                            in
-                            concatMapStringsSep "\n  " (alias: "  echo  - \"${escapeShellArg alias}\"") aliasesList) resolvedCommands}
-                            exit 1
-                            ''}
-                            ;;
-                          esac
-                          exit 1
-                        '';
-                      };
-                      command =
-                        if length resolvedCommands == 0 then
-                          [ ]
-                        else if length resolvedCommands == 1 then
-                          [ "command=\"${escapeShellArg (head resolvedCommands).command}\"" ]
-                        else
-                          [ "command=\"${multipleCommands resolvedCommands}/bin/ssh-command-wrapper\"" ];
-                      allOptions = concatStringsSep "," (grant.extraConnectionOptions ++ command);
-                      allOptionsWithSpace = if allOptions == "" then "" else allOptions + " ";
-                    in
-                    [
-                      "${allOptionsWithSpace}${sshPubKey}"
-                    ];
-                })
-              matching
-          )
-          noxaConfig.nodeNames)
-      ));
-  };
-}
-
+} 
