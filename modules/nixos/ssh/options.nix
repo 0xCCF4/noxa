@@ -134,53 +134,65 @@
               default = "${last submod._prefix}";
             };
 
-            options = {
-              restrict = mkOption {
-                description = ''
-                  Apply the "restrict" option to this SSH key, disabling every feature
-                  except executing commands. Disabling this option, will circumvent all
-                  other options set via .options .
-                '';
-                type = bool;
-                default = true;
-              };
-              listen = mkOption {
-                description = ''
-                  Apply the "permitlisten" option to this SSH key, remote listening and
-                  forwarding of ports to local ports.
-                '';
-                type = listOf str;
-                default = [ ];
-              };
-              open = mkOption {
-                description = ''
-                  Apply the "permitopen" option to this SSH key, allowing to open
-                  specific host:port combinations.
-                '';
-                type = listOf str;
-                default = [ ];
-              };
-              pty = mkOption {
-                description = ''
-                  Apply the "pty" option to this SSH key, allowing to allocate a pseudo-terminal.
-                '';
-                type = bool;
-                default = false;
-              };
-              x11Forwarding = mkOption {
-                description = ''
-                  Apply the "x11-forwarding" option to this SSH key, allowing X11 forwarding.
-                '';
-                type = bool;
-                default = false;
-              };
-              agentForwarding = mkOption {
-                description = ''
-                  Apply the "agent-forwarding" option to this SSH key, allowing SSH agent forwarding.
-                '';
-                type = bool;
-                default = false;
-              };
+            options = mkOption {
+              visible = "transparent";
+              description = "Options to apply to this SSH authorized key";
+              type = submodule (submodOptions: {
+                options = {
+                  restrict = mkOption {
+                    description = ''
+                      Apply the "restrict" option to this SSH key, disabling every feature
+                      except executing commands. Disabling this option, will circumvent all
+                      other options set via .options .
+                    '';
+                    type = bool;
+                    default = true;
+                  };
+                  listen = mkOption {
+                    description = ''
+                      Apply the "permitlisten" option to this SSH key, remote listening and
+                      forwarding of ports to local ports.
+                    '';
+                    type = listOf str;
+                    default = [ ];
+                  };
+                  open = mkOption {
+                    description = ''
+                      Apply the "permitopen" option to this SSH key, allowing to open
+                      specific host:port combinations.
+                    '';
+                    type = listOf str;
+                    default = [ ];
+                  };
+                  pty = mkOption {
+                    description = ''
+                      Apply the "pty" option to this SSH key, allowing to allocate a pseudo-terminal.
+                    '';
+                    type = bool;
+                    default = false;
+                  };
+                  x11Forwarding = mkOption {
+                    description = ''
+                      Apply the "x11-forwarding" option to this SSH key, allowing X11 forwarding.
+                    '';
+                    type = bool;
+                    default = false;
+                  };
+                  agentForwarding = mkOption {
+                    description = ''
+                      Apply the "agent-forwarding" option to this SSH key, allowing SSH agent forwarding.
+                    '';
+                    type = bool;
+                    default = false;
+                  };
+                };
+
+                config = {
+                  extraConnectionOptions = mkIf (submodOptions.config.restrict && (
+                    length submodOptions.config.listen > 0 || length submodOptions.config.open > 0
+                  )) ["port-forwarding"];
+                };
+              });
             };
 
             extraConnectionOptions = mkOption {
