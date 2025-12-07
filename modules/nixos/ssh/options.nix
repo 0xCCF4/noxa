@@ -62,7 +62,7 @@
                   };
                   extraOptions = mkOption {
                     description = "Additional configuration options to add to the SSH config for this grant.";
-                    type = let x = attrsOf ((oneOf [ str int (listOf str) x ])); in if noxa.__buildDocs then anything else x;
+                    type = let x = attrsOf ((oneOf [ str int (listOf str) x ])); in if (noxa.__buildDocs or false) then anything else x;
                     default = { };
                   };
                   hostname = mkOption {
@@ -97,7 +97,7 @@
                         };
                         extraOptions = mkOption {
                           description = "Additional configuration options to add to the SSH config for this address option.";
-                          type = let x = attrsOf (nullOr (oneOf [ str int (listOf str) x ])); in if noxa.__buildDocs then anything else x;
+                          type = let x = attrsOf (nullOr (oneOf [ str int (listOf str) x ])); in if (noxa.__buildDocs or false) then anything else x;
                           default = { };
                           visible = "shallow";
                         };
