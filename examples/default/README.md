@@ -195,4 +195,4 @@ nix run nixpkgs#nix-inspect -- --expr 'builtins.getFlake "path to this folder"'
 ```
 
 ## Contributing
-Feel free to contribute to this (template) via merge requests when you change or add something useful to either your own user, machine, or shared configuration.
+Feel free to contribute to this (template on <https://github.com/0xCCF4/noxa/>) via merge requests when you change or add something useful to either your own user, machine, or shared configuration.
