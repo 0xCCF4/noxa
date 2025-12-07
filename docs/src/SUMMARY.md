@@ -4,7 +4,7 @@
 - [Getting Started](./getting-started.md)
 - [Modules](./modules.md)
     - [SSH](./modules/ssh.md)
-    - [SSH ⚙️](./options/ssh.noxa.md)
+    - [SSH ⚙️](./options/ssh.nixos.md)
     - [NixOS Secrets](./modules/secrets.md)
     - [NixOS Secrets ⚙️](./options/secrets.nixos.md)
     - [Nodes](./modules/nodes.md)
@@ -12,6 +12,3 @@
     - [Wireguard](./modules/wireguard.md)
     - [Wireguard (Node Config) ⚙️](./options/wireguard.nixos.md)
     - [Wireguard (Noxa Config) ⚙️](./options/wireguard.noxa.md)
-
-
-

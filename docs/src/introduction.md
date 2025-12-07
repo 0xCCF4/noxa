@@ -9,29 +9,21 @@ you through setting up a multi-host NixOS configuration.
 NixOS is a Linux distribution configuration solution composed of modules and packages [NixOS Manual](https://nixos.org/manual/nixos/stable/#preface). While [nixpkgs](https://github.com/NixOS/nixpkgs/) provides many modules for configuring NixOS machines, it lacks fundamental support for configuration beyond the scope of a single host.
 
 In practice, some hosts share configuration settings. Imagine that you configure four different NixOS machines and would like to set up a WireGuard network between them. In the end, you will configure `networking.wireguard.interfaces.<name>` on each host, but there are several open questions:
-1. Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network once globally should be enough.
+1. Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network (and members) once globally should be enough.
 2. How do you manage secrets efficiently? Preshared connection keys, for example, are owned not by one but by two hosts. Should you specify them on several hosts redundantly, or would it be sufficient to declare the network topology globally?
 
-To summarize, some configuration settings are shared among different hosts and do not belong to any specific one. For example, the existence of a WireGuard network and its configuration fundamentally does not belong to the configuration of a single NixOS host. Further, one host's configuration might depend on another's configuration.
-
-Currently, [nixpkgs](https://github.com/NixOS/nixpkgs/) does not support these multi-host configuration scenarios and multi-host dependencies.
+This is were **noxa** shines. **Noxa** builds another layer on top of the "normal" per-system nixos configuration by providing inter host dependencies and configuration options.
 
 ## Goal
 
-The goal of **Noxa** is to fill this gap and provide a framework to support the configuration of multiple hosts that:
-1. Potentially depend on each other
-2. Depend on a global configuration
-
-Whats contained in **Noxa**:
-1. The module system scaffolding to set up a **noxa** configuration.
-2. *Noxa modules* covering standard use-cases.
-3. *Nixos modules* that configure the specified hosts according to the global configuration from *noxa modules*
+The goal of **Noxa** is to fill the gap of nixos-modules limited to only a single host, providing a framework to support the configuration of multiple hosts that:
+1. Depend on each other
+2. Depend on a global configuration that is not part of any specific host
+3. Automates as many tasks that multi-host management requires (like exchanging secrets).
 
 ## How does it work
 
-At the highest level, **Noxa** uses the module system to provide a configuration environment. A *Noxa module* can extend the functionality of your configuration (like with standard NixOS modules).
-The difference to the "normal" NixOS module system being the provided configuration options. Hosts are, for example, defined using the configuration value `nodes.<name>.***`. NixOS
-configuration is then supplied via the `nodes.<name>.configuration` option.
+At the highest level, **Noxa** uses the same module system library to provide a global configuration environment. Settings specified here (in *noxa modules*) do not belong to the configuration of any specific host unless specified under `nodes.<name>.configuration`, which holds the configuration of host `<name>`.
 
 For example, the following *Noxa module* declares two hosts, while `hostB` depends on the configuration values of `hostA`.
 ```nix
@@ -51,6 +43,7 @@ For example, the following *Noxa module* declares two hosts, while `hostB` depen
 
         # Access config values from other hosts
         networking.hostName =
+            /* depend on configuration of hostA */
            "${config.nodes.hostA.configuration.networking.hostName}-copy";
     };
 
@@ -62,7 +55,22 @@ For example, the following *Noxa module* declares two hosts, while `hostB` depen
 }
 ```
 
-For a reference, which options are available to *noxa modules* checkout [options](./options.md).
+> For a reference, which options are available to *noxa modules* checkout [Modules](./modules.md).
+
+## Getting started
+
+To quick start, initialize a new *noxa/nixos* project via:
+```bash
+nix flake init --template github:0xccf4/noxa
+```
+
+Compiling and deploying a new configuration, is done via the "normal" nixos
+and build commands by:
+```bash
+nixos-rebuild switch --flake .#<hostname>
+```
+
+A more detailed guide is found in [Getting Started](./getting-started.md)
 
 ## Contributing
 
@@ -71,8 +79,10 @@ Contributions are welcome. Suggest new features and bugs via issues. Pull reques
 
 ## Related projects
 
-Other frameworks already aim to implement multi-host NixOS configuration; the list is provided below.
-Why another framework? Learning the Nix language and ecosystem.
-
 List of other multi-host configuration frameworks (feel free to add others):
 - [nixus @infinisil (GPLv3)](https://github.com/infinisil/nixus/)
+
+> Why another framework?
+>
+> Initially [@0xCCF4](https://github.com/0xCCF4/) started the project to learn Nix in-depth,
+> but since it has grown to a usable multi-host configuration framework.

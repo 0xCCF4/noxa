@@ -33,6 +33,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.agenix.follows = "agenix";
       inputs.agenix-rekey.follows = "agenix-rekey";
+      inputs.home-manager.follows = "home-manager";
     };
 
     # Secret management
