@@ -4,8 +4,9 @@
 }@inputs:
 with builtins; with lib;
 let
-  nixDirectoryToList = (import ./nix-dir-listing.nix { inherit nixpkgs; inherit lib; }).nixDirectoryToList;
+  nixDirectoryToList = (import ./nix-dir-listing.nix { inherit nixpkgs; inherit lib; noxaLib = library; }).nixDirectoryToList;
 
   nix-files = nixDirectoryToList ./.;
+  library = (foldl (a: b: a // b) { } (map (file: import file (inputs // { noxaLib = library; })) nix-files));
 in
-(fold (a: b: a // b) { } (map (file: import file inputs) nix-files))
+library

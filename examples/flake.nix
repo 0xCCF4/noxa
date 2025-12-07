@@ -3,29 +3,19 @@
 
   #########################################################
   #
-  # Todos when using this example as a template:
+  # Todos when using this template:
   # 1. Remove the secrets/master.key file from your repository.
   #       git rm secrets/master.key ; rm secrets/master.key
-  # 2. Change the url of the master key to a string value, see file `shared.nix`.
-  # 3. Generate a new master key:
-  #       nix shell nixpkgs#age
-  #       age-keygen -o <your-master-key-file-location>
-  # 4. Update the public key part of your master key in `shared.nix`.
-  # 5. Delete `hosts/*` files that you do not need.
-  # 6. Remove config from `config.nix` that you do not need.
-  # 7. Your are ready to go!
+  # 2. Update the master key, see secrets/default.nix
+  # 3. Delete `hosts/*` files that you do not need.
+  # 4. Delete `hardware/*`files that you don not need.
+  # 5. Your are ready to go!
   #
   #########################################################
 
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    # Disk setup tool, used in this example but not required for Noxa
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     # Noxa
     noxa = {
@@ -59,7 +49,6 @@
     { self
     , nixpkgs
     , flake-utils
-    , disko
     , agenix
     , agenix-rekey
     , noxa
@@ -68,25 +57,31 @@
     }:
       with nixpkgs.lib; with builtins;
       {
-        # Agenix rekey module configuration
-        agenix-rekey = agenix-rekey.configure {
-          userFlake = self;
-          nixosConfigurations = attrsets.mapAttrs
-            (name: value: {
-              config = value.configuration;
-            })
-            self.noxaConfiguration.config.nodes;
-        };
-
         # Noxa configuration
         noxaConfiguration = noxa.lib.noxa-instantiate {
           modules = [ ./config.nix ];
           specialArgs = {
-            inherit disko;
             inherit agenix;
             inherit agenix-rekey;
             inherit home-manager;
           };
+        };
+
+        # Allow interoperability with "standard" nixos build tools
+        nixosConfigurations = attrsets.mapAttrs
+          (name: value: {
+            config = value.configuration;
+            options = value.options;
+          })
+          (filterAttrs
+            (node: value: elem node self.noxaConfiguration.nodeNames)
+            self.noxaConfiguration.config.nodes);
+
+        # Agenix rekey module configuration
+        # See the wiki <https://0xccf4.github.io/noxa/modules/secrets.html> for more information
+        agenix-rekey = agenix-rekey.configure {
+          userFlake = self;
+          nixosConfigurations = self.nixosConfigurations;
         };
       };
 }

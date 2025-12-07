@@ -1,5 +1,6 @@
 { nixpkgs
 , lib ? nixpkgs.lib
+, noxaLib
 , ...
 }:
 with lib; with builtins;
@@ -75,9 +76,46 @@ rec {
     ```
     */
   filesystem.readFileWithError = path: error:
-    if lib.filesystem.pathIsRegularFile path then
-      readFile path
-    else
-      throw error;
+    noxaLib.filesystem.whenFileExistsElse path (readFile path) (throw error);
 
+  /**
+    Returns then if the file at the given path exists, else returns else.
+
+    # Inputs
+    `path` : The file path to check.
+    `then` : The value to return if the file exists.
+    `else` : The value to return if the file does not exist.
+
+    # Output
+    The value of then or else based on the existence of the file.
+
+    # Type
+    ```
+    Path -> a -> b -> a/b
+    ```
+    */
+  filesystem.whenFileExistsElse' = path: thenValue: elseValue:
+    if lib.filesystem.pathIsRegularFile path then
+      thenValue
+    else
+      elseValue;
+
+  /**
+    Returns then if the file at the given path exists, else returns else.
+
+    # Inputs
+    `path` : The file path to check.
+    `then` : function Path -> a : The value to return if the file exists. It is called with the path as argument.
+    `else` : function Path -> b : The value to return if the file does not exist. It is called with the path as argument.
+
+    # Output
+    The value of then or else based on the existence of the file.
+
+    # Type
+    ```
+    Path -> (Path -> a) -> (Path -> b) -> a/b
+    ```
+    */
+  filesystem.whenFileExistsElse = path: thenFunc: elseFunc:
+    noxaLib.filesystem.whenFileExistsElse' path (thenFunc path) (elseFunc path);
 }

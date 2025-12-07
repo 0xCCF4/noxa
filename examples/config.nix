@@ -1,107 +1,43 @@
-{ noxa, lib, disko, config, home-manager, ... }: with lib; {
-  config =
-    let
+# Main noxa configuration file
+# This is the central configuration file for your multi-host NixOS setup
+#
+# Like with any NixOS configuration, you can import additional modules,
+# define options, etc.
+#
+# Hosts are defined via the nodes attribute. By default, we import all files
+# from the `./hosts` directory as nodes, using their file names as node names.
+# To add a new host configuration, just add a new file in the `./hosts` directory.
+{ noxa, lib, disko, config, home-manager, ... }: with lib; let
+  filesInHostDir = noxa.lib.nixDirectoryToAttr' ./hosts;
+in
+{
+  config = {
+    defaults = { config, name, lib, ... }: with lib; {
+      configuration = {
+        imports = [
+          # Add global nixos modules
+          ./secrets # Configure secrets management
+          home-manager.nixosModules.default # Add home manager to all nodes
+        ];
 
-      filesInHostDir = noxa.lib.nixDirectoryToAttr' ./hosts;
-    in
-    {
-      defaults = { config, name, lib, ... }: {
-        configuration = {
-          imports = [
-            # Add global nixos modules
-            ./shared.nix
-            ./hardware/vm.nix
-            disko.nixosModules.disko
-            home-manager.nixosModules.default
-          ];
+        config = {
           # Set the default hostname based on the file name in `./hosts`
-          config.networking.hostName = lib.mkDefault name;
-        };
-      };
+          # If you do not specify a hostname in your nixos config, it uses the noxa node name
+          networking.hostName = mkDefault name;
 
-      # Add files located in `./hosts` directory as nodes.
-      nodes =
-        attrsets.mapAttrs
-          (name: path: path)
-          filesInHostDir;
-
-      # Add files located in `./hosts` directory as nodes.
-      nodeNames = attrsets.mapAttrsToList (name: path: name) filesInHostDir;
-
-      # Define exemplary wireguard network.
-      # You will likely remove this, when you use this example as template.
-      wireguard = {
-        wg-service = {
-          networkAddress = "10.0.0.0/24";
-          members = {
-            hostA = {
-              deviceAddresses = [ "10.0.0.1/32" ];
-              advertise.server = {
-                listenPort = 51820;
-                listenAddress = "1.1.1.1";
-                defaultGateway = true;
-              };
-            };
-            hostB = {
-              deviceAddresses = [ "10.0.0.2/32" ];
-            };
-            hostC = {
-              deviceAddresses = [ "10.0.0.3/32" ];
-            };
-            hostD = {
-              deviceAddresses = [ "10.0.0.4/32" ];
-              advertise.server = {
-                listenPort = 51820;
-                listenAddress = "2.2.2.2";
-              };
-            };
-          };
+          # Default state version for all nodes
+          system.stateVersion = mkDefault "25.11";
         };
       };
     };
-  imports = [
-    {
-      nodes = {
-        hostA = {
-          configuration.ssh.grants = {
-            hostB =
-              {
-                from = "bob";
-                to.node = "hostB";
-                to.user = "bob";
-              };
-          };
-        };
-        hostB = {
-          configuration.ssh.grants = {
-            hostA = {
-              from = "bob";
-              to.node = "hostA";
-              to.user = "bob";
-            };
-          };
-        };
 
-        hostC = {
-          configuration.ssh.grants = {
-            hostC = rec {
-              from = "alice";
-              to.node = "hostA";
-              to.user = "alice";
+    # Add files located in `./hosts` directory as nodes.
+    nodes =
+      attrsets.mapAttrs
+        (name: path: path)
+        filesInHostDir;
 
-              commands = { busybox, hello, cowsay, ... }: [
-                hello
-                cowsay
-                {
-                  command = "${busybox}/bin/echo";
-                  aliases = [ "echo" "print" ];
-                  passParameters = true;
-                }
-              ];
-            };
-          };
-        };
-      };
-    }
-  ];
+    # Add files located in `./hosts` directory as nodes.
+    nodeNames = attrsets.mapAttrsToList (name: path: name) filesInHostDir;
+  };
 }

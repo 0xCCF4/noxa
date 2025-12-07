@@ -5,7 +5,7 @@
 > **Status:** Under active development.  
 > Interfaces and features are subject to change.
 >
-> Though, it is in a usable state, as I ([@0xCCF4](https://github.com/0xCCF4/)) use it as my daily driver for my NixOS setup.
+> Though, it is in a usable state and I ([@0xCCF4](https://github.com/0xCCF4/)) use it as my daily driver of my NixOS setup.
 
 ## Goals
 
@@ -27,9 +27,6 @@
 1. The official documentation is available here: <https://0xccf4.github.io/noxa/>
 2. A minimal working example can be found in the [examples](examples/) folder.
 3. My ([@0xCCF4](https://github.com/0xCCF4/)) daily used nixos configuration, using **Noxa**, can be found here: [github:0xCCF4/system](https://github.com/0xCCF4/system)
-
-## Other related projects
-- [nixus](https://github.com/infinisil/nixus/)
 
 ## Contributing
 

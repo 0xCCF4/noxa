@@ -31,19 +31,12 @@
       url = "github:oddlama/agenix-rekey";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Disk setup tool, used by the example configuration in `examples/`
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
     { self
     , nixpkgs
     , flake-utils
-    , disko
     , ...
     }@inputs:
       with nixpkgs.lib; with builtins;

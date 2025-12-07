@@ -1,36 +1,41 @@
-{ disko
-, pkgs
+# This is an exemplary nixos hardware configuration if our (noxa's) automated testing VMs.
+#
+# Feel free to remove this file and create your own hardware configuration in this folder.
+{ pkgs
 , lib
 , config
 , modulesPath
 , ...
-}:
+}: with lib;
 {
-  imports = [
-    (import ./disko.nix {
-      device = "/dev/sda";
-      bootType = "bios";
-      espSize = "1G";
-    })
-    (modulesPath + "/profiles/qemu-guest.nix")
-  ];
+  # Enable automatic disk resizing on boot
+  boot.growPartition = mkDefault true;
 
-  boot.loader.grub.enable = lib.mkDefault true; # Use the boot drive for GRUB
-  boot.growPartition = lib.mkDefault true;
+  # Required kernel modules for qemu virtual machines
   boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "sr_mod" "virtio_blk" ];
 
-  boot.loader.grub.efiSupport = true;
-  boot.loader.grub.efiInstallAsRemovable = true;
+  # Enable QEMU guest services
+  services.qemuGuest.enable = mkDefault true;
 
-  services.qemuGuest.enable = lib.mkDefault true;
+  # Target architecture
+  nixpkgs.hostPlatform = mkDefault "x86_64-linux";
 
-  security.sudo.wheelNeedsPassword = lib.mkDefault false; # Don't ask for passwords
-  services.openssh = {
-    enable = lib.mkDefault true;
-    settings.PasswordAuthentication = lib.mkDefault false;
-    settings.KbdInteractiveAuthentication = lib.mkDefault false;
+  # File systems
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/nixos-root";
+    fsType = "ext4";
   };
-  programs.ssh.startAgent = lib.mkDefault true;
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  # Bootloader configuration
+  boot.loader.grub = {
+    enable = mkDefault false;
+    zfsSupport = true;
+    efiSupport = true;
+    efiInstallAsRemovable = true;
+    mirroredBoots = [
+      { devices = [ "nodev" ]; path = "/boot"; }
+    ];
+  };
+  boot.loader.efi.canTouchEfiVariables = false;
+  boot.loader.systemd-boot.enable = mkDefault true;
 }
