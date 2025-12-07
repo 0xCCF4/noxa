@@ -75,8 +75,12 @@
 
         # Templates
         templates.default = {
-          path = ./examples;
-          description = "Basic noxa configuration example";
+          path = ./examples/default;
+          description = "Fully featured template. (Recommended)";
+        };
+        templates.minimal = {
+          path = ./examples/minimal;
+          description = "Minimal template.";
         };
       }
       // flake-utils.lib.eachDefaultSystem (
