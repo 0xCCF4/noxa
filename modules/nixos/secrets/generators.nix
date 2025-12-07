@@ -41,7 +41,7 @@
         PRIVATE_KEY_FILE="''${TMPDIR}/private-key.pem"
         PUBLIC_KEY_FILE="''${TMPDIR}/public-key.pem"
         ${pkgs.nix}/bin/nix-store --generate-binary-cache-key "$(basename ${file})" "''${PRIVATE_KEY_FILE}" "''${PUBLIC_KEY_FILE}"
-        ${pkgs.busybox}/bin/cp "$PUBLIC_KEY_FILE" ${escapeShellArg (removeSuffix ".age" file + ".pub")}
+        ${pkgs.busybox}/bin/cp "$PUBLIC_KEY_FILE" ${escapeShellArg (file + ".pub")}
         ${pkgs.busybox}/bin/cat "$PRIVATE_KEY_FILE"
       
         ${pkgs.busybox}/bin/rm -rf "''${TMPDIR}"
