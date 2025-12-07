@@ -123,7 +123,7 @@ According to this categorization, we provide default values for all settings (e.
 
 All custom configuration options (that are declared for this this template) are exposed via the `mine` namespace, when presets differ between single machines.
 
-Settings here are seperated by topic. Settings regarding the font configuration are located in `modules/nixos/fonts.nix`, settings regarding the SSH server are located in `modules/nixos/ssh.nix`, etc.
+Settings here are separated by topic. Settings regarding the font configuration are located in `modules/nixos/fonts.nix`, settings regarding the SSH server are located in `modules/nixos/ssh.nix`, etc.
 
 Adding a new NixOS module:
 1. Create a new file in `modules/nixos/`, e.g. `my-module.nix`.
