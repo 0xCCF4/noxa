@@ -103,6 +103,13 @@ let
             This may be used to name the secret.
           '';
         };
+        global = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Whether this secret is global, i.e., a host might subscribe to it without owning it.
+          '';
+        };
       };
       config =
         let
@@ -114,12 +121,16 @@ let
 
           hostSecretRekeyFile = cfg.hostSecretsPath + "/${module}/${ident}.age";
           sharedSecretRekeyFile = cfg.sharedSecretsPath + "/${module}/${hostPath}/${ident}.age";
+          instanceSecretRekeyFile = cfg.instanceSecretsPath + "/${module}/${ident}.age";
 
           rekeyFile =
-            if length hosts <= 1 then
-              hostSecretRekeyFile
+            if submod.config.global then
+              instanceSecretRekeyFile
             else
-              sharedSecretRekeyFile;
+              (if length hosts <= 1 then
+                hostSecretRekeyFile
+              else
+                sharedSecretRekeyFile);
         in
         (add.config or { }) // {
           rekeyFile = mkIf (rekeyFile != null) rekeyFile;
@@ -173,10 +184,26 @@ in
       '';
     };
 
+    instanceSecretsPath = mkOption {
+      type = path;
+      description = ''
+        The path where instance-wide secrets are stored. This is the path where noxa will look for (encrypted) instance-wide secrets.
+
+        This directory contains encrypted secrets that are shared between potentially all hosts.
+        Secrets in this directory are not host specific, each host might subscribe to them.
+
+        An example secret would be a shared API key or password.
+
+        Since this path is used by multiple hosts, it is recommended to set this path once for all hosts, instead of setting it per host.
+
+        ATTENTION: Since this path is copied to the nix store, it must not contain any secrets that are not encrypted.
+      '';
+    };
+
     secretsPath = mkOption {
       type = nullOr path;
       description = ''
-        The path where all secrets are stored. Subfolders are created for host specific and shared secrets.
+        The path where all secrets are stored. Subfolders are created for host specific, shared, and instance secrets.
       '';
     };
 
@@ -218,6 +245,13 @@ in
                 default = null;
                 description = ''
                   The group to set on the secret file when it is created.
+                '';
+              };
+              global = mkOption {
+                type = bool;
+                default = false;
+                description = ''
+                  Whether this secret is global, i.e., a host might subscribe to it without owning it.
                 '';
               };
             };
@@ -352,6 +386,7 @@ in
 
     noxa.secrets.hostSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/host/${noxaHost}"));
     noxa.secrets.sharedSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/shared"));
+    noxa.secrets.instanceSecretsPath = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/global"));
     noxa.secrets.options.rekeyDirectory = mkIf (cfg.secretsPath != null) (mkDefault (cfg.secretsPath + "/rekeyed/${noxaHost}"));
 
     age.secrets = mkMerge (map
@@ -367,6 +402,7 @@ in
             mode = mkIf (secret.mode != null) secret.mode;
             owner = mkIf (secret.owner != null) secret.owner;
             group = mkIf (secret.group != null) secret.group;
+            global = mkIf (secret.global != null) secret.global;
           };
         })
       cfg.def);
