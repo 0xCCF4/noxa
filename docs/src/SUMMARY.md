@@ -2,6 +2,7 @@
 
 - [Intro](./introduction.md)
 - [Getting Started](./getting-started.md)
+- [Architecture](./architecture.md)
 - [Modules](./modules.md)
     - [SSH](./modules/ssh.md)
     - [SSH ⚙️](./options/ssh.nixos.md)
