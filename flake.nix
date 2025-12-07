@@ -44,7 +44,7 @@
         modifiedInputs = (inputs // { noxa = self; });
         modules = import ./modules modifiedInputs;
         prefixAttrs = prefix: attrs: attrsets.mapAttrs' (name: value: nameValuePair "${prefix}${name}" value) attrs;
-        noxaConfiguration = ((import ./examples/flake.nix).outputs modifiedInputs).noxaConfiguration;
+        noxaConfiguration = ((import ./examples/minimal/flake.nix).outputs modifiedInputs).noxaConfiguration;
       in
       {
         # Nixos modules
