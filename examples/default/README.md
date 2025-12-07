@@ -194,5 +194,10 @@ You can inspect the current configuration of a machine by running:
 nix run nixpkgs#nix-inspect -- --expr 'builtins.getFlake "path to this folder"'
 ```
 
+## FAQ
+You added a new file but it seems to be ignored by nix eval, e.g., you add a new host configuration file but the new host seems to be missing in the flake output.
+
+> Make sure that you added the new file to git, e.g. via `git add hosts/new-host.nix`. The template makes use of `builtins.readDir` to automatically import files in e.g. `hosts/` directory, which only returns files tracked by git.
+
 ## Contributing
 Feel free to contribute to this (template on <https://github.com/0xCCF4/noxa/>) via merge requests when you change or add something useful to either your own user, machine, or shared configuration.
