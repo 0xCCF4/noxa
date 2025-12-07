@@ -1,4 +1,4 @@
-{ lib, ... }: with lib; with builtins; {
+{ lib, config, noxaHost, ... }: with lib; with builtins; {
   config =
     let
       ssh-keys = type: { pkgs, file, ... }: ''
@@ -40,7 +40,7 @@
 
         PRIVATE_KEY_FILE="''${TMPDIR}/private-key.pem"
         PUBLIC_KEY_FILE="''${TMPDIR}/public-key.pem"
-        ${pkgs.nix}/bin/nix-store --generate-binary-cache-key "$(basename ${file})" "''${PRIVATE_KEY_FILE}" "''${PUBLIC_KEY_FILE}"
+        ${pkgs.nix}/bin/nix-store --generate-binary-cache-key "${noxaHost}" "''${PRIVATE_KEY_FILE}" "''${PUBLIC_KEY_FILE}"
         ${pkgs.busybox}/bin/cp "$PUBLIC_KEY_FILE" ${escapeShellArg (file + ".pub")}
         ${pkgs.busybox}/bin/cat "$PRIVATE_KEY_FILE"
       
