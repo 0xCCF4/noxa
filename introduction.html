@@ -186,27 +186,19 @@ you through setting up a multi-host NixOS configuration.</p>
 <p>NixOS is a Linux distribution configuration solution composed of modules and packages <a href="https://nixos.org/manual/nixos/stable/#preface">NixOS Manual</a>. While <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> provides many modules for configuring NixOS machines, it lacks fundamental support for configuration beyond the scope of a single host.</p>
 <p>In practice, some hosts share configuration settings. Imagine that you configure four different NixOS machines and would like to set up a WireGuard network between them. In the end, you will configure <code>networking.wireguard.interfaces.&lt;name&gt;</code> on each host, but there are several open questions:</p>
 <ol>
-<li>Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network once globally should be enough.</li>
+<li>Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network (and members) once globally should be enough.</li>
 <li>How do you manage secrets efficiently? Preshared connection keys, for example, are owned not by one but by two hosts. Should you specify them on several hosts redundantly, or would it be sufficient to declare the network topology globally?</li>
 </ol>
-<p>To summarize, some configuration settings are shared among different hosts and do not belong to any specific one. For example, the existence of a WireGuard network and its configuration fundamentally does not belong to the configuration of a single NixOS host. Further, one host's configuration might depend on another's configuration.</p>
-<p>Currently, <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> does not support these multi-host configuration scenarios and multi-host dependencies.</p>
+<p>This is were <strong>noxa</strong> shines. <strong>Noxa</strong> builds another layer on top of the "normal" per-system nixos configuration by providing inter host dependencies and configuration options.</p>
 <h2 id="goal"><a class="header" href="#goal">Goal</a></h2>
-<p>The goal of <strong>Noxa</strong> is to fill this gap and provide a framework to support the configuration of multiple hosts that:</p>
+<p>The goal of <strong>Noxa</strong> is to fill the gap of nixos-modules limited to only a single host, providing a framework to support the configuration of multiple hosts that:</p>
 <ol>
-<li>Potentially depend on each other</li>
-<li>Depend on a global configuration</li>
-</ol>
-<p>Whats contained in <strong>Noxa</strong>:</p>
-<ol>
-<li>The module system scaffolding to set up a <strong>noxa</strong> configuration.</li>
-<li><em>Noxa modules</em> covering standard use-cases.</li>
-<li><em>Nixos modules</em> that configure the specified hosts according to the global configuration from <em>noxa modules</em></li>
+<li>Depend on each other</li>
+<li>Depend on a global configuration that is not part of any specific host</li>
+<li>Automates as many tasks that multi-host management requires (like exchanging secrets).</li>
 </ol>
 <h2 id="how-does-it-work"><a class="header" href="#how-does-it-work">How does it work</a></h2>
-<p>At the highest level, <strong>Noxa</strong> uses the module system to provide a configuration environment. A <em>Noxa module</em> can extend the functionality of your configuration (like with standard NixOS modules).
-The difference to the "normal" NixOS module system being the provided configuration options. Hosts are, for example, defined using the configuration value <code>nodes.&lt;name&gt;.***</code>. NixOS
-configuration is then supplied via the <code>nodes.&lt;name&gt;.configuration</code> option.</p>
+<p>At the highest level, <strong>Noxa</strong> uses the same module system library to provide a global configuration environment. Settings specified here (in <em>noxa modules</em>) do not belong to the configuration of any specific host unless specified under <code>nodes.&lt;name&gt;.configuration</code>, which holds the configuration of host <code>&lt;name&gt;</code>.</p>
 <p>For example, the following <em>Noxa module</em> declares two hosts, while <code>hostB</code> depends on the configuration values of <code>hostA</code>.</p>
 <pre><code class="language-nix">{config, ...}: {
     # Declaration of `hostA`
@@ -224,6 +216,7 @@ configuration is then supplied via the <code>nodes.&lt;name&gt;.configuration</c
 
         # Access config values from other hosts
         networking.hostName =
+            /* depend on configuration of hostA */
            "${config.nodes.hostA.configuration.networking.hostName}-copy";
     };
 
@@ -234,16 +227,30 @@ configuration is then supplied via the <code>nodes.&lt;name&gt;.configuration</c
     /* Other Noxa configuration options */
 }
 </code></pre>
-<p>For a reference, which options are available to <em>noxa modules</em> checkout <a href="./options.html">options</a>.</p>
+<blockquote>
+<p>For a reference, which options are available to <em>noxa modules</em> checkout <a href="./modules.html">Modules</a>.</p>
+</blockquote>
+<h2 id="getting-started"><a class="header" href="#getting-started">Getting started</a></h2>
+<p>To quick start, initialize a new <em>noxa/nixos</em> project via:</p>
+<pre><code class="language-bash">nix flake init --template github:0xccf4/noxa
+</code></pre>
+<p>Compiling and deploying a new configuration, is done via the "normal" nixos
+and build commands by:</p>
+<pre><code class="language-bash">nixos-rebuild switch --flake .#&lt;hostname&gt;
+</code></pre>
+<p>A more detailed guide is found in <a href="./getting-started.html">Getting Started</a></p>
 <h2 id="contributing"><a class="header" href="#contributing">Contributing</a></h2>
 <p>Contributions are welcome. Suggest new features and bugs via issues. Pull requests are welcome.</p>
 <h2 id="related-projects"><a class="header" href="#related-projects">Related projects</a></h2>
-<p>Other frameworks already aim to implement multi-host NixOS configuration; the list is provided below.
-Why another framework? Learning the Nix language and ecosystem.</p>
 <p>List of other multi-host configuration frameworks (feel free to add others):</p>
 <ul>
 <li><a href="https://github.com/infinisil/nixus/">nixus @infinisil (GPLv3)</a></li>
 </ul>
+<blockquote>
+<p>Why another framework?</p>
+<p>Initially <a href="https://github.com/0xCCF4/">@0xCCF4</a> started the project to learn Nix in-depth,
+but since it has grown to a usable multi-host configuration framework.</p>
+</blockquote>
 
                     </main>
 

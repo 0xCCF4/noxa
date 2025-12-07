@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SSH ⚙️ - Noxa</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Noxa</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/0xCCF4/noxa" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="sshgrants"><a class="header" href="#sshgrants">ssh.grants</a></h2>
+<p>Grant SSH access from from node users to to node users.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnamecommands"><a class="header" href="#sshgrantsnamecommands">ssh.grants.&lt;name&gt;.commands</a></h2>
+<p>Function that evaluates to a list of commands the user is allowed to execute on the target node. If empty, all commands are allowed.</p>
+<p>This function will be called with the pkgs.callPackage function taken from the target node.</p>
+<p><em>Type:</em>
+function that evaluates to a(n) list of ((submodule) or package convertible to it)</p>
+<p><em>Default:</em>
+<code>&lt;function&gt;</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnamecommandsfunction-bodyaliases"><a class="header" href="#sshgrantsnamecommandsfunction-bodyaliases">ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.aliases</a></h2>
+<p>The SSH command that is requested by the user, mapping to this command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnamecommandsfunction-bodycommand"><a class="header" href="#sshgrantsnamecommandsfunction-bodycommand">ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.command</a></h2>
+<p>The command to allow.</p>
+<p><em>Type:</em>
+string or package convertible to it</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnamecommandsfunction-bodypassparameters"><a class="header" href="#sshgrantsnamecommandsfunction-bodypassparameters">ssh.grants.&lt;name&gt;.commands.&lt;function body&gt;.*.passParameters</a></h2>
+<p>Whether to pass any parameters given by the user to the command.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameextraconnectionoptions"><a class="header" href="#sshgrantsnameextraconnectionoptions">ssh.grants.&lt;name&gt;.extraConnectionOptions</a></h2>
+<p>Additional SSH connection options to use when connecting to the target node.</p>
+<p>View man SSH(8) - AUTHORIZED_KEYS</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnamefrom"><a class="header" href="#sshgrantsnamefrom">ssh.grants.&lt;name&gt;.from</a></h2>
+<p>Source user name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnamename"><a class="header" href="#sshgrantsnamename">ssh.grants.&lt;name&gt;.name</a></h2>
+<p>Alias name under which the user can <code>ssh {alias}</code> to the target.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"&lt;name&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameoptionsagentforwarding"><a class="header" href="#sshgrantsnameoptionsagentforwarding">ssh.grants.&lt;name&gt;.options.agentForwarding</a></h2>
+<p>Apply the “agent-forwarding” option to this SSH key, allowing SSH agent forwarding.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameoptionslisten"><a class="header" href="#sshgrantsnameoptionslisten">ssh.grants.&lt;name&gt;.options.listen</a></h2>
+<p>Apply the “permitlisten” option to this SSH key, remote listening and
+forwarding of ports to local ports.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameoptionsopen"><a class="header" href="#sshgrantsnameoptionsopen">ssh.grants.&lt;name&gt;.options.open</a></h2>
+<p>Apply the “permitopen” option to this SSH key, allowing to open
+specific host:port combinations.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameoptionspty"><a class="header" href="#sshgrantsnameoptionspty">ssh.grants.&lt;name&gt;.options.pty</a></h2>
+<p>Apply the “pty” option to this SSH key, allowing to allocate a pseudo-terminal.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameoptionsrestrict"><a class="header" href="#sshgrantsnameoptionsrestrict">ssh.grants.&lt;name&gt;.options.restrict</a></h2>
+<p>Apply the “restrict” option to this SSH key, disabling every feature
+except executing commands. Disabling this option, will circumvent all
+other options set via .options .</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameoptionsx11forwarding"><a class="header" href="#sshgrantsnameoptionsx11forwarding">ssh.grants.&lt;name&gt;.options.x11Forwarding</a></h2>
+<p>Apply the “x11-forwarding” option to this SSH key, allowing X11 forwarding.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameresolvedcommands"><a class="header" href="#sshgrantsnameresolvedcommands">ssh.grants.&lt;name&gt;.resolvedCommands</a></h2>
+<p>The resolved commands after evaluating the <code>commands</code> function.</p>
+<p><em>Type:</em>
+(list of ((submodule) or package convertible to it)) or string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameshowavailablecommands"><a class="header" href="#sshgrantsnameshowavailablecommands">ssh.grants.&lt;name&gt;.showAvailableCommands</a></h2>
+<p>If set to true, when the user tries to execute an unauthorized command,
+the list of available commands will be shown.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnamesshgenkeytype"><a class="header" href="#sshgrantsnamesshgenkeytype">ssh.grants.&lt;name&gt;.sshGenKeyType</a></h2>
+<p>When generating SSH keys use this key type.</p>
+<p><em>Type:</em>
+one of “ed25519”, “rsa”</p>
+<p><em>Default:</em>
+<code>"ed25519"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnameto"><a class="header" href="#sshgrantsnameto">ssh.grants.&lt;name&gt;.to</a></h2>
+<p>Destination node and user.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em>
+<code>"&lt;to&gt;"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnametohostname"><a class="header" href="#sshgrantsnametohostname">ssh.grants.&lt;name&gt;.to.hostname</a></h2>
+<p>Hostname or IP address of the target node.</p>
+<p>Multiple addresses may be specified by providing a executable
+each that when exiting with code 0 selects the corresponding address,
+see the example value.</p>
+<p><em>Type:</em>
+string or attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>"&lt;to.node&gt;"</code></p>
+<p><em>Example:</em></p>
+<pre><code>{
+  local = {
+    command = "ping -c 1 -W 1 192.168.0.55 &gt; /dev/null";
+    host = "192.168.0.55";
+    priority = 10;
+  };
+  public = {
+    command = "true";
+    host = "host.example.com";
+    priority = 20;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnametonode"><a class="header" href="#sshgrantsnametonode">ssh.grants.&lt;name&gt;.to.node</a></h2>
+<p>Destination node name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnametoport"><a class="header" href="#sshgrantsnametoport">ssh.grants.&lt;name&gt;.to.port</a></h2>
+<p>SSH port of the target node.</p>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Default:</em>
+<code>22</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnametosshfingerprint"><a class="header" href="#sshgrantsnametosshfingerprint">ssh.grants.&lt;name&gt;.to.sshFingerprint</a></h2>
+<p>Expected SSH host key fingerprint of the destination node.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em>
+<code>null</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+<h2 id="sshgrantsnametouser"><a class="header" href="#sshgrantsnametouser">ssh.grants.&lt;name&gt;.to.user</a></h2>
+<p>Destination user name.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix">noxa/modules/nixos/ssh/options.nix</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../modules/ssh.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../modules/secrets.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../modules/ssh.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../modules/secrets.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
