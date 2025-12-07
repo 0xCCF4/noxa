@@ -1,7 +1,6 @@
 [book]
 authors = ["0xCCF4"]
 language = "en"
-multilingual = false
 src = "src"
 title = "Noxa"
 

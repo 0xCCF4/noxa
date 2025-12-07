@@ -20,7 +20,7 @@
       }
     ];
 
-    # informing the user, that they are using the public master key, that is commited
+    # informing the user, that they are using the public master key, that is committed
     # to the noxa repository
     #
     # you may just remove this section, if you made sure that you are not using the
