@@ -76,7 +76,7 @@ rec {
     ```
     */
   filesystem.readFileWithError = path: error:
-    noxaLib.filesystem.whenFileExistsElse path (readFile path) (throw error);
+    noxaLib.filesystem.whenFileExistsElse path readFile (a: throw error);
 
   /**
     Returns then if the file at the given path exists, else returns else.
