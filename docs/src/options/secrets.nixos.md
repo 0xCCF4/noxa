@@ -29,6 +29,27 @@ attribute set of (submodule)
 
 
 
+## age\.secrets\.\<name>\.global
+
+
+
+Whether this secret is global, i\.e\., a host might subscribe to it without owning it\.
+
+
+
+*Type:*
+boolean
+
+
+
+*Default:*
+` false `
+
+*Declared by:*
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
+
+
+
 ## age\.secrets\.\<name>\.hosts
 
 
@@ -284,6 +305,27 @@ null or (list of string)
 
 
 
+## noxa\.secrets\.def\.\*\.global
+
+
+
+Whether this secret is global, i\.e\., a host might subscribe to it without owning it\.
+
+
+
+*Type:*
+boolean
+
+
+
+*Default:*
+` false `
+
+*Declared by:*
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
+
+
+
 ## noxa\.secrets\.def\.\*\.group
 
 
@@ -493,6 +535,31 @@ absolute path
 
 
 
+## noxa\.secrets\.instanceSecretsPath
+
+
+
+The path where instance-wide secrets are stored\. This is the path where noxa will look for (encrypted) instance-wide secrets\.
+
+This directory contains encrypted secrets that are shared between potentially all hosts\.
+Secrets in this directory are not host specific, each host might subscribe to them\.
+
+An example secret would be a shared API key or password\.
+
+Since this path is used by multiple hosts, it is recommended to set this path once for all hosts, instead of setting it per host\.
+
+ATTENTION: Since this path is copied to the nix store, it must not contain any secrets that are not encrypted\.
+
+
+
+*Type:*
+absolute path
+
+*Declared by:*
+ - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
+
+
+
 ## noxa\.secrets\.options\.enable
 
 
@@ -616,7 +683,7 @@ absolute path
 
 
 
-The path where all secrets are stored\. Subfolders are created for host specific and shared secrets\.
+The path where all secrets are stored\. Subfolders are created for host specific, shared, and instance secrets\.
 
 
 
