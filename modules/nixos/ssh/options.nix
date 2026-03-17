@@ -55,6 +55,16 @@
                     type = nullOr str;
                     default = null;
                   };
+                  port = mkOption {
+                    description = "SSH port of the target node.";
+                    type = int;
+                    default = 22;
+                  };
+                  extraConfig = mkOption {
+                    description = "Additional configuration options to add to the SSH config for this grant.";
+                    type = anything;
+                    default = { };
+                  };
                   hostname = mkOption {
                     description = ''
                       Hostname or IP address of the target node.
@@ -85,6 +95,11 @@
                           default = submodInner.config.port;
                           defaultText = "same as to.port";
                         };
+                        extraConfig = mkOption {
+                          description = "Additional configuration options to add to the SSH config for this address option.";
+                          type = anything;
+                          default = { };
+                        };
                       };
                     }));
                     default = submod.config.to.node;
@@ -101,11 +116,6 @@
                         host = "host.example.com";
                       };
                     };
-                  };
-                  port = mkOption {
-                    description = "SSH port of the target node.";
-                    type = int;
-                    default = 22;
                   };
                 };
                 config =

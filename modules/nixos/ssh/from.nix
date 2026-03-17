@@ -22,7 +22,7 @@
 
             traceX = s: builtins.trace (builtins.toJSON s) s;
 
-            block = extra: {
+            block = {
               identitiesOnly = true;
               identityFile = sshKeySecret.path;
               user = grant.to.user;
@@ -50,6 +50,7 @@
                   port = grant.to.port;
                   host = grant.name;
                 }
+                grant.to.extraConfig
               ]
             );
           }] ++ (mapAttrsToList
@@ -75,6 +76,8 @@
                       hostname = rule.host;
                       port = rule.port;
                     }
+                    grant.to.extraConfig
+                    rule.extraConfig
                   ]
                 );
               })
