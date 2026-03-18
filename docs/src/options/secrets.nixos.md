@@ -43,7 +43,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -65,7 +68,7 @@ unique list of string
 
 *Default:*
 
-```
+```nix
 [
   "<noxa-host-id>"
 ]
@@ -75,7 +78,7 @@ unique list of string
 
 *Example:*
 
-```
+```nix
 [
   "host1"
   "host2"
@@ -103,7 +106,10 @@ string
 
 
 *Example:*
-` "wg-interface-key" `
+
+```nix
+"wg-interface-key"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -125,7 +131,10 @@ string *(read only)*
 
 
 *Example:*
-` "host:noxa.wireguard.interfaces.some-interface::wg-interface-key" `
+
+```nix
+"host:noxa.wireguard.interfaces.some-interface::wg-interface-key"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -148,7 +157,10 @@ string
 
 
 *Example:*
-` "services.openssh" `
+
+```nix
+"services.openssh"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -169,7 +181,10 @@ boolean
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -197,7 +212,10 @@ list of (submodule)
 
 
 *Default:*
-` [ ] `
+
+```nix
+[ ]
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -218,7 +236,10 @@ null or (submodule)
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -239,12 +260,18 @@ null or (list of unspecified value) or attribute set of unspecified value
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 
 
 *Example:*
-` [ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ] `
+
+```nix
+[ config.age.secrets.basicAuthPw1 nixosConfigurations.machine2.config.age.secrets.basicAuthPw ]
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -265,7 +292,10 @@ null or string or function that evaluates to a(n) string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -288,13 +318,16 @@ null or (list of string)
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 
 
 *Example:*
 
-```
+```nix
 [
   "wireguard"
 ]
@@ -319,7 +352,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -340,7 +376,10 @@ null or string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -362,7 +401,7 @@ unique list of string
 
 *Default:*
 
-```
+```nix
 [
   "<noxa-host-id>"
 ]
@@ -372,7 +411,7 @@ unique list of string
 
 *Example:*
 
-```
+```nix
 [
   "host1"
   "host2"
@@ -400,7 +439,10 @@ string
 
 
 *Example:*
-` "wg-interface-key" `
+
+```nix
+"wg-interface-key"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -422,7 +464,10 @@ string *(read only)*
 
 
 *Example:*
-` "host:noxa.wireguard.interfaces.some-interface::wg-interface-key" `
+
+```nix
+"host:noxa.wireguard.interfaces.some-interface::wg-interface-key"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -443,7 +488,10 @@ null or string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -466,7 +514,10 @@ string
 
 
 *Example:*
-` "services.openssh" `
+
+```nix
+"services.openssh"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -487,7 +538,10 @@ null or string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -577,7 +631,10 @@ boolean
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -598,7 +655,10 @@ null or string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/default.nix)
@@ -734,7 +794,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/sshHostKeys\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/sshHostKeys.nix)
@@ -774,7 +837,10 @@ null or string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/secrets/sshHostKeys\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/sshHostKeys.nix)

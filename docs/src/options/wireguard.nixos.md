@@ -10,7 +10,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -32,7 +35,10 @@ lazy attribute set of (submodule)
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -53,7 +59,10 @@ null or signed integer
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -78,7 +87,10 @@ null or (submodule)
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -99,7 +111,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -120,7 +135,10 @@ boolean
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -175,7 +193,10 @@ boolean
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -199,7 +220,10 @@ one of “wireguard”, “wg-quick”
 
 
 *Default:*
-` "wireguard" `
+
+```nix
+"wireguard"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -237,7 +261,10 @@ null or string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -260,7 +287,10 @@ null or signed integer
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -281,7 +311,10 @@ boolean *(read only)*
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -303,7 +336,10 @@ boolean *(read only)*
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -324,7 +360,10 @@ boolean *(read only)*
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/options.nix)
@@ -508,7 +547,10 @@ lazy attribute set of (submodule)
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/nixos/wireguard/secrets\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/wireguard/secrets.nix)

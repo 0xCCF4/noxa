@@ -10,7 +10,10 @@ attribute set of (submodule)
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -33,7 +36,10 @@ function that evaluates to a(n) list of ((submodule) or package convertible to i
 
 
 *Default:*
-` <function> `
+
+```nix
+<function>
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -54,7 +60,10 @@ list of string
 
 
 *Default:*
-` [ ] `
+
+```nix
+[ ]
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -91,7 +100,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -114,7 +126,10 @@ list of string
 
 
 *Default:*
-` [ ] `
+
+```nix
+[ ]
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -151,7 +166,10 @@ string
 
 
 *Default:*
-` "<name>" `
+
+```nix
+"<name>"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -172,7 +190,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -194,7 +215,10 @@ list of string
 
 
 *Default:*
-` [ ] `
+
+```nix
+[ ]
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -216,7 +240,10 @@ list of string
 
 
 *Default:*
-` [ ] `
+
+```nix
+[ ]
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -237,7 +264,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -260,7 +290,10 @@ boolean
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -281,7 +314,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -319,7 +355,10 @@ boolean
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -340,7 +379,10 @@ one of “ed25519”, “rsa”
 
 
 *Default:*
-` "ed25519" `
+
+```nix
+"ed25519"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -361,7 +403,34 @@ submodule
 
 
 *Default:*
-` "<to>" `
+
+```nix
+"<to>"
+```
+
+*Declared by:*
+ - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
+
+
+
+## ssh\.grants\.\<name>\.to\.extraOptions
+
+
+
+Additional configuration options to add to the SSH config for this grant\.
+
+
+
+*Type:*
+anything
+
+
+
+*Default:*
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -386,13 +455,16 @@ string or attribute set of (submodule)
 
 
 *Default:*
-` "<to.node>" `
+
+```nix
+"<to.node>"
+```
 
 
 
 *Example:*
 
-```
+```nix
 {
   local = {
     command = "ping -c 1 -W 1 192.168.0.55 > /dev/null";
@@ -442,7 +514,10 @@ signed integer
 
 
 *Default:*
-` 22 `
+
+```nix
+22
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
@@ -463,7 +538,10 @@ null or string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)

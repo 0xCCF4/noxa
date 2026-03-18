@@ -10,7 +10,10 @@ raw value *(read only)*
 
 
 *Default:*
-` "<options>" `
+
+```nix
+"<options>"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/options.nix)

@@ -10,7 +10,10 @@ raw value *(read only)*
 
 
 *Default:*
-` "<pkgs>" `
+
+```nix
+"<pkgs>"
+```
 
 *Declared by:*
  - [noxa/modules/nixos/pkgs\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/pkgs.nix)

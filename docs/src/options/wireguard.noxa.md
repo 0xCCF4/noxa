@@ -8,7 +8,10 @@ attribute set of (submodule)
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -30,7 +33,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -52,7 +58,10 @@ boolean
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -91,7 +100,10 @@ null or signed integer
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -118,7 +130,10 @@ null or (submodule)
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -139,7 +154,10 @@ null or boolean
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -162,7 +180,10 @@ null or boolean
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -183,7 +204,10 @@ null or IPv4 address or IPv6 address
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -204,7 +228,10 @@ null or signed integer
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -229,7 +256,10 @@ null or boolean
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -255,7 +285,10 @@ null or one of “wireguard”, “wg-quick”
 
 
 *Default:*
-` "wireguard" `
+
+```nix
+"wireguard"
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -277,7 +310,10 @@ null or ((list of (IPv4 address or IPv6 address)) or (IPv4 address or IPv6 addre
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -300,7 +336,10 @@ null or string
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -325,7 +364,10 @@ null or signed integer
 
 
 *Default:*
-` null `
+
+```nix
+null
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)
@@ -347,7 +389,10 @@ boolean
 
 
 *Default:*
-` true `
+
+```nix
+true
+```
 
 *Declared by:*
  - [noxa/modules/noxa/wireguard\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/wireguard.nix)

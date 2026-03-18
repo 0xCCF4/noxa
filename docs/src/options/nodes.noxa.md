@@ -10,7 +10,10 @@ submodule
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix)
@@ -69,7 +72,10 @@ absolute path
 
 
 *Default:*
-` "<nixpkgs>" `
+
+```nix
+"<nixpkgs>"
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/nixpkgs\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix)
@@ -90,7 +96,10 @@ raw value *(read only)*
 
 
 *Default:*
-` "<options>" `
+
+```nix
+"<options>"
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/nixpkgs\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix)
@@ -111,7 +120,10 @@ raw value *(read only)*
 
 
 *Default:*
-` "<pkgs>" `
+
+```nix
+"<pkgs>"
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/nixpkgs\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix)
@@ -132,7 +144,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/info\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix)
@@ -153,7 +168,10 @@ list of (IPv4 address or IPv6 address)
 
 
 *Default:*
-` [ ] `
+
+```nix
+[ ]
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/info\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix)
@@ -174,7 +192,10 @@ attribute set of list of (IPv4 address or IPv6 address)
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/info\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix)
@@ -195,7 +216,10 @@ attribute set of anything
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/configuration\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/configuration.nix)
@@ -224,7 +248,10 @@ list of string
 
 
 *Default:*
-` [ ] `
+
+```nix
+[ ]
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix)
@@ -245,7 +272,10 @@ attribute set of (submodule)
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/default\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix)
@@ -304,7 +334,10 @@ absolute path
 
 
 *Default:*
-` "<nixpkgs>" `
+
+```nix
+"<nixpkgs>"
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/nixpkgs\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix)
@@ -325,7 +358,10 @@ raw value *(read only)*
 
 
 *Default:*
-` "<options>" `
+
+```nix
+"<options>"
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/nixpkgs\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix)
@@ -346,7 +382,10 @@ raw value *(read only)*
 
 
 *Default:*
-` "<pkgs>" `
+
+```nix
+"<pkgs>"
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/nixpkgs\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/nixpkgs.nix)
@@ -367,7 +406,10 @@ boolean
 
 
 *Default:*
-` false `
+
+```nix
+false
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/info\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix)
@@ -388,7 +430,10 @@ list of (IPv4 address or IPv6 address)
 
 
 *Default:*
-` [ ] `
+
+```nix
+[ ]
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/info\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix)
@@ -409,7 +454,10 @@ attribute set of list of (IPv4 address or IPv6 address)
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/info\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/info.nix)
@@ -430,7 +478,10 @@ attribute set of anything
 
 
 *Default:*
-` { } `
+
+```nix
+{ }
+```
 
 *Declared by:*
  - [noxa/modules/noxa/nodes/configuration\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/configuration.nix)
