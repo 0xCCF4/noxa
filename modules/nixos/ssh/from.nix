@@ -50,10 +50,18 @@
                   port = grant.to.port;
                   host = grant.name;
                 }
-                grant.to.extraConfig
+                grant.to.extraOptions
               ]
             );
-          }] ++ (mapAttrsToList
+          }
+            {
+              "${grant.from}".programs.ssh.enable = mkOverride 800 true; # higher priority than mkDefault
+            }
+            {
+              "${grant.from}".warnings = mkIf (!config.home-manager.users.${grant.from}.programs.ssh.enable) [
+                "${lib.ansi.fgYellow}SSH grant ${lib.ansi.fgCyan}${name}.${grantName}${lib.ansi.fgYellow} defined for user ${lib.ansi.fgCyan}${grant.from}${lib.ansi.fgYellow}; but SSH config is not managed by home-manager for this user. ${lib.ansi.fgGreen}Set ${lib.ansi.fgCyan}programs.ssh.enable = true;${lib.ansi.fgGreen} for that user, or remove the explicit set to false (if any).${lib.ansi.default}"
+              ];
+            }] ++ (mapAttrsToList
             (ruleName: rule:
               let
                 rulesWithLowerPriority =
@@ -76,8 +84,8 @@
                       hostname = rule.host;
                       port = rule.port;
                     }
-                    grant.to.extraConfig
-                    rule.extraConfig
+                    grant.to.extraOptions
+                    rule.extraOptions
                   ]
                 );
               })

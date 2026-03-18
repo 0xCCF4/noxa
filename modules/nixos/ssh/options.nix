@@ -60,9 +60,9 @@
                     type = int;
                     default = 22;
                   };
-                  extraConfig = mkOption {
+                  extraOptions = mkOption {
                     description = "Additional configuration options to add to the SSH config for this grant.";
-                    type = anything;
+                    type = let x = attrsOf ((oneOf [ str int (listOf str) x ])); in x;
                     default = { };
                   };
                   hostname = mkOption {
@@ -95,9 +95,9 @@
                           default = submodInner.config.port;
                           defaultText = "same as to.port";
                         };
-                        extraConfig = mkOption {
+                        extraOptions = mkOption {
                           description = "Additional configuration options to add to the SSH config for this address option.";
-                          type = anything;
+                          type = let x = attrsOf (nullOr (oneOf [ str int (listOf str) x ])); in x;
                           default = { };
                         };
                       };
