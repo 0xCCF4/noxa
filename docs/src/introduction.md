@@ -23,7 +23,7 @@ not part any host specific configuration. Instead only the membership to this ne
 might be a host specific setting.
 
 **Noxa** builds another layer on top of the "normal"
-per-system nixos configuration by providing inter host dependencies and configuration options; a higher-abtraction module system environment (see the Examples below).
+per-system nixos configuration by providing inter host dependencies and configuration options; a higher-abstraction module system environment (see the Examples below).
 
 ## Goal
 
