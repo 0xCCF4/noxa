@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bd171aa8.js";
+            window.path_to_searchindex_js = "searchindex-2305f7eb.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a5eb574d.js"></script>
+        <script src="toc-5de2427f.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -183,41 +183,70 @@
 Starting with the motivation, design goals, and design decisions, this handbook guides
 you through setting up a multi-host NixOS configuration.</p>
 <h2 id="motivation"><a class="header" href="#motivation">Motivation</a></h2>
-<p>NixOS is a Linux distribution configuration solution composed of modules and packages <a href="https://nixos.org/manual/nixos/stable/#preface">NixOS Manual</a>. While <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> provides many modules for configuring NixOS machines, it lacks fundamental support for configuration beyond the scope of a single host.</p>
-<p>In practice, some hosts share configuration settings. Imagine that you configure four different NixOS machines and would like to set up a WireGuard network between them. In the end, you will configure <code>networking.wireguard.interfaces.&lt;name&gt;</code> on each host, but there are several open questions:</p>
+<p>NixOS is a Linux distribution configuration solution composed of modules and packages
+<a href="https://nixos.org/manual/nixos/stable/#preface">NixOS Manual</a>. While
+<a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> provides many modules for configuring NixOS
+machines, it lacks fundamental support for configuration beyond the scope of a single host.</p>
+<p>In practice, some hosts share configuration settings. Imagine that you configure four
+different NixOS machines and would like to set up a WireGuard overlay network between them.
+You will likely configure <code>networking.wireguard.interfaces.&lt;name&gt;</code> on each host,
+but there are several open questions:</p>
 <ol>
-<li>Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network (and members) once globally should be enough.</li>
+<li>Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network (and members) once globally should be enough, right?</li>
 <li>How do you manage secrets efficiently? Preshared connection keys, for example, are owned not by one but by two hosts. Should you specify them on several hosts redundantly, or would it be sufficient to declare the network topology globally?</li>
 </ol>
-<p>This is were <strong>noxa</strong> shines. <strong>Noxa</strong> builds another layer on top of the “normal” per-system nixos configuration by providing inter host dependencies and configuration options.</p>
+<p>The problem we face here is, that the existance/declaration of the overlay network is conceptually
+not part any host specific configuration. Instead only the membership to this network
+might be a host specific setting.</p>
+<p><strong>Noxa</strong> builds another layer on top of the “normal”
+per-system nixos configuration by providing inter host dependencies and configuration options; a higher-abtraction module system environment (see the Examples below).</p>
 <h2 id="goal"><a class="header" href="#goal">Goal</a></h2>
-<p>The goal of <strong>Noxa</strong> is to fill the gap of nixos-modules limited to only a single host, providing a framework to support the configuration of multiple hosts that:</p>
+<p>The goal of <strong>Noxa</strong> is to fill the gap of nixos-modules limited to only a single host,
+providing a framework to support the configuration of multiple hosts that:</p>
 <ol>
 <li>Depend on each other</li>
 <li>Depend on a global configuration that is not part of any specific host</li>
-<li>Automates as many tasks that multi-host management requires (like exchanging secrets).</li>
+<li>Automate as many tasks that multi-host management demands (like exchanging secrets, overlay network configuration, inter device SSH connection setup, …).</li>
 </ol>
 <h2 id="how-does-it-work"><a class="header" href="#how-does-it-work">How does it work</a></h2>
-<p>At the highest level, <strong>Noxa</strong> uses the same module system library to provide a global configuration environment. Settings specified here (in <em>noxa modules</em>) do not belong to the configuration of any specific host unless specified under <code>nodes.&lt;name&gt;.configuration</code>, which holds the configuration of host <code>&lt;name&gt;</code>.</p>
-<p>For example, the following <em>Noxa module</em> declares two hosts, while <code>hostB</code> depends on the configuration values of <code>hostA</code>.</p>
+<p>At the highest level, <strong>Noxa</strong> uses the nixpkgs module system to declare global
+settings and entities that do not belong to any specific host and the hosts itself.
+Settings specified here (in <em>noxa modules</em>) do not belong to the configuration of
+any specific host unless specified under <code>nodes.&lt;name&gt;.configuration</code>,
+which holds the configuration of the host <code>&lt;name&gt;</code>.</p>
+<p>For example, the following <em>Noxa module</em> declares two hosts, while <code>hostB</code>
+depends on the configuration values of <code>hostA</code>.</p>
 <pre><code class="language-nix">{config, ...}: {
     # Declaration of `hostA`
     nodes.hostA.configuration = {
-        services.openssh.enable = true;
+        # Add prometheus node exporter on non-default port
+        services.prometheus.exporters.node = {
+            enable = true;
+            openFirewall = true;
+            port = 6000;
+        };
 
         /* Other NixOS configuration options */
     };
 
     # Declaration of `hostB`
     nodes.hostB.configuration = {
+        # Import some nixos module for this host only
         imports = [
             ./some-nixos-module.nix
         ];
 
-        # Access config values from other hosts
-        networking.hostName =
-            /* depend on configuration of hostA */
-           "${config.nodes.hostA.configuration.networking.hostName}-copy";
+        # Configure prometheus collector
+        services.prometheus = {
+            enable = true;
+            scrapeConfigs = [{
+                job_name = "node";
+                targets = [
+                    # access config of `hostA`
+                    "hostA:${config.nodes.hostA.configuration.services.prometheus.exporters.node.port}"
+                ]
+            }];
+        };
     };
 
     imports = [
@@ -235,7 +264,7 @@ you through setting up a multi-host NixOS configuration.</p>
 <pre><code class="language-bash">nix flake init --template github:0xccf4/noxa
 </code></pre>
 <p>Compiling and deploying a new configuration, is done via the “normal” nixos
-and build commands by:</p>
+build commands, e.g.:</p>
 <pre><code class="language-bash">nixos-rebuild switch --flake .#&lt;hostname&gt;
 </code></pre>
 <p>A more detailed guide is found in <a href="#getting-started-1">Getting Started</a></p>
@@ -249,10 +278,173 @@ and build commands by:</p>
 <blockquote>
 <p>Why another framework?</p>
 <p>Initially <a href="https://github.com/0xCCF4/">@0xCCF4</a> started the project to learn Nix in-depth,
-but since it has grown to a usable multi-host configuration framework.</p>
+but since it has grown into a usable multi-host configuration framework that is used on a daily basis.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="getting-started-1"><a class="header" href="#getting-started-1">Getting Started</a></h1>
+<h2 id="quick-start"><a class="header" href="#quick-start">Quick start</a></h2>
+<p>Create a new <em>noxa</em> project via:</p>
+<pre><code class="language-bash">nix flake init --template github:0xccf4/noxa
+</code></pre>
+<p>Which will set you up with a basic template project structured as follows:</p>
+<ul>
+<li><code>hardware</code> contains the <code>hardware-configuration.nix</code> files of your hosts.</li>
+<li><code>hosts</code> contains the toplevel definitions of your machines/hosts</li>
+<li><code>modules/home</code> contains <a href="https://github.com/nix-community/home-manager/">home-manager</a> modules</li>
+<li><code>modules/nixos</code> contains nixos modules</li>
+<li><code>modules/noxa</code> contains noxa modules</li>
+<li><code>packages</code> contains custom nix derivation which will be available to your hosts</li>
+<li><code>parts</code> contains <a href="https://flake.parts/">flake-parts</a> modules to build up your flake.nix</li>
+<li><code>users</code> contains the definition of your users, with their respective home-manager modules</li>
+<li><code>secrets</code> will contain the secrets of your hosts</li>
+</ul>
+<p>Of course feel free to change, restructure and adapt the project to your needs. The above is just a template to get you started fast. For additional information see also the <a href="https://github.com/0xCCF4/noxa/blob/main/examples/default/README.md">README.md</a> of the template.</p>
+<h2 id="setting-up-noxa"><a class="header" href="#setting-up-noxa">Setting up noxa</a></h2>
+<blockquote>
+<p>When using the template project, skip this step.</p>
+</blockquote>
+<p>To add <em>noxa</em> to your flake, 1. add it as an input to your <code>flake.nix</code>, then, 2. instantiate it via <code>noxa.lib.noxa-instantiate</code>.</p>
+<p>Below you will find an example <code>flake.nix</code>:</p>
+<pre><code class="language-nix">{
+  inputs = {
+    # Nixpkgs
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Noxa
+    noxa = {
+      url = "github:0xCCF4/noxa";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.agenix.follows = "agenix";
+      inputs.agenix-rekey.follows = "agenix-rekey";
+      inputs.home-manager.follows = "home-manager";
+    };
+
+    # Secret management
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Secret management
+    agenix-rekey = {
+      url = "github:oddlama/agenix-rekey";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Home Manager
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    { self
+    , nixpkgs
+    , agenix
+    , agenix-rekey
+    , noxa
+    , home-manager
+    , ...
+    }:
+      with nixpkgs.lib; with builtins;
+      {
+        # Noxa configuration
+        noxaConfiguration = noxa.lib.noxa-instantiate {
+          modules = [ ./config.nix ];
+          specialArgs = {
+            inherit agenix;
+            inherit agenix-rekey;
+            inherit home-manager;
+          };
+        };
+      };
+}
+</code></pre>
+<p>The function <code>noxa.lib.noxa-instantiate</code> will instantiate your configuration and accepts as arguments:</p>
+<ul>
+<li><code>modules</code>: A list of <em>noxa modules</em> which will be used to build up your configuration. In here, you will add your hosts and other configuration options.</li>
+<li><code>specialArgs</code>: A set of arguments which will be passed to all <em>noxa modules</em></li>
+</ul>
+<p><em>Noxa</em> uses the same module system as nixos and home-manager, so all concept of options, modules, etc. apply to <em>noxa modules</em> as well.</p>
+<h2 id="adding-a-new-host"><a class="header" href="#adding-a-new-host">Adding a new host</a></h2>
+<blockquote>
+<p>When using the template project, navigate to <code>hosts/</code>, just add a new file with the name of your host, e.g. <code>vm-alice.nix</code> and add the configuration of your host there. This file will the the toplevel declaration of your host, like the normal <code>configuration.nix</code> file of a nixos configuration.</p>
+</blockquote>
+<p>Adding a host can be done via declaring it inside a <em>noxa module</em>, e.g.:</p>
+<pre><code class="language-nix">{...}: {
+    nodes.hostA = {
+        # Host specific configuration options, e.g.:
+        configuration = {
+            # Add prometheus node exporter on non-default port
+            services.ssh.enable = true;
+
+            /* Other NixOS configuration options */
+        };
+    };
+}
+</code></pre>
+<h2 id="setting-up-secrets"><a class="header" href="#setting-up-secrets">Setting up secrets</a></h2>
+<p><em>Noxa</em> uses by default <a href="https://github.com/ryantm/agenix">agenix</a> and <a href="https://github.com/oddlama/agenix-rekey/">agenix-rekey</a> to manage secrets. To get started using secrets, you will need to generate a master key and include the public SSH host keys of your hosts in their hosts configuration.</p>
+<h3 id="generating-a-master-key"><a class="header" href="#generating-a-master-key">Generating a master key</a></h3>
+<p>Generate a master key to encrypt secrets with.</p>
+<pre><code class="language-bash">mkdir -p $HOME/.noxa
+nix shell nixpkgs#age -c age-keygen -o $HOME/.noxa/master.key
+# note down the public key, you will need it below
+
+# Recommended: Encrypt the master key with a password
+nix run nixpkgs#age -- --encrypt --armor --passphrase -o $HOME/.noxa/master.key.age $HOME/.noxa/master.key
+rm $HOME/.noxa/master.key
+</code></pre>
+<h3 id="adding-a-master-key-to-the-configuration"><a class="header" href="#adding-a-master-key-to-the-configuration">Adding a master key to the configuration</a></h3>
+<blockquote>
+<p>When using the template project, navigate to <code>modules/nixos/secrets.nix</code>, you will find placeholders to add your previously generated master key to the configuration.</p>
+</blockquote>
+<p>Create a entry in <code>noxa.secrets.options.masterIdentities</code> with the path and public key of your master key, e.g.:</p>
+<pre><code class="language-nix">noxa.secrets.options.masterIdentities = [
+    {
+        identity = "/home/user/.noxa/master.key.age";
+        pubkey = "age1qql...";
+    }
+];
+</code></pre>
+<h3 id="adding-a-new-host-or-adding-the-public-ssh-host-to-the-configuration"><a class="header" href="#adding-a-new-host-or-adding-the-public-ssh-host-to-the-configuration">Adding a new host or adding the public SSH host to the configuration</a></h3>
+<p>Secrets will be stored encrypted in the nix store, such that only the host they are meant for can decrypt them using
+their private SSH host key. Therefore, you will have to add the public SSH host key of your hosts to the respective host configuration, e.g.:</p>
+<pre><code class="language-nix">{...}: {
+    # Inside host configuration of `hostA`
+    config = {
+        # Add the public SSH host key of `hostA` to the configuration
+        noxa.secrets.options.hostPubkey = "ssh-ed25519 AAAAC...";
+    };
+}
+
+&gt; When using the template project, navigate to `hosts/vm-bob.nix`, you will find a placeholder to add the public SSH host key of `vm-bob` to the configuration.
+</code></pre>
+<h3 id="further-information-about-secrets"><a class="header" href="#further-information-about-secrets">Further information about secrets</a></h3>
+<p>Further information about secrets and how to use them can be found in the <a href="#nixos-secrets">Secrets module</a> documentation.</p>
+<h2 id="compiling-and-deploying-a-configuration"><a class="header" href="#compiling-and-deploying-a-configuration">Compiling and deploying a configuration</a></h2>
+<blockquote>
+<p>When using the template project, you may use any tool to build and deploy the configuration since <em>noxa</em>’s output will be available via the <code>nixosConfigurations</code> attribute of the flake, e.g. <code>nixosConfigurations.vm-bob</code>.</p>
+</blockquote>
+<p>Compiling and deploying a new configuration, is done via the “normal” nixos
+and build commands by:</p>
+<pre><code class="language-bash">nixos-rebuild switch --flake .#&lt;hostname&gt;
+</code></pre>
+<p>When you are not using the template project, you might want to add compatibility for the these tools, by, e.g. adding
+the following to your <code>flake.nix</code> <code>outputs</code> section:</p>
+<pre><code class="language-nix"># NixOS tool compatibility
+nixosConfigurations = mapAttrs
+    (name: value: {
+        config = value.configuration;
+        options = value.options;
+    })
+    self.noxaConfiguration.config.nodes;
+</code></pre>
+<h1 id="further-reading"><a class="header" href="#further-reading">Further reading</a></h1>
+<p>You may continue reading on the architecture and instantiation of the module system in the <a href="#architecture">Architecture</a> or jump to the explanation of a specific module in the <a href="#modules">Modules</a> section.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="architecture"><a class="header" href="#architecture">Architecture</a></h1>
 <p>todo</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="modules"><a class="header" href="#modules">Modules</a></h1>

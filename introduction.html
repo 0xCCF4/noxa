@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bd171aa8.js";
+            window.path_to_searchindex_js = "searchindex-2305f7eb.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a5eb574d.js"></script>
+        <script src="toc-5de2427f.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,41 +182,70 @@
 Starting with the motivation, design goals, and design decisions, this handbook guides
 you through setting up a multi-host NixOS configuration.</p>
 <h2 id="motivation"><a class="header" href="#motivation">Motivation</a></h2>
-<p>NixOS is a Linux distribution configuration solution composed of modules and packages <a href="https://nixos.org/manual/nixos/stable/#preface">NixOS Manual</a>. While <a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> provides many modules for configuring NixOS machines, it lacks fundamental support for configuration beyond the scope of a single host.</p>
-<p>In practice, some hosts share configuration settings. Imagine that you configure four different NixOS machines and would like to set up a WireGuard network between them. In the end, you will configure <code>networking.wireguard.interfaces.&lt;name&gt;</code> on each host, but there are several open questions:</p>
+<p>NixOS is a Linux distribution configuration solution composed of modules and packages
+<a href="https://nixos.org/manual/nixos/stable/#preface">NixOS Manual</a>. While
+<a href="https://github.com/NixOS/nixpkgs/">nixpkgs</a> provides many modules for configuring NixOS
+machines, it lacks fundamental support for configuration beyond the scope of a single host.</p>
+<p>In practice, some hosts share configuration settings. Imagine that you configure four
+different NixOS machines and would like to set up a WireGuard overlay network between them.
+You will likely configure <code>networking.wireguard.interfaces.&lt;name&gt;</code> on each host,
+but there are several open questions:</p>
 <ol>
-<li>Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network (and members) once globally should be enough.</li>
+<li>Is specifying each network redundantly on each host necessary? Boiling it down: specifying a network (and members) once globally should be enough, right?</li>
 <li>How do you manage secrets efficiently? Preshared connection keys, for example, are owned not by one but by two hosts. Should you specify them on several hosts redundantly, or would it be sufficient to declare the network topology globally?</li>
 </ol>
-<p>This is were <strong>noxa</strong> shines. <strong>Noxa</strong> builds another layer on top of the “normal” per-system nixos configuration by providing inter host dependencies and configuration options.</p>
+<p>The problem we face here is, that the existance/declaration of the overlay network is conceptually
+not part any host specific configuration. Instead only the membership to this network
+might be a host specific setting.</p>
+<p><strong>Noxa</strong> builds another layer on top of the “normal”
+per-system nixos configuration by providing inter host dependencies and configuration options; a higher-abtraction module system environment (see the Examples below).</p>
 <h2 id="goal"><a class="header" href="#goal">Goal</a></h2>
-<p>The goal of <strong>Noxa</strong> is to fill the gap of nixos-modules limited to only a single host, providing a framework to support the configuration of multiple hosts that:</p>
+<p>The goal of <strong>Noxa</strong> is to fill the gap of nixos-modules limited to only a single host,
+providing a framework to support the configuration of multiple hosts that:</p>
 <ol>
 <li>Depend on each other</li>
 <li>Depend on a global configuration that is not part of any specific host</li>
-<li>Automates as many tasks that multi-host management requires (like exchanging secrets).</li>
+<li>Automate as many tasks that multi-host management demands (like exchanging secrets, overlay network configuration, inter device SSH connection setup, …).</li>
 </ol>
 <h2 id="how-does-it-work"><a class="header" href="#how-does-it-work">How does it work</a></h2>
-<p>At the highest level, <strong>Noxa</strong> uses the same module system library to provide a global configuration environment. Settings specified here (in <em>noxa modules</em>) do not belong to the configuration of any specific host unless specified under <code>nodes.&lt;name&gt;.configuration</code>, which holds the configuration of host <code>&lt;name&gt;</code>.</p>
-<p>For example, the following <em>Noxa module</em> declares two hosts, while <code>hostB</code> depends on the configuration values of <code>hostA</code>.</p>
+<p>At the highest level, <strong>Noxa</strong> uses the nixpkgs module system to declare global
+settings and entities that do not belong to any specific host and the hosts itself.
+Settings specified here (in <em>noxa modules</em>) do not belong to the configuration of
+any specific host unless specified under <code>nodes.&lt;name&gt;.configuration</code>,
+which holds the configuration of the host <code>&lt;name&gt;</code>.</p>
+<p>For example, the following <em>Noxa module</em> declares two hosts, while <code>hostB</code>
+depends on the configuration values of <code>hostA</code>.</p>
 <pre><code class="language-nix">{config, ...}: {
     # Declaration of `hostA`
     nodes.hostA.configuration = {
-        services.openssh.enable = true;
+        # Add prometheus node exporter on non-default port
+        services.prometheus.exporters.node = {
+            enable = true;
+            openFirewall = true;
+            port = 6000;
+        };
 
         /* Other NixOS configuration options */
     };
 
     # Declaration of `hostB`
     nodes.hostB.configuration = {
+        # Import some nixos module for this host only
         imports = [
             ./some-nixos-module.nix
         ];
 
-        # Access config values from other hosts
-        networking.hostName =
-            /* depend on configuration of hostA */
-           "${config.nodes.hostA.configuration.networking.hostName}-copy";
+        # Configure prometheus collector
+        services.prometheus = {
+            enable = true;
+            scrapeConfigs = [{
+                job_name = "node";
+                targets = [
+                    # access config of `hostA`
+                    "hostA:${config.nodes.hostA.configuration.services.prometheus.exporters.node.port}"
+                ]
+            }];
+        };
     };
 
     imports = [
@@ -234,7 +263,7 @@ you through setting up a multi-host NixOS configuration.</p>
 <pre><code class="language-bash">nix flake init --template github:0xccf4/noxa
 </code></pre>
 <p>Compiling and deploying a new configuration, is done via the “normal” nixos
-and build commands by:</p>
+build commands, e.g.:</p>
 <pre><code class="language-bash">nixos-rebuild switch --flake .#&lt;hostname&gt;
 </code></pre>
 <p>A more detailed guide is found in <a href="./getting-started.html">Getting Started</a></p>
@@ -248,7 +277,7 @@ and build commands by:</p>
 <blockquote>
 <p>Why another framework?</p>
 <p>Initially <a href="https://github.com/0xCCF4/">@0xCCF4</a> started the project to learn Nix in-depth,
-but since it has grown to a usable multi-host configuration framework.</p>
+but since it has grown into a usable multi-host configuration framework that is used on a daily basis.</p>
 </blockquote>
 
                     </main>
