@@ -30,9 +30,15 @@ The configuration of a node is comprised of the default configuration, shared am
         # node-specific configuration
         # inherits the default hostName "abc"
     };
+
+    nodeNames = [ "my-node" "other-node" ];
 }
 ```
 Global imports and modules might, therefore, be placed in the `defaults` configuration, while node-specific imports and modules can be placed in the node configuration.
+
+> Note the `nodeNames` attribute, which is a list of all node names. This is currently required, when you write noxa modules that go over all nodes, and will set properties on them. To prevent infinite recursion on module evaluation, we added this attribute, so that the module can know which nodes there are, without having to look at the `nodes` attribute itself.
+>
+> If you have suggestion on how to circumvent recursion in this case, please let us know via an issue or PR.
 
 ### Nixpkgs versions
 By default, all nodes share the same `nixpkgs` version, which is inherited from the `nixpkgs` version
@@ -42,6 +48,9 @@ you specified for *noxa* itself.
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Nixpkgs stable
+    nixpkgs-stable.url = "github:nixos/nixpkgs/release-25.11";
 
     # Noxa
     noxa = {
@@ -53,28 +62,32 @@ you specified for *noxa* itself.
 ```
 However, you can specify that a single node use a different `nixpkgs` version, by setting the `nixpkgs` attribute in the node configuration, e.g.:
 ```nix
-{
+{nixpkgs-stable, ...}: {
     nodes."my-node" = {
         nixpkgs = nixpkgs-stable; # use a different nixpkgs version for this node
     };
 }
 ```
-This node will then use the `nixpkgs-stable` version of `pkgs` and module system, while all other nodes will use the `nixpkgs` version that *noxa* uses.
-
-
+This node will then use the `nixpkgs-stable` version of `pkgs` and module system.
 
 ## Module system
 Internally *noxa* uses the same module system to evaluate the configuration files like nixos does; via
 the `nixpkgs.lib.evalModules` function. You can, therefore, specify your (initial) modules and special args, when calling the `noxa-instantiate` function.
 
-To evaluate the configuration of a single node
+To evaluate the configuration of a single node *noxa* will call the `<nixpkgs>/nixos/lib/eval-config.nix` which would
+normally be called via calling `<nixpkgs>.lib.nixosSystem`.
 
+By default, we pass down the following additional special args to *noxa* modules:
+- `noxa`: The *noxa* flake itself
+- `noxa.nixpkgs`: The nixpkgs, *noxa* uses during its module system evaluation.
+- `noxa.nixosModules`/`noxa.noxaModules`: The list of modules specified in the *noxa* flake
+- `noxa.lib`: Utility functions provided by *noxa*.
+- `noxa.lib.net`: Network related utility functions, vendored from `nix-net-lib`
 
-# Todos
-- module System
-- specialArgs
-- use single module
-- nodes vs hostnames
-- defaults
-- nodeNames
-- node nixpkgs
+To each *nixos* host evaluation, *noxa* will pass down the following additional special args:
+- `agenix`: The agenix module specified in the *noxa* flake
+- `agenix-rekey`: The agenix-rekey module specified in the *noxa* flake
+- `noxa`: See above, minus the `nixpkgs`
+- `noxaHost`/`name`: The node name of the host being evaluated
+- `noxaConfig`: The top-level `config` attribute of the `noxa` module system evaluation
+- `nodes`: The `nodes.<name>.configuration` attribute of the `noxa` module system evaluation

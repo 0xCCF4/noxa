@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d121992f.js";
+            window.path_to_searchindex_js = "searchindex-bf75033c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5de2427f.js"></script>
@@ -265,19 +265,21 @@
 <p><em>Noxa</em> uses the same module system as nixos and home-manager, so all concept of options, modules, etc. apply to <em>noxa modules</em> as well.</p>
 <h2 id="adding-a-new-host"><a class="header" href="#adding-a-new-host">Adding a new host</a></h2>
 <blockquote>
-<p>When using the template project, navigate to <code>hosts/</code>, just add a new file with the name of your host, e.g. <code>vm-alice.nix</code> and add the configuration of your host there. This file will the the toplevel declaration of your host, like the normal <code>configuration.nix</code> file of a nixos configuration.</p>
+<p>When using the template project, navigate to <code>hosts/</code>, just add a new file with the name of your host, e.g. <code>vm-alice.nix</code> and add the configuration of your host there. This file will the the toplevel declaration of your host, like the normal <code>configuration.nix</code> file of a nixos configuration. (To let nix know about the new file, you will have to <code>git add</code> it.)</p>
 </blockquote>
 <p>Adding a host can be done via declaring it inside a <em>noxa module</em>, e.g.:</p>
 <pre><code class="language-nix">{...}: {
-    nodes.hostA = {
-        # Host specific configuration options, e.g.:
-        configuration = {
-            # Add prometheus node exporter on non-default port
-            services.ssh.enable = true;
+  nodes.hostA = {
+    # Host specific configuration options, e.g.:
+    configuration = {
+      # Add prometheus node exporter on non-default port
+      services.ssh.enable = true;
 
-            /* Other NixOS configuration options */
-        };
+      /* Other NixOS configuration options */
     };
+  };
+
+  nodeNames = [ "hostA" ];
 }
 </code></pre>
 <h2 id="setting-up-secrets"><a class="header" href="#setting-up-secrets">Setting up secrets</a></h2>
@@ -285,11 +287,11 @@
 <h3 id="generating-a-master-key"><a class="header" href="#generating-a-master-key">Generating a master key</a></h3>
 <p>Generate a master key to encrypt secrets with.</p>
 <pre><code class="language-bash">mkdir -p $HOME/.noxa
-nix shell nixpkgs#age -c age-keygen -o $HOME/.noxa/master.key
+nix shell "nixpkgs#age" -c age-keygen -o $HOME/.noxa/master.key
 # note down the public key, you will need it below
 
 # Recommended: Encrypt the master key with a password
-nix run nixpkgs#age -- --encrypt --armor --passphrase -o $HOME/.noxa/master.key.age $HOME/.noxa/master.key
+nix run "nixpkgs#age" -- --encrypt --armor --passphrase -o $HOME/.noxa/master.key.age $HOME/.noxa/master.key
 rm $HOME/.noxa/master.key
 </code></pre>
 <h3 id="adding-a-master-key-to-the-configuration"><a class="header" href="#adding-a-master-key-to-the-configuration">Adding a master key to the configuration</a></h3>
@@ -298,21 +300,21 @@ rm $HOME/.noxa/master.key
 </blockquote>
 <p>Create a entry in <code>noxa.secrets.options.masterIdentities</code> with the path and public key of your master key, e.g.:</p>
 <pre><code class="language-nix">noxa.secrets.options.masterIdentities = [
-    {
-        identity = "/home/user/.noxa/master.key.age";
-        pubkey = "age1qql...";
-    }
+  {
+    identity = "/home/user/.noxa/master.key.age";
+    pubkey = "age1qql...";
+  }
 ];
 </code></pre>
 <h3 id="adding-a-new-host-or-adding-the-public-ssh-host-to-the-configuration"><a class="header" href="#adding-a-new-host-or-adding-the-public-ssh-host-to-the-configuration">Adding a new host or adding the public SSH host to the configuration</a></h3>
 <p>Secrets will be stored encrypted in the nix store, such that only the host they are meant for can decrypt them using
 their private SSH host key. Therefore, you will have to add the public SSH host key of your hosts to the respective host configuration, e.g.:</p>
 <pre><code class="language-nix">{...}: {
-    # Inside host configuration of `hostA`
-    config = {
-        # Add the public SSH host key of `hostA` to the configuration
-        noxa.secrets.options.hostPubkey = "ssh-ed25519 AAAAC...";
-    };
+  # Inside host configuration of `hostA`
+  config = {
+    # Add the public SSH host key of `hostA` to the configuration
+    noxa.secrets.options.hostPubkey = "ssh-ed25519 AAAAC...";
+  };
 }
 
 &gt; When using the template project, navigate to `hosts/vm-bob.nix`, you will find a placeholder to add the public SSH host key of `vm-bob` to the configuration.
@@ -331,11 +333,11 @@ and build commands by:</p>
 the following to your <code>flake.nix</code> <code>outputs</code> section:</p>
 <pre><code class="language-nix"># NixOS tool compatibility
 nixosConfigurations = mapAttrs
-    (name: value: {
-        config = value.configuration;
-        options = value.options;
-    })
-    self.noxaConfiguration.config.nodes;
+  (name: value: {
+    config = value.configuration;
+    options = value.options;
+  })
+  self.noxaConfiguration.config.nodes;
 </code></pre>
 <h1 id="further-reading"><a class="header" href="#further-reading">Further reading</a></h1>
 <p>You may continue reading on the architecture and instantiation of the module system in the <a href="./architecture.html">Architecture</a> or jump to the explanation of a specific module in the <a href="./modules.html">Modules</a> section.</p>

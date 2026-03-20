@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d121992f.js";
+            window.path_to_searchindex_js = "searchindex-bf75033c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5de2427f.js"></script>
@@ -204,9 +204,15 @@ referring nodes in the configuration, we always use the node name, never the hos
         # node-specific configuration
         # inherits the default hostName "abc"
     };
+
+    nodeNames = [ "my-node" "other-node" ];
 }
 </code></pre>
 <p>Global imports and modules might, therefore, be placed in the <code>defaults</code> configuration, while node-specific imports and modules can be placed in the node configuration.</p>
+<blockquote>
+<p>Note the <code>nodeNames</code> attribute, which is a list of all node names. This is currently required, when you write noxa modules that go over all nodes, and will set properties on them. To prevent infinite recursion on module evaluation, we added this attribute, so that the module can know which nodes there are, without having to look at the <code>nodes</code> attribute itself.</p>
+<p>If you have suggestion on how to circumvent recursion in this case, please let us know via an issue or PR.</p>
+</blockquote>
 <h3 id="nixpkgs-versions"><a class="header" href="#nixpkgs-versions">Nixpkgs versions</a></h3>
 <p>By default, all nodes share the same <code>nixpkgs</code> version, which is inherited from the <code>nixpkgs</code> version
 you specified for <em>noxa</em> itself.</p>
@@ -214,6 +220,9 @@ you specified for <em>noxa</em> itself.</p>
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Nixpkgs stable
+    nixpkgs-stable.url = "github:nixos/nixpkgs/release-25.11";
 
     # Noxa
     noxa = {
@@ -224,26 +233,34 @@ you specified for <em>noxa</em> itself.</p>
 }
 </code></pre>
 <p>However, you can specify that a single node use a different <code>nixpkgs</code> version, by setting the <code>nixpkgs</code> attribute in the node configuration, e.g.:</p>
-<pre><code class="language-nix">{
+<pre><code class="language-nix">{nixpkgs-stable, ...}: {
     nodes."my-node" = {
         nixpkgs = nixpkgs-stable; # use a different nixpkgs version for this node
     };
 }
 </code></pre>
-<p>This node will then use the <code>nixpkgs-stable</code> version of <code>pkgs</code> and module system, while all other nodes will use the <code>nixpkgs</code> version that <em>noxa</em> uses.</p>
+<p>This node will then use the <code>nixpkgs-stable</code> version of <code>pkgs</code> and module system.</p>
 <h2 id="module-system"><a class="header" href="#module-system">Module system</a></h2>
 <p>Internally <em>noxa</em> uses the same module system to evaluate the configuration files like nixos does; via
 the <code>nixpkgs.lib.evalModules</code> function. You can, therefore, specify your (initial) modules and special args, when calling the <code>noxa-instantiate</code> function.</p>
-<p>To evaluate the configuration of a single node</p>
-<h1 id="todos"><a class="header" href="#todos">Todos</a></h1>
+<p>To evaluate the configuration of a single node <em>noxa</em> will call the <code>&lt;nixpkgs&gt;/nixos/lib/eval-config.nix</code> which would
+normally be called via calling <code>&lt;nixpkgs&gt;.lib.nixosSystem</code>.</p>
+<p>By default, we pass down the following additional special args to <em>noxa</em> modules:</p>
 <ul>
-<li>module System</li>
-<li>specialArgs</li>
-<li>use single module</li>
-<li>nodes vs hostnames</li>
-<li>defaults</li>
-<li>nodeNames</li>
-<li>node nixpkgs</li>
+<li><code>noxa</code>: The <em>noxa</em> flake itself</li>
+<li><code>noxa.nixpkgs</code>: The nixpkgs, <em>noxa</em> uses during its module system evaluation.</li>
+<li><code>noxa.nixosModules</code>/<code>noxa.noxaModules</code>: The list of modules specified in the <em>noxa</em> flake</li>
+<li><code>noxa.lib</code>: Utility functions provided by <em>noxa</em>.</li>
+<li><code>noxa.lib.net</code>: Network related utility functions, vendored from <code>nix-net-lib</code></li>
+</ul>
+<p>To each <em>nixos</em> host evaluation, <em>noxa</em> will pass down the following additional special args:</p>
+<ul>
+<li><code>agenix</code>: The agenix module specified in the <em>noxa</em> flake</li>
+<li><code>agenix-rekey</code>: The agenix-rekey module specified in the <em>noxa</em> flake</li>
+<li><code>noxa</code>: See above, minus the <code>nixpkgs</code></li>
+<li><code>noxaHost</code>/<code>name</code>: The node name of the host being evaluated</li>
+<li><code>noxaConfig</code>: The top-level <code>config</code> attribute of the <code>noxa</code> module system evaluation</li>
+<li><code>nodes</code>: The <code>nodes.&lt;name&gt;.configuration</code> attribute of the <code>noxa</code> module system evaluation</li>
 </ul>
 
                     </main>

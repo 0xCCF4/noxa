@@ -90,20 +90,22 @@ The function `noxa.lib.noxa-instantiate` will instantiate your configuration and
 *Noxa* uses the same module system as nixos and home-manager, so all concept of options, modules, etc. apply to *noxa modules* as well.
 
 ## Adding a new host
-> When using the template project, navigate to `hosts/`, just add a new file with the name of your host, e.g. `vm-alice.nix` and add the configuration of your host there. This file will the the toplevel declaration of your host, like the normal `configuration.nix` file of a nixos configuration.
+> When using the template project, navigate to `hosts/`, just add a new file with the name of your host, e.g. `vm-alice.nix` and add the configuration of your host there. This file will the the toplevel declaration of your host, like the normal `configuration.nix` file of a nixos configuration. (To let nix know about the new file, you will have to `git add` it.)
 
 Adding a host can be done via declaring it inside a *noxa module*, e.g.:
 ```nix
 {...}: {
-    nodes.hostA = {
-        # Host specific configuration options, e.g.:
-        configuration = {
-            # Add prometheus node exporter on non-default port
-            services.ssh.enable = true;
+  nodes.hostA = {
+    # Host specific configuration options, e.g.:
+    configuration = {
+      # Add prometheus node exporter on non-default port
+      services.ssh.enable = true;
 
-            /* Other NixOS configuration options */
-        };
+      /* Other NixOS configuration options */
     };
+  };
+
+  nodeNames = [ "hostA" ];
 }
 ```
 
@@ -114,11 +116,11 @@ Adding a host can be done via declaring it inside a *noxa module*, e.g.:
 Generate a master key to encrypt secrets with.
 ```bash
 mkdir -p $HOME/.noxa
-nix shell nixpkgs#age -c age-keygen -o $HOME/.noxa/master.key
+nix shell "nixpkgs#age" -c age-keygen -o $HOME/.noxa/master.key
 # note down the public key, you will need it below
 
 # Recommended: Encrypt the master key with a password
-nix run nixpkgs#age -- --encrypt --armor --passphrase -o $HOME/.noxa/master.key.age $HOME/.noxa/master.key
+nix run "nixpkgs#age" -- --encrypt --armor --passphrase -o $HOME/.noxa/master.key.age $HOME/.noxa/master.key
 rm $HOME/.noxa/master.key
 ```
 
@@ -128,10 +130,10 @@ rm $HOME/.noxa/master.key
 Create a entry in `noxa.secrets.options.masterIdentities` with the path and public key of your master key, e.g.:
 ```nix
 noxa.secrets.options.masterIdentities = [
-    {
-        identity = "/home/user/.noxa/master.key.age";
-        pubkey = "age1qql...";
-    }
+  {
+    identity = "/home/user/.noxa/master.key.age";
+    pubkey = "age1qql...";
+  }
 ];
 ```
 
@@ -140,11 +142,11 @@ Secrets will be stored encrypted in the nix store, such that only the host they 
 their private SSH host key. Therefore, you will have to add the public SSH host key of your hosts to the respective host configuration, e.g.:
 ```nix
 {...}: {
-    # Inside host configuration of `hostA`
-    config = {
-        # Add the public SSH host key of `hostA` to the configuration
-        noxa.secrets.options.hostPubkey = "ssh-ed25519 AAAAC...";
-    };
+  # Inside host configuration of `hostA`
+  config = {
+    # Add the public SSH host key of `hostA` to the configuration
+    noxa.secrets.options.hostPubkey = "ssh-ed25519 AAAAC...";
+  };
 }
 
 > When using the template project, navigate to `hosts/vm-bob.nix`, you will find a placeholder to add the public SSH host key of `vm-bob` to the configuration.
@@ -167,11 +169,11 @@ the following to your `flake.nix` `outputs` section:
 ```nix
 # NixOS tool compatibility
 nixosConfigurations = mapAttrs
-    (name: value: {
-        config = value.configuration;
-        options = value.options;
-    })
-    self.noxaConfiguration.config.nodes;
+  (name: value: {
+    config = value.configuration;
+    options = value.options;
+  })
+  self.noxaConfiguration.config.nodes;
 ```
 
 # Further reading
