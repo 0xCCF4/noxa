@@ -185,12 +185,24 @@
                     type = bool;
                     default = false;
                   };
+                  extraOptions = mkOption {
+                    description = "Additional configuration options to add authorized_key for this grant.";
+                    type = listOf str;
+                    default = [ ];
+                  };
+                  allowPortForwarding = mkOption {
+                    description = "Whether to set the port-forwarding option for this SSH key.";
+                    type = bool;
+                    default = false;
+                  };
                 };
 
                 config = {
-                  extraConnectionOptions = mkIf (submodOptions.config.restrict && (
-                    length submodOptions.config.listen > 0 || length submodOptions.config.open > 0
-                  )) ["port-forwarding"];
+                  allowPortForwarding = mkIf
+                    (
+                      length submodOptions.config.listen > 0 || length submodOptions.config.open > 0
+                    )
+                    true;
                 };
               });
             };
@@ -240,7 +252,9 @@
             ++ (map (open: "permitopen=\"${open}\"") submod.config.options.open)
             ++ (optional submod.config.options.pty "pty")
             ++ (optional submod.config.options.x11Forwarding "x11-forwarding")
-            ++ (optional submod.config.options.agentForwarding "agent-forwarding");
+            ++ (optional submod.config.options.agentForwarding "agent-forwarding")
+            ++ (optional submod.config.options.allowPortForwarding [ "port-forwarding" ])
+            ++ submod.config.options.extraOptions;
 
           resolvedCommands =
             let
