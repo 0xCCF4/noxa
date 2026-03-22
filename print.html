@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bf75033c.js";
+            window.path_to_searchindex_js = "searchindex-e3788407.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5de2427f.js"></script>
@@ -533,6 +533,108 @@ normally be called via calling <code>&lt;nixpkgs&gt;.lib.nixosSystem</code>.</p>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="modules"><a class="header" href="#modules">Modules</a></h1>
+<p>Below you find a short summary of functionality of the different modules
+comprising <em>noxa</em>.</p>
+<h2 id="nodes-1"><a class="header" href="#nodes-1">Nodes</a></h2>
+<p>The core framework consists of the <a href="#nodes-2">Nodes</a> module,
+providing definitions of hosts.</p>
+<h2 id="ssh"><a class="header" href="#ssh">SSH</a></h2>
+<p>The <a href="#ssh-module">SSH module</a> allows automatic configuration of SSH authorized keys
+between different hosts. You might for example want that some user (bob@source) can log in
+to a specific host (alice@destination) to forward the port 5555. This can be achieved by
+the following configuration, automatically creating required SSH keys, setting up
+authorized keys with connection restrictions, and configuration of the SSH config files.</p>
+<pre><code class="language-nix">nodes.source.configuration.ssh.grants = {
+
+ # name of the grant, can be anything
+ portForwarding = {
+      
+   # connection settings
+   from = "bob";
+   to.node = "target";
+   to.user = "alice";
+
+   # configure client side options
+   to.extraOptions = {
+
+     # extra option to the home manager SSH module
+     localForward = [
+       bind.port = 5555;
+       host.address = "127.0.0.1";
+       host.port = 5555;
+     ];
+
+     extraOptions = {
+       # dont open a shell, only port forwarding
+       SessionType = "none";
+     };
+
+   };
+
+   # configure server side options
+   options.open = ["127.0.0.1:5555"];
+   
+   commands = {pkgs}: [ # only allow port forwarding, no shell or other commands
+     "${pkgs.coreutils}/bin/false"
+   ];
+ };
+};
+</code></pre>
+<p>Now run <code>agenix generate</code>, then <code>agenix rekey</code> and voila.</p>
+<h2 id="secrets"><a class="header" href="#secrets">Secrets</a></h2>
+<p><a href="#nixos-secrets">This module</a> allows configuring of host specific and shared secrets.</p>
+<p>For example when setting up a wireguard network, connection keys are neither owned by any
+of both peers. <em>noxa</em> will manage these shared secrets and make them available to the respective hosts.
+Under the hood, <em>noxa</em> uses <code>agenix</code> and <code>agenix-rekey</code> to manage these secrets, but adds required functionality
+for above mentioned use cases.</p>
+<pre><code class="language-nix">nodes.example.configuration = {
+  noxa.secrets.def = [
+    
+    { # shared secret between "source" and "target"
+      ident = "connection-psk-example";
+      module = "noxa.wireguard";
+      hosts = [ "source" "target" ];
+      generator.script = "wireguard-psk";
+    }
+    
+    { # host specific secret
+      ident = "interface-key-example";
+      module = "noxa.wireguard";
+      generator.script = "wireguard-key";
+    }
+
+    { # instance wide secret, not assigned to any host
+      ident = "instance-wide-secret";
+      module = "something";
+      global = true;
+    }
+
+  ];
+};
+</code></pre>
+<h2 id="wireguard"><a class="header" href="#wireguard">Wireguard</a></h2>
+<p>This module allows the declaration of wireguard overlay networks
+to connect several hosts together. It uses the secrets module to automatically
+exchange secrets between the hosts, configures gateways and routing in case of
+hosts being behind NAT/without public IPs, while also allowing direct peer to peer
+connections for hosts reachable by each other.</p>
+<pre><code class="language-nix">wireguard.overlay-lan = {
+  networkAddress = "10.0.0.0/24";
+
+  members = {
+    # define a host "someHost" as a member of this wireguard network 
+    someHost.deviceAddresses = "10.0.0.1/32";
+    someHost.backend = "wg-quick";
+    someHost.advertise.server.listenPort = 51823;
+    someHost.advertise.server.firewallAllow = true;
+
+    # define another host "otherHost" as a member of this wireguard network
+    otherHost.deviceAddresses = "10.0.0.2/32";
+    otherHost.keepAlive = 30;
+  };
+};
+</code></pre>
+<p>Now run <code>agenix generate</code>, then <code>agenix rekey</code> and voila.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ssh-module"><a class="header" href="#ssh-module">SSH Module</a></h1>
 <p>The SSH module automated the distribution of SSH host config between managed hosts.</p>
@@ -1246,7 +1348,7 @@ null or string</p>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/nixos/secrets/sshHostKeys.nix">noxa/modules/nixos/secrets/sshHostKeys.nix</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="nodes-1"><a class="header" href="#nodes-1">Nodes</a></h1>
+<h1 id="nodes-2"><a class="header" href="#nodes-2">Nodes</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nodes-"><a href="#nodes-" class="header">Nodes ⚙️</a></h1>
 <h2 id="defaults"><a class="header" href="#defaults">defaults</a></h2>
@@ -1373,7 +1475,7 @@ list of string</p>
 <ul>
 <li><a href="https://github.com/0xCCF4/noxa/tree/main/modules/noxa/nodes/default.nix">noxa/modules/noxa/nodes/default.nix</a></li>
 </ul>
-<h2 id="nodes-2"><a class="header" href="#nodes-2">nodes</a></h2>
+<h2 id="nodes-3"><a class="header" href="#nodes-3">nodes</a></h2>
 <p>A set of nixos hosts managed by Noxa.</p>
 <p><em>Type:</em>
 attribute set of (submodule)</p>
@@ -1783,7 +1885,7 @@ string <em>(read only)</em></p>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wireguard-noxa-config-"><a href="#wireguard-noxa-config-" class="header">Wireguard (Noxa Config) ⚙️</a></h1>
-<h2 id="wireguard"><a class="header" href="#wireguard">wireguard</a></h2>
+<h2 id="wireguard-1"><a class="header" href="#wireguard-1">wireguard</a></h2>
 <p><em>Type:</em>
 attribute set of (submodule)</p>
 <p><em>Default:</em></p>
