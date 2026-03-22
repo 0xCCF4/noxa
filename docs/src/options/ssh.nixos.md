@@ -200,6 +200,54 @@ false
 
 
 
+## ssh\.grants\.\<name>\.options\.allowPortForwarding
+
+
+
+Whether to set the port-forwarding option for this SSH key\.
+
+
+
+*Type:*
+boolean
+
+
+
+*Default:*
+
+```nix
+false
+```
+
+*Declared by:*
+ - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
+
+
+
+## ssh\.grants\.\<name>\.options\.extraOptions
+
+
+
+Additional configuration options to add authorized_key for this grant\.
+
+
+
+*Type:*
+list of string
+
+
+
+*Default:*
+
+```nix
+[ ]
+```
+
+*Declared by:*
+ - [noxa/modules/nixos/ssh/options\.nix](https://github.com/0xCCF4/noxa/tree/main/modules/nixos/ssh/options.nix)
+
+
+
 ## ssh\.grants\.\<name>\.options\.listen
 
 
