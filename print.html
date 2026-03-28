@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e1a9ad3b.js";
+            window.path_to_searchindex_js = "searchindex-5e287c25.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5de2427f.js"></script>
@@ -1442,6 +1442,31 @@ null or string</p>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nodes-2"><a class="header" href="#nodes-2">Nodes</a></h1>
+<p>The nodes module allows definition of hosts and their NixOS configuration.</p>
+<h2 id="defining-nodes"><a class="header" href="#defining-nodes">Defining nodes</a></h2>
+<p>A node is defined via</p>
+<pre><code class="language-nix">nodes.&lt;name&gt;.configuration = {
+  # (NixOS) configuration of the node &lt;name&gt;
+  # ...
+};
+nodeNames = [ "&lt;name&gt;" ];
+</code></pre>
+<blockquote>
+<p>If you use the template, the nodes are automatically added
+to the <code>nodeNames</code> list.</p>
+</blockquote>
+<h2 id="default-values-for-all-nodes"><a class="header" href="#default-values-for-all-nodes">Default values for all nodes</a></h2>
+<p>Default nixos configuration values for all nodes (or imports)
+may be specified via the <code>defaults</code> attribute, which
+is inherited by all nodes.</p>
+<pre><code class="language-nix">defaults.configuration = {
+  # default configuration for all nodes
+  # ...
+};
+</code></pre>
+<h2 id="nixpkgs-versions-1"><a class="header" href="#nixpkgs-versions-1">Nixpkgs versions</a></h2>
+<p>Each host may use its own version of nixpkgs which can be
+specified via the <code>nixpkgs</code> attribute. If not specified, the node inherits the nixpkgs version from the noxa framework.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nodes-"><a href="#nodes-" class="header">Nodes ⚙️</a></h1>
 <h2 id="defaults"><a class="header" href="#defaults">defaults</a></h2>
