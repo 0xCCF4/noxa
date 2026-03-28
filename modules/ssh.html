@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-809f70f0.js";
+            window.path_to_searchindex_js = "../searchindex-e1a9ad3b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-5de2427f.js"></script>
@@ -180,21 +180,92 @@
                         <h1 id="ssh-module"><a class="header" href="#ssh-module">SSH Module</a></h1>
 <p>The SSH module automated the distribution of SSH host config between managed hosts.</p>
 <p>By specifying which user on which node has access to which user on a different node, SSH configuration and authorized SSH keys can be generated and distributed automatically.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
-<pre><code class="language-nix">{...}: {
-    config = {
-        ssh.grant."sourceNodeName"."sourceNodeUser".
-            accessTo."targetNodeName".users = [ "targetUser" ];
-    };
+<h2 id="internal-workings"><a class="header" href="#internal-workings">Internal workings</a></h2>
+<p>The SSH module automates the following steps:</p>
+<ol>
+<li>Generation and distribution of SSH keypairs (via <a href="./secrets.html">Secrets module</a>).</li>
+<li>Configuration of authorizedKey on the target node for the targetUser (via <a href="https://search.nixos.org/options?channel=unstable&amp;show=users.users.&lt;name&gt;.openssh.authorizedKeys.keys">users.users.<name>.openssh.authorizedKeys</name></a>).</li>
+<li>Configuration of the .ssh/config file on the source node to allow easy access to the target node (via <a href="https://nix-community.github.io/home-manager/options.xhtml#opt-programs.ssh.matchBlocks">Home Manager</a>).</li>
+</ol>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>When adding a new grant, renaming a grant, new secrets need to be rolled out to the affected nodes. This can be done by running <code>agenix generate</code> (to generate new secrets) and <code>agenix rekey</code> (to distribute the new secrets to the affected nodes).</p>
+<p>For a detailed list of options, see the <a href="../options/ssh.nixos.html">SSH module reference</a>. Below are some common examples of usage.</p>
+<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
+<h3 id="simple-connection"><a class="header" href="#simple-connection">Simple connection</a></h3>
+<p>Allow <code>bob@source</code> to SSH into <code>alice@target</code>:</p>
+<pre><code class="language-nix">nodes.source.configuration.ssh.grants = {
+
+ # name of the grant, can be anything
+ access = {
+      
+   # connection settings
+   from = "bob";
+   to.node = "target";
+   to.user = "alice";
+
+ };
 };
 </code></pre>
-<p>Will grant <code>sourceNodeUser@sourceNodeName</code> SSH access to the machine <code>targetUser@targetNodeName</code> by</p>
-<ol>
-<li>Generating a SSH keypair.</li>
-<li>The private key part will be placed inside the sourceNode’s agenix keystore using the <a href="./secrets.html">NixOS Secrets</a> module.</li>
-<li>The public key part will be registered as an authorizedKey on the target node for the targetUser.</li>
-</ol>
-<p>Each step is configurable, e.g. instead of generating a custom keypair a local path may be used, an SSH command forced, … . Reference the <a href="../options/ssh.noxa.html">SSH module option’s reference</a> for a detailed list of options.</p>
+<h3 id="restrict-commands-on-the-target-node"><a class="header" href="#restrict-commands-on-the-target-node">Restrict commands on the target node</a></h3>
+<p>Allow <code>bob@source</code> to SSH into <code>alice@target</code> but only allow running the <code>uptime</code> or <code>date</code> command:</p>
+<pre><code class="language-nix">nodes.source.configuration.ssh.grants = {
+
+ # name of the grant, can be anything
+ uptime = {
+      
+   # connection settings
+   from = "bob";
+   to.node = "target";
+   to.user = "alice";
+   
+   commands = {pkgs}: [
+     "${pkgs.coreutils}/bin/uptime"
+     "${pkgs.coreutils}/bin/date"
+   ];
+
+   # provide a list of allowed commands when no valid command is provided
+   showAvailableCommands = true;
+ };
+};
+</code></pre>
+<h3 id="port-forwarding"><a class="header" href="#port-forwarding">Port forwarding</a></h3>
+<p>Allow <code>bob@source</code> to SSH into <code>alice@target</code> but only allow port forwarding on port 5555, no shell access:</p>
+<pre><code class="language-nix">nodes.source.configuration.ssh.grants = {
+
+ # name of the grant, can be anything
+ portForwarding = {
+      
+   # connection settings
+   from = "bob";
+   to.node = "target";
+   to.user = "alice";
+
+   # configure client side options
+   to.extraOptions = {
+
+     # extra option to the home manager SSH module
+     localForward = [
+       bind.port = 5555;
+       host.address = "127.0.0.1";
+       host.port = 5555;
+     ];
+
+     extraOptions = {
+       # dont open a shell, only port forwarding
+       SessionType = "none";
+     };
+
+   };
+
+   # configure server side options
+   options.open = ["127.0.0.1:5555"];
+   
+   commands = {pkgs}: [ # only allow port forwarding, no shell or other commands
+     "${pkgs.coreutils}/bin/false"
+   ];
+ };
+};
+</code></pre>
 
                     </main>
 
