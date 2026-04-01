@@ -137,6 +137,7 @@
             options = mkOption {
               visible = "transparent";
               description = "Options to apply to this SSH authorized key";
+              default = { };
               type = submodule (submodOptions: {
                 options = {
                   restrict = mkOption {
@@ -253,7 +254,7 @@
             ++ (optional submod.config.options.pty "pty")
             ++ (optional submod.config.options.x11Forwarding "x11-forwarding")
             ++ (optional submod.config.options.agentForwarding "agent-forwarding")
-            ++ (optional submod.config.options.allowPortForwarding [ "port-forwarding" ])
+            ++ (optional submod.config.options.allowPortForwarding "port-forwarding")
             ++ submod.config.options.extraOptions;
 
           resolvedCommands =
