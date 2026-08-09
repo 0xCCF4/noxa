@@ -79,16 +79,14 @@ nodes.source.configuration.ssh.grants = {
    to.extraOptions = {
 
      # extra option to the home manager SSH module
-     localForward = [
+     LocalForward = [
        bind.port = 5555;
        host.address = "127.0.0.1";
        host.port = 5555;
      ];
 
-     extraOptions = {
-       # dont open a shell, only port forwarding
-       SessionType = "none";
-     };
+     # dont open a shell, only port forwarding
+     SessionType = "none";
 
    };
 

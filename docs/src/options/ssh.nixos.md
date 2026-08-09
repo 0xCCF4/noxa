@@ -465,7 +465,7 @@ submodule
 
 
 
-Additional configuration options to add to the SSH config for this grant\.
+Additional configuration options to add to the SSH config for this grant\. Keys are literal ssh_config/programs\.ssh\.settings directive names (e\.g\. HostName, ForwardAgent), passed through unchanged\.
 
 
 

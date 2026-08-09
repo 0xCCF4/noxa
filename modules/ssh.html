@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-5e287c25.js";
+            window.path_to_searchindex_js = "../searchindex-cbf8550a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-5de2427f.js"></script>
@@ -244,16 +244,14 @@
    to.extraOptions = {
 
      # extra option to the home manager SSH module
-     localForward = [
+     LocalForward = [
        bind.port = 5555;
        host.address = "127.0.0.1";
        host.port = 5555;
      ];
 
-     extraOptions = {
-       # dont open a shell, only port forwarding
-       SessionType = "none";
-     };
+     # dont open a shell, only port forwarding
+     SessionType = "none";
 
    };
 
