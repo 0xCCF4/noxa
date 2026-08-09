@@ -17,6 +17,9 @@
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # Flake parts, build flake outputs modularly
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
     # Noxa
     noxa = {
       url = "github:0xCCF4/noxa";
@@ -45,43 +48,13 @@
     };
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , flake-utils
-    , agenix
-    , agenix-rekey
-    , noxa
-    , home-manager
-    , ...
-    }:
-      with nixpkgs.lib; with builtins;
-      {
-        # Noxa configuration
-        noxaConfiguration = noxa.lib.noxa-instantiate {
-          modules = [ ./config.nix ];
-          specialArgs = {
-            inherit agenix;
-            inherit agenix-rekey;
-            inherit home-manager;
-          };
-        };
+  outputs = inputs@{ self, flake-parts, noxa, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
 
-        # Allow interoperability with "standard" nixos build tools
-        nixosConfigurations = attrsets.mapAttrs
-          (name: value: {
-            config = value.configuration;
-            options = value.options;
-          })
-          (filterAttrs
-            (node: value: elem node self.noxaConfiguration.nodeNames)
-            self.noxaConfiguration.config.nodes);
-
-        # Agenix rekey module configuration
-        # See the wiki <https://0xccf4.github.io/noxa/modules/secrets.html> for more information
-        agenix-rekey = agenix-rekey.configure {
-          userFlake = self;
-          nixosConfigurations = self.nixosConfigurations;
-        };
-      };
+      imports = [
+        noxa.flakeModules.default
+        ./config.nix
+      ];
+    };
 }

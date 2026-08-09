@@ -1,67 +1,30 @@
-{ inputs, lib, self, ... }: with lib; let
-  hosts = inputs.noxa.lib.nixDirectoryToAttr' ./../hosts;
-in
-{
-  flake = {
-    # Agenix rekey module configuration
-    agenix-rekey = inputs.agenix-rekey.configure {
-      userFlake = self;
-      nixosConfigurations = mapAttrs
-        (name: value: {
-          config = value.configuration;
-        })
-        (filterAttrs (name: value: name != "iso") self.noxaConfiguration.config.nodes);
-    };
+{ inputs, lib, self, config, ... }: with lib; {
+  ezConfigs.root = ./..;
+  # Derived from `ezConfigs.root` (not a bare `./hosts` literal) so hosts stay in the
+  # same store copy as `../hardware`. A standalone path literal to just the `hosts`
+  # directory would copy it to the store in isolation, breaking `../` references
+  # inside host files.
+  ezConfigs.nixos.configurationsDirectory = "${config.ezConfigs.root}/hosts";
 
-    # NixOS tool compatibility
-    nixosConfigurations = mapAttrs
-      (name: value: {
-        config = value.configuration;
-        options = value.options;
-      })
-      self.noxaConfiguration.config.nodes;
+  ezConfigs.nixos.specialArgs = {
+    # All these are available to every host that imports them. `inputs` itself
+    # is included so it can safely be used inside a module's own `imports`
+    # list too. A value only reachable via `_module.args` (not a genuine
+    # specialArg) can't be referenced from `imports`, since `imports` is
+    # resolved before `_module.args` contributions are collected.
+    inherit inputs;
 
-    # Define all hosts
-    noxaConfiguration = inputs.noxa.lib.noxa-instantiate {
-      specialArgs = { };
-      modules = [
-        ({ lib, specialArgs, ... }: {
-          # overlay own packages
-          defaults.configuration.imports = [
-            self.nixosModules.default
-            inputs.home-manager.nixosModules.default
-          ];
-          defaults.specialArgs = {
-            # All these inputs will be available for all hosts, if they import them
+    inherit (inputs) nixos-hardware;
+    inherit (inputs) agenix;
+    inherit (inputs) agenix-rekey;
+    inherit (inputs) home-manager;
+    inherit (inputs) nixpkgs-stable;
+    inherit (inputs.self) users;
+  };
 
-            inherit (inputs) nixos-hardware;
-            inherit (inputs) agenix;
-            inherit (inputs) agenix-rekey;
-            inherit (inputs) home-manager;
-            inherit (inputs) nixpkgs-stable;
-            inherit (inputs.self) users;
-            inherit (inputs) self;
-          };
-
-          nodes = attrsets.mapAttrs
-            (name: path: {
-              configuration = {
-                imports = [
-                  path
-                  ({ config, ... }: {
-                    nixpkgs.overlays = [ (final: prev: self.packages."${config.nixpkgs.hostPlatform.system}") ];
-                  })
-                ];
-
-                config.networking.hostName = mkDefault name;
-              };
-            })
-            hosts;
-
-          nodeNames = attrsets.mapAttrsToList (name: path: name) hosts;
-        })
-        self.noxaModules.default
-      ];
-    };
+  # Agenix rekey module configuration
+  flake.agenix-rekey = inputs.agenix-rekey.configure {
+    userFlake = self;
+    nixosConfigurations = filterAttrs (name: value: name != "iso") self.nixosConfigurations;
   };
 }

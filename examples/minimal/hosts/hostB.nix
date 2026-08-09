@@ -1,6 +1,3 @@
-{ ... }:
-{
-  configuration = { lib, config, ... }: {
-    imports = [ ../hardware/vm.nix ];
-  };
+{ ... }: {
+  imports = [ ../hardware/vm.nix ];
 }

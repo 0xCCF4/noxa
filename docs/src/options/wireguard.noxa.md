@@ -1,1 +1,0 @@
-# Wireguard (Noxa Config) ⚙️

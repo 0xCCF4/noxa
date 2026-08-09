@@ -20,13 +20,22 @@
     # Flake utils
     flake-utils.url = "github:numtide/flake-utils";
 
-    # Secret management; enabled for a host if `noxa.agenixSupport` is set to true
+    # Flake parts, the module system Noxa itself is built on top of
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
+    # Host discovery and defaults for flake-parts, Noxa builds on top of this
+    ez-configs = {
+      url = "github:ehllie/ez-configs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Secret management; import `noxa.nixosModules.secrets` on a host to use it
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Secret management with rekeying capabilities; enabled for a host if `noxa.agenixRekeySupport` is set to true
+    # Secret management with rekeying capabilities; import `noxa.nixosModules.secrets` on a host to use it
     agenix-rekey = {
       url = "github:oddlama/agenix-rekey";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -36,42 +45,37 @@
   outputs =
     { self
     , nixpkgs
+    , flake-parts
     , flake-utils
+    , ez-configs
+    , nix-net-lib
     , ...
     }@inputs:
-      with nixpkgs.lib; with builtins;
-      let
-        modifiedInputs = (inputs // { noxa = self; });
-        modules = import ./modules modifiedInputs;
-        prefixAttrs = prefix: attrs: attrsets.mapAttrs' (name: value: nameValuePair "${prefix}${name}" value) attrs;
-        noxaConfiguration = ((import ./examples/minimal/flake.nix).outputs modifiedInputs).noxaConfiguration;
-      in
-      {
+    let
+      modifiedInputs = inputs // { noxa = self; };
+      modules = import ./modules modifiedInputs;
+    in
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = flake-utils.lib.defaultSystems;
+
+      imports = [ ./parts ];
+
+      flake = {
         # Nixos modules
         nixosModules = modules.nixos;
 
-        # Noxa modules
-        noxaModules = modules.noxa;
+        # Noxa's own flake-parts module. Import this into a consumer's
+        # `flake-parts.lib.mkFlake` call to declare Noxa-managed hosts:
+        #
+        #   imports = [ inputs.noxa.flakeModules.default ];
+        flakeModules.default = import ./modules/flake-parts {
+          noxaFlake = self;
+          nixNetLib = nix-net-lib.lib;
+          ezConfigsFlakeModule = ez-configs.flakeModule;
+        };
 
         # Libraries
         lib = import ./lib modifiedInputs;
-
-        # Source code formatter
-        formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
-
-        # Example nixos configuration
-        nixosConfigurations =
-          { }#(prefixAttrs "plain:" ((import ./examples/plain-no-noxa-modules/flake.nix).outputs (inputs // { noxa = self; })).nixosConfigurations)
-        ; #// (prefixAttrs "noxa:" ((import ./examples/noxa-modules/flake.nix).outputs (inputs // { noxa = self; })).nixosConfigurations);
-
-        # Configuration of agenix rekey for usage in the examples
-        agenix-rekey = inputs.agenix-rekey.configure {
-          userFlake = self;
-          nixosConfigurations = attrsets.mapAttrs (name: value: { config = value.configuration; }) noxaConfiguration.config.nodes;
-        };
-
-        # Expose example configuration
-        inherit noxaConfiguration;
 
         # Templates
         templates.default = {
@@ -82,26 +86,6 @@
           path = ./examples/minimal;
           description = "Minimal template.";
         };
-      }
-      // flake-utils.lib.eachDefaultSystem (
-        system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-          };
-
-          scopedInputs = inputs // {
-            inherit pkgs system;
-          };
-        in
-        {
-
-          # Packages
-          packages.doc = pkgs.callPackage ./pkgs/doc.nix scopedInputs;
-          packages.prebuilt = pkgs.callPackage ./pkgs/prebuilt.nix scopedInputs;
-
-          # Dev shells
-          devShells = import ./shells scopedInputs;
-        }
-      );
+      };
+    };
 }

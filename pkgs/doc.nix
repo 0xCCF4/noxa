@@ -22,9 +22,15 @@ let
                 # Provide `pkgs` arg to all modules
                 config._module = {
                   args.pkgs = pkgs;
-                  args.noxaHost = "<noxa-host-id>";
-                  args.nodes = { };
+                  args.self = { nixosConfigurations = { }; };
                   check = false;
+                };
+                # Mock the real NixOS `networking.hostName` option: modules derive
+                # their own host identity from it instead of taking a `noxaHost` arg.
+                options.networking.hostName = mkOption {
+                  type = types.str;
+                  default = "<noxa-host-id>";
+                  description = "Mocked for documentation purposes.";
                 };
                 # Hide NixOS `_module.args` from nixosOptionsDoc to remain specific to noxa
                 options._module.args = mkOption {
@@ -39,6 +45,8 @@ let
                 net = inputs.nix-net-lib.lib;
               };
               inherit nixpkgs;
+              managedNodes = [ ];
+              wireguard = { };
               __buildDocs = true;
             };
             agenix-rekey = { nixosModules.default = { }; };
@@ -78,11 +86,11 @@ let
     };
 
   nixosPaths = self.lib.nixDirectoryToAttr' ../modules/nixos;
-  noxaPaths = self.lib.nixDirectoryToAttr' ../modules/noxa;
 
-  groups = { } //
-    (attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair (name + ".nixos") value) nixosPaths) //
-    (attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair (name + ".noxa") value) noxaPaths);
+  # Options contributed by `flakeModules.default` (modules/flake-parts) are flake-parts
+  # options, not NixOS options, and are not covered by this NixOS-module-oriented doc
+  # generator. Document them by hand in docs/src/modules.md instead.
+  groups = attrsets.mapAttrs' (name: value: lib.attrsets.nameValuePair (name + ".nixos") value) nixosPaths;
 
   documentation = attrsets.mapAttrs (name: module: makeOptionsDoc module) groups;
 

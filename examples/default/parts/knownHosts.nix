@@ -17,7 +17,7 @@
     in
     {
       packages.knownHosts = pkgs.writeText "known-hosts" (
-        concatStringsSep "\n" (flatten ((mapAttrsToList (host: node: nodeToEntry node) hostsWithPubKey) ++ [ jumpServer jumpServer2 ]))
+        concatStringsSep "\n" (flatten (mapAttrsToList (host: node: nodeToEntry node) hostsWithPubKey))
       );
     };
 }

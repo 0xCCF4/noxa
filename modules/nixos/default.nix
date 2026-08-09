@@ -21,6 +21,13 @@ noxa-inputs: rec {
   };
 
   /**
+    Cross-host SSH access management module
+    */
+  ssh = { ... }: {
+    imports = [ secrets ./ssh ];
+  };
+
+  /**
     Experimental overlay module used by nixos-instantiate
     */
   overlay = { ... }: {

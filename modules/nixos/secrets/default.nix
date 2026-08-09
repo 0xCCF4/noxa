@@ -18,12 +18,12 @@
 , noxa
 , agenix
 , agenix-rekey
-, noxaHost ? throw "Are you using this module outside of a Noxa host configuration?"
 , ...
 }:
 with lib; with builtins; with types;
 let
   cfg = config.noxa.secrets;
+  noxaHost = config.networking.hostName;
 
   generatorType = {
     options = {
@@ -373,7 +373,7 @@ in
       (secret:
         {
           assertion = length secret.hosts <= 1 -> elem noxaHost secret.hosts;
-          message = "${fgYellow}Defined secret ${fgCyan}'${secret.identifier}'${fgYellow} is not defined on the host that owns it: ${fgCyan}'${noxaHost}'${fgYellow}, instead it is defined on: ${fgCyan}'${head secret.hosts}Ä${default}";
+          message = "${fgYellow}Defined secret ${fgCyan}'${secret.identifier}'${fgYellow} is not defined on the host that owns it: ${fgCyan}'${noxaHost}'${fgYellow}, instead it is defined on: ${fgCyan}'${head secret.hosts}'${default}";
         })
       cfg.def)
     ;

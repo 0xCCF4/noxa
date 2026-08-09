@@ -1,43 +1,29 @@
 # Main noxa configuration file
-# This is the central configuration file for your multi-host NixOS setup
+# This is the central configuration file for your multi-host NixOS setup.
 #
-# Like with any NixOS configuration, you can import additional modules,
-# define options, etc.
-#
-# Hosts are defined via the nodes attribute. By default, we import all files
-# from the `./hosts` directory as nodes, using their file names as node names.
-# To add a new host configuration, just add a new file in the `./hosts` directory.
-{ noxa, lib, disko, config, home-manager, ... }: with lib; let
-  filesInHostDir = noxa.lib.nixDirectoryToAttr' ./hosts;
-in
-{
-  config = {
-    defaults = { config, name, lib, ... }: with lib; {
-      configuration = {
-        imports = [
-          # Add global nixos modules
-          ./secrets # Configure secrets management
-          home-manager.nixosModules.default # Add home manager to all nodes
-        ];
+# Hosts live in the `./hosts` directory. ez-configs discovers each file there
+# as a host, using the file name as the host name. To add a new host, add a
+# new file to `./hosts`. `./modules/default.nix` applies to every host.
+{ inputs, self, config, ... }: {
+  ezConfigs.root = ./.;
+  # Derived from `ezConfigs.root` (not a bare `./hosts` literal) so hosts stay in the
+  # same store copy as `../hardware` and `../secrets`. A standalone path literal to
+  # just the `hosts` directory would copy it to the store in isolation, breaking any
+  # `../` references inside it.
+  ezConfigs.nixos.configurationsDirectory = "${config.ezConfigs.root}/hosts";
+  ezConfigs.nixos.modulesDirectory = "${config.ezConfigs.root}/modules";
 
-        config = {
-          # Set the default hostname based on the file name in `./hosts`
-          # If you do not specify a hostname in your nixos config, it uses the noxa node name
-          networking.hostName = mkDefault name;
+  ezConfigs.nixos.specialArgs = {
+    inherit (inputs) home-manager agenix agenix-rekey;
+  };
 
-          # Default state version for all nodes
-          system.stateVersion = mkDefault "25.11";
-        };
-      };
-    };
+  # Allow interoperability with "standard" nixos build tools
+  # (`self.nixosConfigurations.<host>` is set by ez-configs already)
 
-    # Add files located in `./hosts` directory as nodes.
-    nodes =
-      attrsets.mapAttrs
-        (name: path: path)
-        filesInHostDir;
-
-    # Add files located in `./hosts` directory as nodes.
-    nodeNames = attrsets.mapAttrsToList (name: path: name) filesInHostDir;
+  # Agenix rekey module configuration
+  # See the wiki <https://0xccf4.github.io/noxa/modules/secrets.html> for more information
+  flake.agenix-rekey = inputs.agenix-rekey.configure {
+    userFlake = self;
+    nixosConfigurations = self.nixosConfigurations;
   };
 }

@@ -2,13 +2,14 @@
 , config
 , lib
 , noxa
-, nodes ? throw "Are you using this module outside of a Noxa configuration?"
-, noxaHost ? throw "Are you using this module outside of a Noxa host configuration?"
+, self ? throw "Are you using this module outside of a Noxa configuration?"
 , ...
 }:
 with lib; with builtins; with types;
 let
   cfg = config.noxa.wireguard;
+  noxaHost = config.networking.hostName;
+  allNodeConfigs = mapAttrs (host: nixosConfiguration: nixosConfiguration.config) self.nixosConfigurations;
 in
 {
   options.noxa.wireguard = {
@@ -45,7 +46,7 @@ in
 
   config =
     let
-      allmods = name: mapAttrs (key: value: value.noxa.wireguard.interfaces."${name}") (attrsets.filterAttrs (host: nixos: attrsets.hasAttrByPath [ "noxa" "wireguard" "interfaces" name ] nixos) nodes);
+      allmods = name: mapAttrs (key: value: value.noxa.wireguard.interfaces."${name}") (attrsets.filterAttrs (host: nixos: attrsets.hasAttrByPath [ "noxa" "wireguard" "interfaces" name ] nixos) allNodeConfigs);
       exceptThis = attrsets.filterAttrs (host: nixos: host != noxaHost) allmods;
     in
     {

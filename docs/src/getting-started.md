@@ -1,35 +1,41 @@
 # Getting Started
 
 ## Quick start
-Create a new *noxa* project via:
+Create a new *noxa* project:
 ```bash
 nix flake init --template github:0xccf4/noxa
 ```
 
-Which will set you up with a basic template project structured as follows:
-- `hardware` contains the `hardware-configuration.nix` files of your hosts.
-- `hosts` contains the toplevel definitions of your machines/hosts
-- `modules/home` contains [home-manager](https://github.com/nix-community/home-manager/) modules
-- `modules/nixos` contains nixos modules
-- `modules/noxa` contains noxa modules
-- `packages` contains custom nix derivation which will be available to your hosts
-- `parts` contains [flake-parts](https://flake.parts/) modules to build up your flake.nix
-- `users` contains the definition of your users, with their respective home-manager modules
-- `secrets` will contain the secrets of your hosts
+This sets up a template project structured as follows:
+- `hardware` holds the `hardware-configuration.nix` files of your hosts.
+- `hosts` holds the top-level configuration of each host. ez-configs discovers files here automatically.
+- `nixos-modules` holds NixOS modules applied to every host.
+- `modules/home` holds [home-manager](https://github.com/nix-community/home-manager/) modules.
+- `modules/nixos` holds your own NixOS modules.
+- `packages` holds custom derivations, available to your hosts through an overlay.
+- `parts` holds [flake-parts](https://flake.parts/) modules that build up your `flake.nix`.
+- `users` holds your user definitions, each with its own home-manager module.
+- `secrets` holds the (encrypted) secrets for your hosts.
 
-Of course feel free to change, restructure and adapt the project to your needs. The above is just a template to get you started fast. For additional information see also the [README.md](https://github.com/0xCCF4/noxa/blob/main/examples/default/README.md) of the template.
+Change, restructure, and adapt the project freely. This is a starting point,
+not a fixed layout. For more detail, see the template's
+[README.md](https://github.com/0xCCF4/noxa/blob/main/examples/default/README.md).
 
 ## Setting up noxa
-> When using the template project, skip this step.
+> Skip this step when you use the template project.
 
-To add *noxa* to your flake, 1. add it as an input to your `flake.nix`, then, 2. instantiate it via `noxa.lib.noxa-instantiate`.
+Noxa ships as a [flake-parts](https://flake.parts/) module, built on top of
+[ez-configs](https://github.com/ehllie/ez-configs) for host discovery. Add
+both to your `flake.nix`:
 
-Below you will find an example `flake.nix`:
 ```nix
 {
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Flake parts, build flake outputs modularly
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
     # Noxa
     noxa = {
@@ -59,122 +65,124 @@ Below you will find an example `flake.nix`:
     };
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , agenix
-    , agenix-rekey
-    , noxa
-    , home-manager
-    , ...
-    }:
-      with nixpkgs.lib; with builtins;
-      {
-        # Noxa configuration
-        noxaConfiguration = noxa.lib.noxa-instantiate {
-          modules = [ ./config.nix ];
-          specialArgs = {
-            inherit agenix;
-            inherit agenix-rekey;
-            inherit home-manager;
-          };
-        };
-      };
+  outputs = inputs@{ self, flake-parts, noxa, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+      imports = [
+        noxa.flakeModules.default
+        ./config.nix
+      ];
+    };
 }
 ```
 
-The function `noxa.lib.noxa-instantiate` will instantiate your configuration and accepts as arguments:
-- `modules`: A list of *noxa modules* which will be used to build up your configuration. In here, you will add your hosts and other configuration options.
-- `specialArgs`: A set of arguments which will be passed to all *noxa modules*
+`config.nix` sets up ez-configs and Noxa's own options:
+```nix
+{ inputs, self, config, ... }: {
+  ezConfigs.root = ./.;
+  # ezConfigs.nixos.configurationsDirectory defaults to ./nixos-configurations;
+  # override it to keep the `hosts` directory name from the template.
+  ezConfigs.nixos.configurationsDirectory = "${config.ezConfigs.root}/hosts";
 
-*Noxa* uses the same module system as nixos and home-manager, so all concept of options, modules, etc. apply to *noxa modules* as well.
+  ezConfigs.nixos.specialArgs = {
+    inherit (inputs) agenix agenix-rekey home-manager;
+  };
+}
+```
+
+`noxa.flakeModules.default` brings in `ezConfigs.*` (host discovery and
+defaults) and Noxa's own `noxa.managedNodes`/`noxa.wireguard` options. Every
+host built by ez-configs also gets `self` and a `noxa` specialArg (carrying
+`noxa.lib`, `noxa.managedNodes`, and `noxa.wireguard`) automatically. You do
+not need to pass these yourself.
 
 ## Adding a new host
-> When using the template project, navigate to `hosts/`, just add a new file with the name of your host, e.g. `vm-alice.nix` and add the configuration of your host there. This file will the the toplevel declaration of your host, like the normal `configuration.nix` file of a nixos configuration. (To let nix know about the new file, you will have to `git add` it.)
+> When you use the template project, add a file under `hosts/`, named after
+> your host, e.g. `vm-alice.nix`. It is the top-level configuration of that
+> host, exactly like the `configuration.nix` of a plain NixOS setup. Since
+> the file is new, `git add` it so Nix picks it up.
 
-Adding a host can be done via declaring it inside a *noxa module*, e.g.:
+A host is a plain NixOS module discovered by ez-configs. To join the Noxa
+mesh, list it in `noxa.managedNodes` (it defaults to every discovered host,
+so most setups need no extra step) and import whichever Noxa modules the
+host needs:
+
 ```nix
-{...}: {
-  nodes.hostA = {
-    # Host specific configuration options, e.g.:
-    configuration = {
-      # Add prometheus node exporter on non-default port
-      services.ssh.enable = true;
+# hosts/hostA.nix
+{ ... }: {
+  ssh.enable = true;
 
-      /* Other NixOS configuration options */
-    };
-  };
-
-  nodeNames = [ "hostA" ];
+  # Opt into Noxa's cross-host SSH module for this host
+  imports = [ inputs.noxa.nixosModules.ssh ];
 }
 ```
 
 ## Setting up secrets
-*Noxa* uses by default [agenix](https://github.com/ryantm/agenix) and [agenix-rekey](https://github.com/oddlama/agenix-rekey/) to manage secrets. To get started using secrets, you will need to generate a master key and include the public SSH host keys of your hosts in their hosts configuration.
+*Noxa* uses [agenix](https://github.com/ryantm/agenix) and
+[agenix-rekey](https://github.com/oddlama/agenix-rekey/) for secrets. To get
+started, generate a master key and add each host's public SSH host key to
+its configuration.
 
 ### Generating a master key
-Generate a master key to encrypt secrets with.
+Generate a master key to encrypt secrets with:
 ```bash
 mkdir -p $HOME/.noxa
 nix shell "nixpkgs#age" -c age-keygen -o $HOME/.noxa/master.key
 # note down the public key, you will need it below
 
-# Recommended: Encrypt the master key with a password
+# Recommended: encrypt the master key with a password
 nix run "nixpkgs#age" -- --encrypt --armor --passphrase -o $HOME/.noxa/master.key.age $HOME/.noxa/master.key
 rm $HOME/.noxa/master.key
 ```
 
 ### Adding a master key to the configuration
-> When using the template project, navigate to `modules/nixos/secrets.nix`, you will find placeholders to add your previously generated master key to the configuration.
+> When you use the template project, open `modules/nixos/secrets.nix` for
+> placeholders to fill in with your generated master key.
 
-Create a entry in `noxa.secrets.options.masterIdentities` with the path and public key of your master key, e.g.:
+A host needs `noxa.nixosModules.secrets` imported before it can use
+`noxa.secrets.*`. Add an entry to `noxa.secrets.options.masterIdentities`
+with the path and public key of your master key:
 ```nix
-noxa.secrets.options.masterIdentities = [
-  {
-    identity = "/home/user/.noxa/master.key.age";
-    pubkey = "age1qql...";
-  }
-];
-```
+{
+  imports = [ inputs.noxa.nixosModules.secrets ];
 
-### Adding a new host or adding the public SSH host to the configuration
-Secrets will be stored encrypted in the nix store, such that only the host they are meant for can decrypt them using
-their private SSH host key. Therefore, you will have to add the public SSH host key of your hosts to the respective host configuration, e.g.:
-```nix
-{...}: {
-  # Inside host configuration of `hostA`
-  config = {
-    # Add the public SSH host key of `hostA` to the configuration
-    noxa.secrets.options.hostPubkey = "ssh-ed25519 AAAAC...";
-  };
+  noxa.secrets.options.masterIdentities = [
+    {
+      identity = "/home/user/.noxa/master.key.age";
+      pubkey = "age1qql...";
+    }
+  ];
 }
-
-> When using the template project, navigate to `hosts/vm-bob.nix`, you will find a placeholder to add the public SSH host key of `vm-bob` to the configuration.
 ```
+
+### Adding the public SSH host key of a host
+Noxa stores secrets encrypted in the Nix store, so only the host they are
+meant for can decrypt them, using its private SSH host key. Add the public
+SSH host key of each host to its own configuration:
+```nix
+{ ... }: {
+  # Inside the configuration of hostA
+  noxa.secrets.options.hostPubkey = "ssh-ed25519 AAAAC...";
+}
+```
+
+> When you use the template project, open `hosts/vm-bob.nix` for a
+> placeholder to fill in with the public SSH host key of `vm-bob`.
 
 ### Further information about secrets
-Further information about secrets and how to use them can be found in the [Secrets module](./modules/secrets.md) documentation.
+See the [Secrets module](./modules/secrets.md) documentation for more detail.
 
 ## Compiling and deploying a configuration
-> When using the template project, you may use any tool to build and deploy the configuration since *noxa*'s output will be available via the `nixosConfigurations` attribute of the flake, e.g. `nixosConfigurations.vm-bob`.
+> When you use the template project, use the normal NixOS tools. Noxa's
+> hosts already appear under the flake's `nixosConfigurations` attribute,
+> e.g. `nixosConfigurations.vm-bob`, since that's what ez-configs builds.
 
-Compiling and deploying a new configuration, is done via the "normal" nixos
-and build commands by:
+Compile and deploy a configuration with the standard NixOS commands:
 ```bash
 nixos-rebuild switch --flake .#<hostname>
 ```
 
-When you are not using the template project, you might want to add compatibility for the these tools, by, e.g. adding
-the following to your `flake.nix` `outputs` section:
-```nix
-# NixOS tool compatibility
-nixosConfigurations = mapAttrs
-  (name: value: {
-    config = value.configuration;
-    options = value.options;
-  })
-  self.noxaConfiguration.config.nodes;
-```
-
 # Further reading
-You may continue reading on the architecture and instantiation of the module system in the [Architecture](./architecture.md) or jump to the explanation of a specific module in the [Modules](./modules.md) section.
+Continue with the [Architecture](./architecture.md) page for how Noxa fits
+together internally, or jump to a specific module in the
+[Modules](./modules.md) section.

@@ -1,35 +1,59 @@
-# Nodes
+# Hosts
 
-The nodes module allows definition of hosts and their NixOS configuration.
+Noxa does not define hosts itself. [ez-configs](https://github.com/ehllie/ez-configs)
+discovers each host from a file (or directory) under `ezConfigs.nixos.configurationsDirectory`
+and builds it with a plain `nixpkgs.lib.nixosSystem` call. Noxa adds
+`noxa.managedNodes` on top, to say which of those hosts join the Noxa mesh.
 
-## Defining nodes
+## Defining a host
 
-A node is defined via
+Add a file to the configured hosts directory (`./hosts` in the template).
+The file name becomes the host name, and its content is a plain NixOS
+module, the same shape as any `configuration.nix`:
+
 ```nix
-nodes.<name>.configuration = {
-  # (NixOS) configuration of the node <name>
+# hosts/my-node.nix
+{ ... }: {
+  # (NixOS) configuration of the host "my-node"
   # ...
-};
-nodeNames = [ "<name>" ];
+}
 ```
 
-> If you use the template, the nodes are automatically added
-to the `nodeNames` list.
+> When you use the template, new files under `hosts/` are picked up
+> automatically. Since the file is new, `git add` it so Nix sees it.
 
-## Default values for all nodes
+## Joining the Noxa mesh
 
-Default nixos configuration values for all nodes (or imports)
-may be specified via the `defaults` attribute, which
-is inherited by all nodes.
+`noxa.managedNodes` defaults to every host ez-configs discovers, so most
+setups need no extra step. Set it explicitly to narrow the list, for example
+to exclude an ISO installer configuration that should stay outside the mesh:
 
 ```nix
-defaults.configuration = {
-  # default configuration for all nodes
+{
+  noxa.managedNodes = [ "my-node" "other-node" ]; # excludes e.g. "iso"
+}
+```
+
+Noxa's own cross-host modules (wireguard, SSH) use this list to validate
+references and to iterate over every managed host.
+
+## Default values for all hosts
+
+To apply NixOS configuration to every host, add a file to
+`ezConfigs.nixos.modulesDirectory` (`./nixos-modules` by default).
+Ez-configs imports it into every host automatically:
+
+```nix
+# nixos-modules/default.nix
+{ ... }: {
+  # default configuration for all hosts
   # ...
-};
+}
 ```
 
 ## Nixpkgs versions
 
-Each host may use its own version of nixpkgs which can be
-specified via the `nixpkgs` attribute. If not specified, the node inherits the nixpkgs version from the noxa framework.
+Each host is built with whichever `nixpkgs` you pass to its own
+`nixosSystem` call (through ez-configs). Noxa does not impose a shared
+version. Use a different `nixpkgs` input for a specific host the same way
+you would in any multi-host flake-parts setup.

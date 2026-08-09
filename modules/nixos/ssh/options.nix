@@ -1,4 +1,4 @@
-{ lib, noxaConfig, noxa, ... }: with lib; with builtins;
+{ lib, self, noxa, ... }: with lib; with builtins;
 {
   options.ssh = with types; {
     grants = mkOption {
@@ -121,7 +121,7 @@
                 };
                 config =
                   let
-                    key = noxaConfig.nodes."${submodInner.config.node}".configuration.noxa.secrets.options.hostPubkey or null;
+                    key = self.nixosConfigurations."${submodInner.config.node}".config.noxa.secrets.options.hostPubkey or null;
                   in
                   {
                     sshFingerprint = mkIf (key != null) key;
@@ -260,7 +260,7 @@
           resolvedCommands =
             let
               # taken from lib.callPackageWith
-              pkgs = noxaConfig.nodes."${submod.config.to.node}".pkgs;
+              pkgs = self.nixosConfigurations."${submod.config.to.node}".pkgs;
               requiredArgs = submod.config.commands.__functionArgs;
               allArgs = intersectAttrs requiredArgs pkgs;
               missingArgs = filterAttrs (name: value: !value) (removeAttrs requiredArgs (attrNames allArgs));

@@ -41,10 +41,11 @@
     };
   };
 
-  outputs = inputs@{ flake-parts, ... }:
+  outputs = inputs@{ flake-parts, noxa, ... }:
     # https://flake.parts/module-arguments.html
     flake-parts.lib.mkFlake { inherit inputs; } (top@{ config, withSystem, moduleWithSystem, ... }: {
       imports = [
+        noxa.flakeModules.default
         ./parts
       ];
       systems = [

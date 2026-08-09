@@ -1,4 +1,4 @@
-{ config, noxa, lib, nodes, ... }:
+{ config, noxa, lib, self, ... }:
 with builtins; with lib; let
   template = backend: name:
     let
@@ -9,8 +9,8 @@ with builtins; with lib; let
       peers = attrsets.mapAttrs
         (neighbor: cfg:
           let
-            otherHost = nodes.${neighbor}.noxa.wireguard.interfaces.${name};
-            otherSecrets = nodes.${neighbor}.noxa.wireguard.secrets.${name};
+            otherHost = self.nixosConfigurations.${neighbor}.config.noxa.wireguard.interfaces.${name};
+            otherSecrets = self.nixosConfigurations.${neighbor}.config.noxa.wireguard.secrets.${name};
           in
           {
             allowedIPs = otherHost.deviceAddresses ++ (lists.optional (elem neighbor routes.participants.gateways) ourConfig.networkAddress);

@@ -1,6 +1,7 @@
-{ lib, config, noxaHost, ... }: with lib; with builtins; {
+{ lib, config, ... }: with lib; with builtins; {
   config =
     let
+      noxaHost = config.networking.hostName;
       ssh-keys = type: { pkgs, file, ... }: ''
         ${pkgs.busybox}/bin/mkdir -p $(${pkgs.busybox}/bin/dirname ${escapeShellArg file})
         TMPDIR=$(mktemp -d)

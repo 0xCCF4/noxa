@@ -1,118 +1,125 @@
 # Modules
-Below you find a short summary of functionality of the different modules
-comprising *noxa*.
 
-## Nodes
+This page summarizes the modules that make up *noxa*.
 
-The core framework consists of the [Nodes](./modules/nodes.md) module,
-providing definitions of hosts.
+## Hosts
+
+[ez-configs](https://github.com/ehllie/ez-configs) discovers your hosts, and
+the [Hosts](./modules/nodes.md) page covers how Noxa's own
+`noxa.managedNodes` option fits on top of that.
 
 ## SSH
 
-The [SSH module](./modules/ssh.md) allows automatic configuration of SSH authorized keys
-between different hosts. You might for example want that some user (bob@source) can log in
-to a specific host (alice@destination) to forward the port 5555. This can be achieved by
-the following configuration, automatically creating required SSH keys, setting up
-authorized keys with connection restrictions, and configuration of the SSH config files.
+The [SSH module](./modules/ssh.md) configures SSH authorized keys between
+hosts automatically. Say user `bob@source` should be able to log in to
+`alice@destination` to forward port 5555. Import `noxa.nixosModules.ssh` on
+both hosts, then declare the grant on the source host. Noxa generates the
+SSH keys, sets up the authorized key with the right restrictions, and writes
+the SSH client config for you.
 
 ```nix
-nodes.source.configuration.ssh.grants = {
+# hosts/source.nix
+{ ... }: {
+  imports = [ inputs.noxa.nixosModules.ssh ];
 
- # name of the grant, can be anything
- portForwarding = {
-      
-   # connection settings
-   from = "bob";
-   to.node = "target";
-   to.user = "alice";
+  ssh.grants.portForwarding = {
+    # connection settings
+    from = "bob";
+    to.node = "target";
+    to.user = "alice";
 
-   # configure client side options
-   to.extraOptions = {
+    # configure client side options
+    to.extraOptions = {
+      # extra option to the home manager SSH module
+      LocalForward = [
+        bind.port = 5555;
+        host.address = "127.0.0.1";
+        host.port = 5555;
+      ];
 
-     # extra option to the home manager SSH module
-     LocalForward = [
-       bind.port = 5555;
-       host.address = "127.0.0.1";
-       host.port = 5555;
-     ];
+      # don't open a shell, only port forwarding
+      SessionType = "none";
+    };
 
-     # dont open a shell, only port forwarding
-     SessionType = "none";
+    # configure server side options
+    options.open = [ "127.0.0.1:5555" ];
 
-   };
-
-   # configure server side options
-   options.open = ["127.0.0.1:5555"];
-   
-   commands = {pkgs}: [ # only allow port forwarding, no shell or other commands
-     "${pkgs.coreutils}/bin/false"
-   ];
- };
-};
+    commands = { pkgs }: [ # only allow port forwarding, no shell or other commands
+      "${pkgs.coreutils}/bin/false"
+    ];
+  };
+}
 ```
 
-Now run `agenix generate`, then `agenix rekey` and voila.
+Run `agenix generate`, then `agenix rekey`.
 
 ## Secrets
 
-[This module](./modules/secrets.md) allows configuring of host specific and shared secrets.
+The [Secrets module](./modules/secrets.md) configures host-specific and
+shared secrets.
 
-For example when setting up a wireguard network, connection keys are neither owned by any
-of both peers. *noxa* will manage these shared secrets and make them available to the respective hosts. 
-Under the hood, *noxa* uses `agenix` and `agenix-rekey` to manage these secrets, but adds required functionality
-for above mentioned use cases.
+A WireGuard connection key, for example, belongs to neither peer alone.
+Import `noxa.nixosModules.secrets` on a host to declare secrets for it.
+Noxa manages the shared ones and makes them available to every host that
+needs them. Under the hood, Noxa uses `agenix` and `agenix-rekey`, adding
+the multi-host bookkeeping on top.
 
 ```nix
-nodes.example.configuration = {
+# hosts/example.nix
+{ ... }: {
+  imports = [ inputs.noxa.nixosModules.secrets ];
+
   noxa.secrets.def = [
-    
     { # shared secret between "source" and "target"
       ident = "connection-psk-example";
       module = "noxa.wireguard";
       hosts = [ "source" "target" ];
       generator.script = "wireguard-psk";
     }
-    
-    { # host specific secret
+
+    { # host-specific secret
       ident = "interface-key-example";
       module = "noxa.wireguard";
       generator.script = "wireguard-key";
     }
 
-    { # instance wide secret, not assigned to any host
+    { # instance-wide secret, not assigned to any host
       ident = "instance-wide-secret";
       module = "something";
       global = true;
     }
-
   ];
-};
+}
 ```
 
 ## Wireguard
 
-This module allows the declaration of wireguard overlay networks
-to connect several hosts together. It uses the secrets module to automatically
-exchange secrets between the hosts, configures gateways and routing in case of
-hosts being behind NAT/without public IPs, while also allowing direct peer to peer
-connections for hosts reachable by each other.
+The [Wireguard module](./modules/wireguard.md) declares WireGuard overlay
+networks that connect several hosts. It uses the secrets module to exchange
+keys automatically, configures gateways and routing for hosts behind NAT or
+without a public IP, and still allows direct peer-to-peer connections where
+hosts can reach each other.
+
+The network topology belongs to no single host, so it lives in your
+flake-parts configuration, under `noxa.wireguard`:
 
 ```nix
-wireguard.overlay-lan = {
+noxa.wireguard.overlay-lan = {
   networkAddress = "10.0.0.0/24";
 
   members = {
-    # define a host "someHost" as a member of this wireguard network 
+    # declare "someHost" as a member of this network
     someHost.deviceAddresses = "10.0.0.1/32";
     someHost.backend = "wg-quick";
     someHost.advertise.server.listenPort = 51823;
     someHost.advertise.server.firewallAllow = true;
 
-    # define another host "otherHost" as a member of this wireguard network
+    # declare "otherHost" as a member of this network
     otherHost.deviceAddresses = "10.0.0.2/32";
     otherHost.keepAlive = 30;
   };
 };
 ```
 
-Now run `agenix generate`, then `agenix rekey` and voila.
+Each member host must import `noxa.nixosModules.wireguard` to pull in its
+share of this topology. Run `agenix generate`, then `agenix rekey`.

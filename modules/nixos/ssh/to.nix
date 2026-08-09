@@ -1,4 +1,7 @@
-{ lib, noxaConfig, noxaHost, noxa, ... }: with lib; {
+{ lib, self, config, noxa, ... }: with lib; let
+  noxaHost = config.networking.hostName;
+in
+{
   config = {
     users.users = mkMerge (
       flatten (
@@ -6,14 +9,14 @@
           (
             (fromNodeName:
               let
-                grants = noxaConfig.nodes."${fromNodeName}".configuration.ssh.grants;
+                grants = self.nixosConfigurations."${fromNodeName}".config.ssh.grants;
                 matching = filterAttrs (grantName: grant: grant.to.node == noxaHost) grants;
-                pkgs = noxaConfig.nodes."${fromNodeName}".pkgs;
+                pkgs = self.nixosConfigurations."${fromNodeName}".pkgs;
               in
               mapAttrsToList
                 (grantName: grant:
                   let
-                    sshKeySecret = noxaConfig.nodes."${fromNodeName}".configuration.age.secrets.${noxa.lib.secrets.computeIdentifier {
+                    sshKeySecret = self.nixosConfigurations."${fromNodeName}".config.age.secrets.${noxa.lib.secrets.computeIdentifier {
                       ident = "ssh-key-${grantName}";
                       module = "noxa.ssh";
                     }};
@@ -84,7 +87,7 @@
                 matching
             )
           )
-          noxaConfig.nodeNames)
+          noxa.managedNodes)
     );
   };
 }

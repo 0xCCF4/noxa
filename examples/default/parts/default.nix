@@ -5,7 +5,6 @@ in
 {
   imports = (attrValues noDefault) ++ [
     ../modules/nixos/default.nix
-    ../modules/noxa/default.nix
     ../modules/home/default.nix
     ../users/default.nix
     ../packages/default.nix

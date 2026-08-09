@@ -16,6 +16,8 @@
   imports = [
     # top to bottom dependency order
     ./options.nix
+    ./reachable.nix
+    ./topology.nix
     ./routes.nix
     ./secrets.nix
     ./interfaces.nix
