@@ -61,7 +61,7 @@
                     default = 22;
                   };
                   extraOptions = mkOption {
-                    description = "Additional configuration options to add to the SSH config for this grant.";
+                    description = "Additional configuration options to add to the SSH config for this grant. Keys are literal ssh_config/programs.ssh.settings directive names (e.g. HostName, ForwardAgent), passed through unchanged.";
                     type = let x = attrsOf ((oneOf [ str int (listOf str) x ])); in if (noxa.__buildDocs or false) then anything else x;
                     default = { };
                   };
@@ -96,7 +96,7 @@
                           defaultText = "same as to.port";
                         };
                         extraOptions = mkOption {
-                          description = "Additional configuration options to add to the SSH config for this address option.";
+                          description = "Additional configuration options to add to the SSH config for this address option. Keys are literal ssh_config/programs.ssh.settings directive names (e.g. HostName, ForwardAgent), passed through unchanged.";
                           type = let x = attrsOf (nullOr (oneOf [ str int (listOf str) x ])); in if (noxa.__buildDocs or false) then anything else x;
                           default = { };
                           visible = "shallow";

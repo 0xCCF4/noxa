@@ -23,10 +23,10 @@
             traceX = s: builtins.trace (builtins.toJSON s) s;
 
             block = {
-              identitiesOnly = true;
-              identityFile = sshKeySecret.path;
-              user = grant.to.user;
-              userKnownHostsFile =
+              IdentitiesOnly = true;
+              IdentityFile = sshKeySecret.path;
+              User = grant.to.user;
+              UserKnownHostsFile =
                 if grant.to.sshFingerprint != null then
                   toString
                     (
@@ -42,13 +42,13 @@
             };
           in
           [{
-            "${grant.from}".programs.ssh.matchBlocks."${grantName}" = mkIf (typeOf grant.to.hostname == "string") (
+            "${grant.from}".programs.ssh.settings."${grantName}" = mkIf (typeOf grant.to.hostname == "string") (
               mkMerge [
                 block
                 {
-                  hostname = grant.to.hostname;
-                  port = grant.to.port;
-                  host = grant.name;
+                  HostName = grant.to.hostname;
+                  Port = grant.to.port;
+                  header = "Host ${grant.name}";
                 }
                 grant.to.extraOptions
               ]
@@ -73,16 +73,16 @@
                     hostNameAttrs;
               in
               {
-                "${grant.from}".programs.ssh.matchBlocks."${grantName}-${ruleName}" = home-manager.lib.hm.dag.entryAfter (mapAttrsToList (ruleName: rule: "${grantName}-${ruleName}") rulesWithLowerPriority) (
+                "${grant.from}".programs.ssh.settings."${grantName}-${ruleName}" = home-manager.lib.hm.dag.entryAfter (mapAttrsToList (ruleName: rule: "${grantName}-${ruleName}") rulesWithLowerPriority) (
                   mkMerge [
                     block
                     {
-                      match = "host=\"${escapeShellArg (grant.name)}\" exec=\"${pkgs.writeShellApplication {
+                      header = "Match host=\"${escapeShellArg (grant.name)}\" exec=\"${pkgs.writeShellApplication {
                         name = "connect-check";
                         text = "exec ${rule.command}";
                       }}/bin/connect-check\"";
-                      hostname = rule.host;
-                      port = rule.port;
+                      HostName = rule.host;
+                      Port = rule.port;
                     }
                     grant.to.extraOptions
                     rule.extraOptions
