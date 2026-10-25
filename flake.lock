@@ -270,16 +270,16 @@
     },
     "nix-net-lib": {
       "inputs": {
-        "nixpkgs": [
+        "nixpkgs-lib": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1769341404,
-        "narHash": "sha256-DRe4hoL880v6SSprIQIXeXjAUvpSqPmxFkEVWU0zdGE=",
+        "lastModified": 1793048057,
+        "narHash": "sha256-5ttCqfib9W6WtMAeZfwEhNH6eXTFufPpKgIIYQPGizo=",
         "owner": "0xCCF4",
         "repo": "nix-net-lib",
-        "rev": "f7a02760eb2864e525da462f3e366ad6e8b5f7f0",
+        "rev": "9cd1345d52bb5ef3557216cc01e9da8b690b885d",
         "type": "github"
       },
       "original": {

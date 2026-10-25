@@ -44,7 +44,7 @@ in
     subnetFor = mkOption {
       type = types.functionTo ipNetwork;
       readOnly = true;
-      default = name: nixNetLib.hashedIpv6Subnet {
+      default = name: nixNetLib.hashedSubnet {
         inherit (cfg) salt;
         network = cfg.prefix;
         inherit name;
@@ -57,7 +57,7 @@ in
     addressFor = mkOption {
       type = types.functionTo (types.functionTo types.str);
       readOnly = true;
-      default = network: name: nixNetLib.hashedIpv6Address {
+      default = network: name: nixNetLib.hashedAddress {
         inherit (cfg) salt;
         inherit network name;
       };

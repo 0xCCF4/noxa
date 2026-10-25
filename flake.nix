@@ -8,7 +8,7 @@
     # IP data types and utility functions
     nix-net-lib = {
       url = "github:0xCCF4/nix-net-lib";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
     # Home Manager
