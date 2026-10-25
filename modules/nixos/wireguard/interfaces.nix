@@ -15,6 +15,9 @@ with builtins; with lib; let
           {
             allowedIPs = otherHost.deviceAddresses
               ++ otherHost.advertise.routes
+              # networks behind peers reached through this neighbor (as gateway)
+              ++ (concatMap (peer: self.nixosConfigurations.${peer.target}.config.noxa.wireguard.interfaces.${name}.advertise.routes)
+              (filter (peer: peer.via == neighbor && peer.target != neighbor) routes.peers))
               ++ (lists.optionals (elem neighbor routes.participants.gateways)
               ([ ourConfig.networkAddress ] ++ lists.optional (ourConfig.networkAddress6 != null) ourConfig.networkAddress6));
             persistentKeepalive = mkIf (cfg.keepAlive != null) cfg.keepAlive;
