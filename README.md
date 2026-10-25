@@ -1,6 +1,12 @@
 # noxa
 
-**Noxa** is a management tool for multi-host NixOS configurations.
+**Noxa** is a harness and a set of NixOS modules that make cross-host
+features easy in multi-host NixOS configurations.
+
+Noxa builds on [ez-configs](https://github.com/ehllie/ez-configs). ez-configs
+already discovers and builds many hosts from one flake. Noxa adds what
+ez-configs does not have: shared options for the whole fleet and modules that
+configure several hosts together.
 
 > **Status:** Under active development.  
 > Interfaces and features are subject to change.
@@ -9,13 +15,13 @@
 
 ## Goals
 
-- Provide a foundation for managing and coordinating multiple NixOS hosts from a single codebase.
-- Enable cross-host configuration, secret management, and network setup for complex environments.
+- Give a harness on top of ez-configs for options and modules that span several hosts.
+- Give ready-to-use modules for common cross-host tasks: secret management, network setup, and SSH access.
 
 ## Features
 
-- **Multi-host configuration:** Define and manage several NixOS machines in a unified structure.
-- **Cross-host modules:** Write modules that can coordinate settings and state between hosts.
+- **Harness:** A flake-parts module for ez-configs. It adds the list of managed hosts, fleet-wide options, and the `noxa` special argument to every host.
+- **Cross-host modules:** Write modules that coordinate settings and state between hosts.
 - **Secret management:** Automated secret management for (cross-host) distributed systems (e.g., WireGuard keys, SSH host keys).
 - **Wireguard networks:** Easy setup of wireguard overlay networks with automatic key exchanges.
 - **SSH setup:** Setup of cross-device SSH access with automatic SSH keypair key exchange and per-connection SSH options.

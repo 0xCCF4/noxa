@@ -8,17 +8,28 @@
   `modules/nixos/wireguard/topology.nix`), which reads this option back
   through the `noxa` specialArg.
 */
-{ config, lib, self, noxaFlake, ... }: with builtins; with lib; {
+{ config, lib, self, noxaFlake, nixNetLib, ... }: with builtins; with lib; {
   options.noxa.wireguard = mkOption {
     description = "Cross-host WireGuard network topology managed by Noxa.";
     default = { };
     type = types.attrsOf
       (types.submodule
-        (network: {
-          options = with noxaFlake.lib.net.types; {
+        (network@{ name, ... }: {
+          options = with nixNetLib.types; {
             networkAddress = mkOption {
               type = ipNetwork;
               description = "The network address of the WireGuard network.";
+            };
+
+            networkAddress6 = mkOption {
+              type = types.nullOr ipNetwork;
+              default = if config.noxa.ula.prefix != null then config.noxa.ula.subnetFor "wireguard-${network.name}" else null;
+              defaultText = literalExpression ''if noxa.ula.prefix != null then noxa.ula.subnetFor "wireguard-<name>" else null'';
+              description = ''
+                The IPv6 network of the WireGuard network, making it dual-stack. Defaults to a /64
+                derived from `noxa.ula.prefix`. Every member additionally gets an address derived
+                from its host name in this network. Set to null to disable IPv6 for this network.
+              '';
             };
 
             allowNodesToJoin = mkOption {
@@ -133,6 +144,15 @@
                     '';
                   };
 
+                  advertise.routes = mkOption {
+                    type = types.listOf ipNetwork;
+                    default = [ ];
+                    description = ''
+                      Networks behind this member, e.g. its local containers. The
+                      other members route traffic for these networks through it.
+                    '';
+                  };
+
                   advertise.keepAlive = mkOption {
                     type = types.nullOr types.int;
                     default = null;
@@ -164,6 +184,11 @@
                   };
                 };
 
+                # IPv6 address of the member, after its own addresses since the first
+                # device address is commonly used as the IPv4 address of the member
+                config.deviceAddresses = mkIf (network.config.networkAddress6 != null)
+                  (mkAfter [ "${config.noxa.ula.addressFor network.config.networkAddress6 name}/128" ]);
+
                 config.advertise.server =
                   let
                     advertisedPublicIps = self.nixosConfigurations.${name}.config.noxa.wireguard.reachable.internet or [ ];
@@ -178,6 +203,10 @@
           };
         }));
   };
+
+  config.noxa.ula.subnets = mapAttrs'
+    (networkName: netConfig: nameValuePair "wireguard-${networkName}" netConfig.networkAddress6)
+    (filterAttrs (networkName: netConfig: netConfig.networkAddress6 != null) config.noxa.wireguard);
 
   config.assertions =
     with noxaFlake.lib.ansi;

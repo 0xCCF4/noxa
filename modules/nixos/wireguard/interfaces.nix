@@ -13,7 +13,10 @@ with builtins; with lib; let
             otherSecrets = self.nixosConfigurations.${neighbor}.config.noxa.wireguard.secrets.${name};
           in
           {
-            allowedIPs = otherHost.deviceAddresses ++ (lists.optional (elem neighbor routes.participants.gateways) ourConfig.networkAddress);
+            allowedIPs = otherHost.deviceAddresses
+              ++ otherHost.advertise.routes
+              ++ (lists.optionals (elem neighbor routes.participants.gateways)
+              ([ ourConfig.networkAddress ] ++ lists.optional (ourConfig.networkAddress6 != null) ourConfig.networkAddress6));
             persistentKeepalive = mkIf (cfg.keepAlive != null) cfg.keepAlive;
             endpoint = mkIf (otherHost.advertise.server != null) "${otherHost.advertise.server.listenAddress or "<invalid>"}:${toString otherHost.advertise.server.listenPort or "<invalid>"}";
             publicKey = otherSecrets.publicKey;

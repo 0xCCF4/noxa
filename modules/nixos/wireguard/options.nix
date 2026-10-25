@@ -28,6 +28,14 @@ in
             '';
           };
 
+          networkAddress6 = mkOption {
+            type = nullOr ipNetwork;
+            default = null;
+            description = ''
+              The IPv6 network of a dual-stack network. On clients, traffic of this network will be routed through the WireGuard interface.
+            '';
+          };
+
           autostart = mkOption {
             type = bool;
             default = true;
@@ -125,6 +133,14 @@ in
             description = ''
               This interface is a server and is marked as the default gateway for clients.
               This means that clients will use this interface to reach other peers that do not advertise their listen port and address.
+            '';
+          };
+
+          advertise.routes = mkOption {
+            type = listOf ipNetwork;
+            default = [ ];
+            description = ''
+              Networks behind this host, e.g. local containers. Peers route traffic for these networks through this host.
             '';
           };
 

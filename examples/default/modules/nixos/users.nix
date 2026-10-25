@@ -108,15 +108,15 @@
 
                     programs.ssh.enable = mkIf (userName == "root") (mkDefault true);
                     programs.ssh.enableDefaultConfig = mkDefault false;
-                    programs.ssh.matchBlocks."*" = {
-                      forwardAgent = mkDefault false;
-                      serverAliveInterval = mkDefault 0;
-                      serverAliveCountMax = mkDefault 3;
-                      compression = mkDefault false;
-                      hashKnownHosts = mkDefault false;
-                      controlMaster = mkDefault "no";
-                      controlPath = mkDefault "~/.ssh/master-%r@%n:%p";
-                      controlPersist = mkDefault "no";
+                    programs.ssh.settings."*" = {
+                      ForwardAgent = mkDefault false;
+                      ServerAliveInterval = mkDefault 0;
+                      ServerAliveCountMax = mkDefault 3;
+                      Compression = mkDefault false;
+                      HashKnownHosts = mkDefault false;
+                      ControlMaster = mkDefault "no";
+                      ControlPath = mkDefault "~/.ssh/master-%r@%n:%p";
+                      ControlPersist = mkDefault "no";
                     };
                   };
                 };

@@ -54,8 +54,8 @@ noxa.wireguard.overlay-lan = {
 Then import the module on each member host:
 ```nix
 # hosts/someHost.nix
-{ ... }: {
-  imports = [ inputs.noxa.nixosModules.wireguard ];
+{ noxa, ... }: {
+  imports = [ noxa.nixosModules.wireguard ];
 }
 ```
 

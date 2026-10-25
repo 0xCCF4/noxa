@@ -79,11 +79,11 @@ Every host, once built by ez-configs, receives:
 A host opts into Noxa's own NixOS modules by importing them. Module
 inclusion is the only switch:
 ```nix
-{
+{ noxa, ... }: {
   imports = [
-    inputs.noxa.nixosModules.wireguard
-    inputs.noxa.nixosModules.ssh
-    inputs.noxa.nixosModules.secrets
+    noxa.nixosModules.wireguard
+    noxa.nixosModules.ssh
+    noxa.nixosModules.secrets
   ];
 }
 ```

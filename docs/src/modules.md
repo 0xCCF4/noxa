@@ -19,8 +19,8 @@ the SSH client config for you.
 
 ```nix
 # hosts/source.nix
-{ ... }: {
-  imports = [ inputs.noxa.nixosModules.ssh ];
+{ noxa, ... }: {
+  imports = [ noxa.nixosModules.ssh ];
 
   ssh.grants.portForwarding = {
     # connection settings
@@ -66,8 +66,8 @@ the multi-host bookkeeping on top.
 
 ```nix
 # hosts/example.nix
-{ ... }: {
-  imports = [ inputs.noxa.nixosModules.secrets ];
+{ noxa, ... }: {
+  imports = [ noxa.nixosModules.secrets ];
 
   noxa.secrets.def = [
     { # shared secret between "source" and "target"

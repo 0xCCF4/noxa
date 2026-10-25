@@ -8,8 +8,8 @@
   #       git rm secrets/master.key ; rm secrets/master.key
   # 2. Update the master key, see secrets/default.nix
   # 3. Delete `hosts/*` files that you do not need.
-  # 4. Delete `hardware/*`files that you don not need.
-  # 5. Your are ready to go!
+  # 4. Delete `hardware/*`files that you do not need.
+  # 5. You are ready to go!
   #
   #########################################################
 

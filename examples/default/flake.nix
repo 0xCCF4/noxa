@@ -30,7 +30,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Multi-host configuration framework
+    # Cross-host harness and modules on top of ez-configs
     noxa = {
       url = "github:0xccf4/noxa";
       # url = "/home/mx/Documents/noxa";

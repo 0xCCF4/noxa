@@ -1,5 +1,9 @@
 { inputs, lib, self, config, ... }: with lib; {
-  ezConfigs.root = ./..;
+  # Use the flake's own store path, not a `./..` path literal. Nix copies a path
+  # literal to the store again when you interpolate it. In read-only mode (for
+  # example `nix flake check`) that copy does not exist, so evaluation fails with
+  # "path ... is not valid".
+  ezConfigs.root = self.outPath;
   # Derived from `ezConfigs.root` (not a bare `./hosts` literal) so hosts stay in the
   # same store copy as `../hardware`. A standalone path literal to just the `hosts`
   # directory would copy it to the store in isolation, breaking `../` references

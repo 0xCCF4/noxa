@@ -28,8 +28,8 @@ Allow `bob@source` to SSH into `alice@target`:
 
 ```nix
 # hosts/source.nix
-{ ... }: {
-  imports = [ inputs.noxa.nixosModules.ssh ];
+{ noxa, ... }: {
+  imports = [ noxa.nixosModules.ssh ];
 
   ssh.grants.access = {
     # connection settings
@@ -46,8 +46,8 @@ Allow `bob@source` to SSH into `alice@target`, but only to run `uptime` or
 
 ```nix
 # hosts/source.nix
-{ ... }: {
-  imports = [ inputs.noxa.nixosModules.ssh ];
+{ noxa, ... }: {
+  imports = [ noxa.nixosModules.ssh ];
 
   ssh.grants.uptime = {
     # connection settings
@@ -72,8 +72,8 @@ Allow `bob@source` to SSH into `alice@target`, but only to forward port
 
 ```nix
 # hosts/source.nix
-{ ... }: {
-  imports = [ inputs.noxa.nixosModules.ssh ];
+{ noxa, ... }: {
+  imports = [ noxa.nixosModules.ssh ];
 
   ssh.grants.portForwarding = {
     # connection settings

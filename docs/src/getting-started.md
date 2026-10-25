@@ -79,7 +79,9 @@ both to your `flake.nix`:
 `config.nix` sets up ez-configs and Noxa's own options:
 ```nix
 { inputs, self, config, ... }: {
-  ezConfigs.root = ./.;
+  # Use the flake's own store path. A `./.` path literal fails in
+  # read-only evaluation, for example in `nix flake check`.
+  ezConfigs.root = self.outPath;
   # ezConfigs.nixos.configurationsDirectory defaults to ./nixos-configurations;
   # override it to keep the `hosts` directory name from the template.
   ezConfigs.nixos.configurationsDirectory = "${config.ezConfigs.root}/hosts";
@@ -109,11 +111,11 @@ host needs:
 
 ```nix
 # hosts/hostA.nix
-{ ... }: {
+{ noxa, ... }: {
   ssh.enable = true;
 
   # Opt into Noxa's cross-host SSH module for this host
-  imports = [ inputs.noxa.nixosModules.ssh ];
+  imports = [ noxa.nixosModules.ssh ];
 }
 ```
 
@@ -143,8 +145,8 @@ A host needs `noxa.nixosModules.secrets` imported before it can use
 `noxa.secrets.*`. Add an entry to `noxa.secrets.options.masterIdentities`
 with the path and public key of your master key:
 ```nix
-{
-  imports = [ inputs.noxa.nixosModules.secrets ];
+{ noxa, ... }: {
+  imports = [ noxa.nixosModules.secrets ];
 
   noxa.secrets.options.masterIdentities = [
     {

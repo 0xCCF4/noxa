@@ -1,8 +1,8 @@
 # Intro
 
-**Noxa** is a tool that eases the configuration of multi-host NixOS setups.
-This handbook starts with the motivation and design, then guides you through
-setting up a multi-host NixOS configuration.
+**Noxa** is a harness and a set of NixOS modules that make cross-host
+features easy in a multi-host NixOS setup. This handbook starts with the
+motivation and design, then guides you through setting up a Noxa project.
 
 ## Motivation
 
@@ -22,17 +22,23 @@ up:
 The overlay network itself is not part of any single host's configuration.
 Only a host's *membership* in that network is a host-specific setting.
 
-**Noxa** adds a layer on top of the per-host NixOS configuration for exactly
-this: options and modules that span hosts, plus automation for the tasks that
-come with running several hosts together (see the examples below).
+Multi-host configuration itself is already possible without Noxa.
+[ez-configs](https://github.com/ehllie/ez-configs) discovers and builds many
+hosts from one flake, and one host can read another host's configuration
+through `self.nixosConfigurations`. Noxa does not replace this. Noxa adds the
+parts that ez-configs does not have: a harness for cross-host options and
+modules that use it for common multi-host tasks.
 
 ## Goal
 
-**Noxa** fills the gap nixpkgs leaves for multi-host configuration. It gives
-you:
-1. Modules where hosts depend on each other's configuration.
-2. Options that describe a whole fleet, not any single host.
-3. Automation for common multi-host tasks: secret exchange, overlay network setup, and cross-host SSH access.
+**Noxa** does not build hosts. ez-configs does that. Noxa gives you:
+1. **The harness:** a flake-parts module that plugs into ez-configs. It adds
+   the `noxa.managedNodes` list, options that describe a whole fleet (for
+   example `noxa.wireguard`), and the `noxa` special argument (with
+   `noxa.lib`) in every host.
+2. **The modules:** NixOS modules that use the harness for common multi-host
+   tasks: secret exchange (`secrets`), overlay networks (`wireguard`), and
+   cross-host SSH access (`ssh`). A host imports only the modules it needs.
 
 ## How it works
 
@@ -47,9 +53,10 @@ modules (wireguard, SSH, secrets) by importing them.
 ```nix
 # flake.nix
 {
-  imports = [ inputs.ez-configs.flakeModule inputs.noxa.flakeModules.default ];
+  # noxa.flakeModules.default also imports ez-configs.
+  imports = [ inputs.noxa.flakeModules.default ];
 
-  ezConfigs.root = ./.;
+  ezConfigs.root = self.outPath;
   noxa.managedNodes = [ "hostA" "hostB" ];
 
   # A network that does not belong to any single host.
@@ -63,11 +70,12 @@ modules (wireguard, SSH, secrets) by importing them.
 
 ```nix
 # hosts/hostB.nix, discovered by ez-configs
-{ config, self, ... }: {
-  imports = [ inputs.noxa.nixosModules.wireguard ];
+{ config, self, noxa, ... }: {
+  imports = [ noxa.nixosModules.wireguard ];
 
-  # Read hostA's own config directly. self.nixosConfigurations is an
-  # ordinary flake output, reachable from any host's own module.
+  # Read hostA's own config directly. This is plain flake and ez-configs
+  # behavior, not a Noxa feature: self.nixosConfigurations is an ordinary
+  # flake output, reachable from any host's own module.
   services.prometheus.scrapeConfigs = [{
     job_name = "node";
     targets = [ "hostA:${toString self.nixosConfigurations.hostA.config.services.prometheus.exporters.node.port}" ];
@@ -99,11 +107,11 @@ requests are welcome too.
 
 ## Related projects
 
-Other multi-host configuration frameworks (send a PR to add more):
+Other multi-host configuration projects (send a PR to add more):
 - [nixus @infinisil (GPLv3)](https://github.com/infinisil/nixus/)
 
-> Why another framework?
+> Why another project?
 >
 > [@0xCCF4](https://github.com/0xCCF4/) started the project to learn Nix in
-> depth. It has since grown into a multi-host configuration framework used
-> as a daily driver.
+> depth. It has since grown into a harness and module set for multi-host
+> NixOS setups, used as a daily driver.

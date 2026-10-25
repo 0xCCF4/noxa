@@ -21,6 +21,7 @@ in
         in
         {
           networkAddress = netConfig.networkAddress;
+          networkAddress6 = netConfig.networkAddress6;
           autostart = setIfNotNull member.autostart;
           backend = setIfNotNull member.backend;
           deviceAddresses = setIfNotNull member.deviceAddresses;
@@ -31,6 +32,7 @@ in
             firewallAllow = setIfNotNull member.advertise.server.firewallAllow;
           };
           advertise.keepAlive = setIfNotNull member.advertise.keepAlive;
+          advertise.routes = member.advertise.routes;
           keepAlive = setIfNotNull member.keepAlive;
           gatewayOverride = setIfNotNull member.gatewayOverride;
         })

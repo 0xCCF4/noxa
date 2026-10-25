@@ -13,6 +13,7 @@
     ezConfigsFlakeModule
     ./assertions.nix
     ./managedNodes.nix
+    ./ula.nix
     ./wireguard.nix
   ];
 

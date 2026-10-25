@@ -7,9 +7,10 @@ The repository is structured as follows:
 - `hosts/`: Host specific configuration files.
 - `modules/nixos/`: OS configuration shared among all machines.
 - `modules/home/`: User environment configuration shared among all machines.
-- `modules/noxa/`: Infrastructure management configuration
+- `nixos-modules/`: Entry point that ez-configs imports into every host. It imports `modules/nixos/` and the overlay for `packages/`.
+- `packages/`: Custom packages, available to all hosts through an overlay.
 - `parts/`: Scaffolding code for generating machine configurations.
-- `secrets/`: Secrets deployed to the machines
+- `secrets/`: Secrets deployed to the machines (created when you generate the first secret).
 - `users/`: User specific configuration files.
 
 All these sub-directories are explained in more detail below.
@@ -149,18 +150,10 @@ The file will now be automatically included in all user home configurations.
 
 A list of all available Home Manager configuration options can be found at <https://nix-community.github.io/home-manager/options.xhtml>.
 
-### Noxa modules
-`modules/noxa/` contains Noxa modules, aka. infrastructure management configuration. We use the Noxa framework <https://github.com/0xCCF4/noxa> to manage our multi-host NixOS infrastructure.
+### Noxa settings
+Noxa <https://github.com/0xCCF4/noxa> adds the harness and modules for cross-host features on top of ez-configs.
 
-Inside the Noxa modules belong all settings that are:
-- settings that are not part of a particular host but shared among a group of hosts (e.g. setup of overlay networks)
-- settings that belong to a single host are to be placed inside the host configuration files or nixos modules directory.
-
-Adding a new Noxa module:
-1. Create a new file in `modules/noxa/`, e.g. `my-noxa-module.nix`.
-2. Add the newly created module to git via `git add modules/noxa/my-noxa-module.nix`.
-
-The file will now be automatically included in the Noxa configuration.
+Put settings that are not part of a single host, but shared among a group of hosts (e.g. setup of overlay networks with `noxa.wireguard`), into the flake-parts configuration in `parts/noxa.nix`. Put settings that belong to a single host into the host configuration files.
 
 A list of all available Noxa configuration options can be found at <https://0xccf4.github.io/noxa/>.
 
@@ -168,13 +161,8 @@ A list of all available Noxa configuration options can be found at <https://0xcc
 `parts/` contains the scaffolding code for making the machine configurations work. You should
 not need to change anything here but refer to the documentation here: <https://flake.parts/>.
 
-### Network topology
-`topology/` contains the code to draw the network topology of our infrastructure.
-
-Refer to the documentation of <https://oddlama.github.io/nix-topology/intro.html> for more information.
-
 ### Secrets
-`secrets/` contains secrets deployed to the machines. The secrets are deployed to git encrypted via age,
+`secrets/` contains secrets deployed to the machines. The directory does not exist until you generate the first secret (`noxa.secrets.secretsPath` in `modules/nixos/secrets.nix` sets its location). The secrets are deployed to git encrypted via age,
 decrypted on the target machines via their ssh host key pair.
 
 When adding new secrets, you may create and edit them using the following commands:
